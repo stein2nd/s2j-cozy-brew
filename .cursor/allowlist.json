@@ -1,0 +1,8 @@
+{
+  "denied": [
+    "npm install"
+  ],
+  "allowed": [
+    "npm install --legacy-peer-deps"
+  ]
+}

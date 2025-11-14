@@ -1,0 +1,23 @@
+{
+  "pins" : [
+    {
+      "identity" : "s2j-about-window",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stein2nd/s2j-about-window.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "98e96b6a1fcba474ce06b9e8db38c57894f93df1"
+      }
+    },
+    {
+      "identity" : "s2j-source-list",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stein2nd/s2j-source-list.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "0ad06dc2a0a09f638142069a95d01e043cb80bf7"
+      }
+    }
+  ],
+  "version" : 2
+}

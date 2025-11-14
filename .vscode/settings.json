@@ -1,0 +1,12 @@
+{
+  "textlint.configPath": "./tools/docs-linter/swift/.textlintrc.swift.json",
+  "textlint.nodePath": "./node_modules",
+  "textlint.enable": true,
+  "textlint.autoFixOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.textlint": "always"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "3w36zj6.textlint"
+  }
+}
