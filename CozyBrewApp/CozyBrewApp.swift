@@ -11,11 +11,7 @@ struct CozyBrewApp: App {
     
     var body: some Scene {
         WindowGroup {
-            if manager.isBrewAvailable {
-                MainWindowView(manager: manager)
-            } else {
-                BrewNotAvailableView(manager: manager)
-            }
+            ContentView(manager: manager, showAboutWindow: $showAboutWindow)
         }
         .commands {
             CommandGroup(replacing: .appInfo) {
@@ -23,11 +19,6 @@ struct CozyBrewApp: App {
                     showAboutWindow = true
                 }
             }
-        }
-        .sheet(isPresented: $showAboutWindow) {
-            // S2J About Window を表示
-            // 注: S2JAboutWindow の実際の API に合わせて調整が必要
-            AboutWindowView()
         }
     }
 }
@@ -138,6 +129,8 @@ struct BrewNotAvailableView: View {
 
 /// About Window View（S2JAboutWindow のプレースホルダー）
 struct AboutWindowView: View {
+    @Environment(\.dismiss) private var dismiss
+    
     var body: some View {
         VStack(spacing: 16) {
             Text("CozyBrew")
@@ -160,7 +153,7 @@ struct AboutWindowView: View {
             }
             
             Button("Close") {
-                // 閉じる処理は親ビューで管理
+                dismiss()
             }
             .buttonStyle(.borderedProminent)
         }
