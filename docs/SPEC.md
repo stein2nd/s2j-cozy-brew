@@ -101,6 +101,38 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
   * `s2j-source-list` (サイドバー)
   * `s2j-about-window` (About ウィンドウ)
 
+* **依存関係の更新方法**
+
+  * 本プロジェクトでは、Swift Package Manager (SPM) を使用して外部依存パッケージを管理しています。
+  * 依存関係の定義は `Package.swift` に記載されており、現在は各パッケージの `main` ブランチを参照しています。
+  * 依存関係を最新の状態に更新するには、以下の方法があります:
+
+    * **方法1: npm スクリプトを使用 (推奨)**
+      ```bash
+      npm run swift:update
+      ```
+      * `package.json` に定義されたスクリプトを使用して、すべての依存関係を最新の `main` ブランチに更新します。
+
+    * **方法2: Swift Package Manager を直接使用**
+      ```bash
+      swift package update
+      ```
+      * Swift Package Manager のコマンドを直接実行して依存関係を更新します。
+
+    * **方法3: Xcode から更新**
+      * Xcode でプロジェクトを開き、`File → Packages → Update to Latest Package Versions` を選択します。
+
+    * **依存関係の状態確認**
+      ```bash
+      npm run swift:show-deps
+      ```
+      * 現在の依存関係ツリーを表示します。
+
+  * **注意事項**:
+    * 現在の設定では、`Package.swift` で `branch: main` を指定しているため、`swift package update` を実行すると、常に各リポジトリの `main` ブランチの最新コミットを取得します。
+    * 特定のバージョンに固定したい場合は、`Package.swift` でバージョンやタグを指定できます (例: `.package(url: "...", from: "1.0.0")`)。
+    * 現在のリビジョンは `Package.resolved` に記録されているため、いつでも確認できます。
+
 ### 4.2. 主要コンポーネント (アーキテクチャー)
 
 ```
@@ -414,6 +446,7 @@ let package = Package(
 #### 11.1.1. Swift Package 基盤
 * ✅ `Package.swift` - Swift Package 定義 (CozyBrewCore、CozyBrewService、CozyBrewUIComponents)
 * ✅ 依存関係の管理 (s2j-source-list、s2j-about-window)
+* ✅ 依存関係の更新スクリプト (`package.json` に `swift:update`、`swift:resolve`、`swift:show-deps` を追加)
 * ✅ ビルド成功確認
 
 #### 11.1.2. CozyBrewCore モジュール
@@ -446,7 +479,12 @@ let package = Package(
   * ✅ Homebrew 未検出時のインストールフロー実装
   * ✅ 自動インストールオプション (opt-in)
   * ✅ About ウィンドウ統合準備
+  * ✅ About ウィンドウの Close ボタン動作実装 (`@Environment(\.dismiss)` を使用)
 * ✅ `ContentView.swift` - メインコンテンツビュー
+* ✅ `CozyBrew.xcodeproj` - Xcode プロジェクトファイル (XcodeGen で生成)
+* ✅ `Info.plist` - アプリケーション情報設定
+* ✅ `Assets.xcassets` - アセットカタログ (アイコン、画像)
+* ✅ `CozyBrewApp.entitlements` - アプリケーション権限設定
 
 #### 11.1.6. テストコード
 * ✅ `CozyBrewCoreTests` - BrewBinaryLocator、BrewProcess の基本テスト
@@ -456,26 +494,28 @@ let package = Package(
 
 #### 11.2.1. About Window 統合
 * ⚠️ S2J About Window の統合準備は完了 (プレースホルダー実装)
+* ✅ About ウィンドウの Close ボタン動作を実装済み (`@Environment(\.dismiss)` を使用)
 * ⚠️ 実際の S2JAboutWindow API に合わせた調整が必要
+* ⚠️ `CozyBrewApp.swift` で `S2JAboutWindow` をインポートしているが、`AboutWindowView` は独自実装のプレースホルダー
+
+#### 11.2.2. サイドバー実装
+* ⚠️ `S2JSourceList` は `Package.swift` で依存関係として定義されているが、実際のコードでは使用されていない
+* ⚠️ `MainWindowView.swift` では独自のサイドバー実装 (`SidebarView`) を使用
+* ⚠️ 仕様では `S2JSourceList` を使用することが想定されているが、現状は標準の SwiftUI `List` を使用
 
 ### 11.3. 未実装機能
 
-#### 11.3.1. Xcode プロジェクト
-* ❌ `CozyBrew.xcodeproj` - Xcode プロジェクトファイル
-* ❌ `Info.plist` - アプリケーション情報設定
-* ❌ `Assets.xcassets` - アセットカタログ (アイコン、画像)
-* ❌ `CozyBrewApp.entitlements` - アプリケーション権限設定
-
-#### 11.3.2. ローカライズ
+#### 11.3.1. ローカライズ
 * ❌ 英語 (en) ローカライズ
 * ❌ 日本語 (ja) ローカライズ
 * ❌ `Localizable.strings`、`Localizable.stringsdict`
 
-#### 11.3.3. CI/CD
+#### 11.3.2. CI/CD
+* ❌ `.github/workflows/` ディレクトリが存在しない
 * ❌ `.github/workflows/docs-linter.yml` - ドキュメント・リント・ワークフロー
 * ❌ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー
 
-#### 11.3.4. その他
+#### 11.3.3. その他
 * ❌ Cakebrew からの設定移行の機能
 * ❌ アクセシビリティ (VoiceOver) 対応の詳細実装
 * ❌ UI スナップショット・テスト
@@ -494,18 +534,23 @@ let package = Package(
 | Swift Package 基盤 | 100% | Package.swift、ビルド成功 |
 | CozyBrewCore | 100% | 全機能を実装済み |
 | CozyBrewService | 100% | 全機能を実装済み |
-| CozyBrewUIComponents | 100% | 全 UI コンポーネント実装済み |
-| CozyBrewApp Target | 90% | 基本の実装完了、リソース未作成 |
+| CozyBrewUIComponents | 90% | 全 UI コンポーネント実装済み、S2JSourceList 未統合 |
+| CozyBrewApp Target | 95% | 基本の実装完了、リソース作成済み、About ウィンドウの Close ボタン動作実装済み、S2JAboutWindow 未統合 |
 | テストコード | 70% | 基本テスト実装済み、カバレッジ向上が必要 |
 | ローカライズ | 0% | 未実装 |
 | CI/CD | 0% | 未実装 |
-| Xcode プロジェクト | 0% | 未実装 |
+| Xcode プロジェクト | 100% | XcodeGen で生成済み、リソース作成済み |
 
-**全体実装の完了率**: **約70%**
+**全体実装の完了率**: **約75%**
 
-* コア機能 (Package、Core、Service、UI Components) は、100% 完了
-* アプリケーション・リソース (Xcode プロジェクト、ローカライズ) は未実装
+* コア機能 (Package、Core、Service) は、100% 完了
+* UI Components は実装済みだが、S2JSourceList の統合が未完了
+* アプリケーション・リソース (Xcode プロジェクト、Info.plist、Assets、entitlements) は作成済み
+* About ウィンドウの Close ボタン動作は実装済み
+* 依存関係の更新スクリプトを追加済み
 * テスト・カバレッジは基本実装のみ
+* CI/CD ワークフローは未実装
+* ローカライズは未実装
 
 ### 11.5. 品質評価
 
@@ -538,20 +583,17 @@ let package = Package(
 
 ### 12.1. 短期での改善予定 (1-3ヵ月)
 
-#### 12.1.1. Xcode プロジェクト作成
-* `CozyBrew.xcodeproj` の作成
-* App Target の設定 (Bundle Identifier、Signing、Capabilities)
-* `Info.plist` の作成 (アプリケーション情報、バージョン、権限)
-* `Assets.xcassets` の作成 (アプリケーション・アイコン、画像リソース)
-* `CozyBrewApp.entitlements` の作成 (App Sandbox 設定)
+#### 12.1.1. 外部パッケージ統合の完成
+* **S2J About Window 統合**
+  * S2J About Window の実際の API に合わせた統合
+  * CozyBrew ロゴの追加
+  * ライセンス情報の表示
+  * サポートリンクの設定
+* **S2J Source List 統合**
+  * `MainWindowView` のサイドバーを `S2JSourceList` に置き換え
+  * 仕様に沿ったサイドバー実装への移行
 
-#### 12.1.2. About Window 統合の完成
-* S2J About Window の実際の API に合わせた統合
-* CozyBrew ロゴの追加
-* ライセンス情報の表示
-* サポートリンクの設定
-
-#### 12.1.3. ローカライズ (初期対応)
+#### 12.1.2. ローカライズ (初期対応)
 * 英語 (en) ローカライズ
   * `Localizable.strings` の作成
   * 主要 UI 要素の翻訳
@@ -559,12 +601,12 @@ let package = Package(
   * `Localizable.strings` の作成
   * 主要 UI 要素の翻訳
 
-#### 12.1.4. CI/CD ワークフロー
+#### 12.1.3. CI/CD ワークフロー
 * `.github/workflows/docs-linter.yml` の作成
 * `.github/workflows/swift-test.yml` の作成
 * テストカバレッジレポートの生成
 
-#### 12.1.5. テストカバレッジ向上
+#### 12.1.4. テストカバレッジ向上
 * BrewManager の統合テスト
 * UI コンポーネントのユニットテスト
 * エッジケースのテスト追加
@@ -669,11 +711,11 @@ let package = Package(
 
 ### 5. CI ワークフロー補足
 
-**実装状況**: ✅ **部分実装** - GitHub Actions ワークフローは実装済み、UI スナップショット・テストは未実装
+**実装状況**: ❌ **未実装** - GitHub Actions ワークフローは未実装
 
-* 本プロジェクトでは、以下の GitHub Actions ワークフローを導入します。
-    * `docs-linter.yml`: Markdown ドキュメントの表記揺れ検出 (Docs Linter) (✅ 実装済み)
-    * `swift-test.yml`: Swift Package のユニットテストおよび UI スナップショットテストの自動実行 (✅ 部分実装 - ユニットテストは実装済み、UI スナップショット・テストは未実装)
+* 本プロジェクトでは、以下の GitHub Actions ワークフローを導入予定です。
+    * `docs-linter.yml`: Markdown ドキュメントの表記揺れ検出 (Docs Linter) (❌ 未実装)
+    * `swift-test.yml`: Swift Package のユニットテストおよび UI スナップショットテストの自動実行 (❌ 未実装)
 * macOS Runner では `swift test --enable-code-coverage` を実行し、テストカバレッジを出力します。
 * iPadOS 互換性テストは、`xcodebuild test -scheme S2JSourceList -destination 'platform=iOS Simulator,name=iPad Pro (12.9-inch)'` で検証します。
 

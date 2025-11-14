@@ -2,11 +2,23 @@ import SwiftUI
 import CozyBrewService
 import CozyBrewUIComponents
 
-/// メインコンテンツビュー（将来の拡張用）
+/// メインコンテンツビュー
 struct ContentView: View {
-    @StateObject private var manager = BrewManager()
+    @ObservedObject var manager: BrewManager
+    @Binding var showAboutWindow: Bool
     
     var body: some View {
-        MainWindowView(manager: manager)
+        Group {
+            if manager.isBrewAvailable {
+                MainWindowView(manager: manager)
+            } else {
+                BrewNotAvailableView(manager: manager)
+            }
+        }
+        .sheet(isPresented: $showAboutWindow) {
+            // S2J About Window を表示
+            // 注: S2JAboutWindow の実際の API に合わせて調整が必要
+            AboutWindowView()
+        }
     }
 }

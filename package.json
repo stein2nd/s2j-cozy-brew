@@ -9,7 +9,10 @@
   "scripts": {
     "postinstall": "cd tools/docs-linter && npm install",
     "prelint:docs": "cd tools/docs-linter && git restore . && cd ../.. && git submodule update --remote --merge && cd tools/docs-linter && (npm ci || (rm -f package-lock.json && npm install)) && npm run build && cd node_modules/textlint-rule-preset-swift-docs-ja && (npm install || true) && (test -f vite.config.ts || test -f vite.config.js) && npm run build || true && cd ../../..",
-    "lint:docs": "NODE_PATH=./tools/docs-linter/node_modules textlint --config ./tools/docs-linter/swift/.textlintrc.swift.json ./README.md ./docs/**/*.md"
+    "lint:docs": "NODE_PATH=./tools/docs-linter/node_modules textlint --config ./tools/docs-linter/swift/.textlintrc.swift.json ./README.md ./docs/**/*.md",
+    "swift:update": "swift package update",
+    "swift:resolve": "swift package resolve",
+    "swift:show-deps": "swift package show-dependencies"
   },
   "repository": {
     "type": "git",

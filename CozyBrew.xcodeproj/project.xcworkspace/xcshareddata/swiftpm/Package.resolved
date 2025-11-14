@@ -1,4 +1,5 @@
 {
+  "originHash" : "1c0a60d44c2849cc33107a00df9850e2714d1e883a58d4a2fb572381699f02fb",
   "pins" : [
     {
       "identity" : "s2j-about-window",
@@ -6,7 +7,7 @@
       "location" : "https://github.com/stein2nd/s2j-about-window.git",
       "state" : {
         "branch" : "main",
-        "revision" : "63f6819ace26f62c9e9bf118f746cc0b0fb05955"
+        "revision" : "0e3b6c0fe7b9221439a3814091c50d9fd0a42cf9"
       }
     },
     {
@@ -19,5 +20,5 @@
       }
     }
   ],
-  "version" : 2
+  "version" : 3
 }
