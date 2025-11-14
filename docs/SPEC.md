@@ -146,8 +146,8 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 │└─ `SPEC.md`  # 本ドキュメント
 ├┬─ tools/
 │└─ docs-linter  # Git サブモジュール『Docs Linter』
-├┬─ CozyBrew.xcodeproj  # Xcode プロジェクト (将来作成予定) (未実装)
-│└─ Info.plist, Assets.xcassets, CozyBrewApp.entitlements  # アプリリソース (将来作成予定) (未実装)
+├┬─ CozyBrew.xcodeproj  # Xcode プロジェクト (XcodeGen で生成済み)
+│└─ Info.plist, Assets.xcassets, CozyBrewApp.entitlements  # アプリリソース (作成済み)
 ├┬─ CozyBrewApp/  # アプリプロジェクト (SwiftUI App Target `CozyBrew.app`)
 │├─ CozyBrewApp.swift  # アプリエントリーポイント (Homebrew 未検出時のインストールフロー含む)
 │└─ ContentView.swift  # メインコンテンツビュー
@@ -674,6 +674,7 @@ let package = Package(
 * 本プロジェクトは Swift Package として他アプリケーションに組み込まれることを前提とします。そのため、Xcode ウィザードで「App」テンプレートを選ぶ必要はありません。
 * macOS/iPadOS 両対応の Swift Package として作成する場合は、「Framework」または「Swift Package」テンプレートを使用し、対応プラットフォームを .macOS (.v12)、.iOS (.v15) と指定します。
 * また、本リポジトリでは Git サブモジュール [Docs Linter](https://github.com/stein2nd/docs-linter) を導入し、ドキュメント品質 (表記揺れや用語統一) の検証を CI で実施します。
+* **注意**: 実際のプロジェクトでは、XcodeGen (`project.yml`) を使用して Xcode プロジェクトを生成しています。このセクションは、手動で Xcode プロジェクトを作成する場合の参考情報です。
 
 ### 1. テンプレート選択
 
@@ -684,7 +685,7 @@ let package = Package(
 
 | 項目 | 推奨値 | 理由 |
 |---|---|---|
-| Product Name | `s2j-source-list` | `SPEC.md` のプロダクト名と一致 |
+| Product Name | `s2j-cozy-brew` | `SPEC.md` のプロダクト名と一致 |
 | Team | Apple ID に応じて設定 | コード署名のため |
 | Organization Identifier | `com.s2j` | ドメイン逆引き規則、一貫性確保 |
 | Interface | SwiftUI | SwiftUI ベースを前提 |
