@@ -1,19 +1,19 @@
 # S2J CozyBrew
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-3.0.en.html)                         
-[![Swift](https://img.shields.io/badge/Swift-5.9-blue?logo=Swift&logoColor=white)](https://www.swift.org)                                                       
+[![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-3.0.en.html)
+[![Swift](https://img.shields.io/badge/Swift-5.9-blue?logo=Swift&logoColor=white)](https://www.swift.org)
 
 ## Description
 
 <!-- 
-S2J CozyBrew is a modern, SwiftUI-based macOS application for managing Homebrew packages. This application has been ported from the popular [Cakebrew](https://github.com/brunophilipe/Cakebrew) project by Bruno Philipe, bringing its functionality to the SwiftUI ecosystem. It provides a user-friendly GUI for managing Homebrew packages without requiring terminal knowledge, making it accessible to users who prefer graphical interfaces.                          
+S2J CozyBrew is a modern, SwiftUI-based macOS application for managing Homebrew packages. This application has been ported from the popular [Cakebrew](https://github.com/brunophilipe/Cakebrew) project by Bruno Philipe, bringing its functionality to the SwiftUI ecosystem. It provides a user-friendly GUI for managing Homebrew packages without requiring terminal knowledge, making it accessible to users who prefer graphical interfaces.
 
-The application offers a comprehensive set of features for managing Homebrew packages, including package listing, search, installation, uninstallation, updates, and more. It also includes a guided installation flow for users who don't have Homebrew installed yet.                    
+The application offers a comprehensive set of features for managing Homebrew packages, including package listing, search, installation, uninstallation, updates, and more. It also includes a guided installation flow for users who don't have Homebrew installed yet.
  -->
 
-S2J CozyBrew は、Homebrew パッケージを管理するためのモダンな SwiftUI ベースの macOS アプリケーションです。本アプリケーションは、Bruno Philipe 制作の人気プロジェクト [Cakebrew](https://github.com/brunophilipe/Cakebrew) から移植され、その機能を SwiftUI エコシステムにもたらしています。ターミナルの知識を必要とせず、Homebrew パッケージを管理できるユーザーフレンドリーな GUI を提供し、グラフィカルインターフェースを好むユーザーにもアクセス可能にしています。     
+S2J CozyBrew は、Homebrew パッケージを管理するためのモダンな SwiftUI ベースの macOS アプリケーションです。本アプリケーションは、Bruno Philipe 制作の人気プロジェクト [Cakebrew](https://github.com/brunophilipe/Cakebrew) から移植され、その機能を SwiftUI エコシステムにもたらしています。ターミナルの知識を必要とせず、Homebrew パッケージを管理できるユーザーフレンドリーな GUI を提供し、グラフィカルインターフェースを好むユーザーにもアクセス可能にしています。
 
-本アプリケーションは、パッケージ一覧、検索、インストール、アンインストール、アップデートなど、Homebrew パッケージを管理するための包括的な機能セットを提供します。また、Homebrew がまだインストールされていないユーザー向けのガイド付きインストールフローも含まれています。         
+本アプリケーションは、パッケージ一覧、検索、インストール、アンインストール、アップデートなど、Homebrew パッケージを管理するための包括的な機能セットを提供します。また、Homebrew がまだインストールされていないユーザー向けのガイド付きインストールフローも含まれています。
 
 ## Features
 
@@ -42,18 +42,18 @@ S2J CozyBrew は、Homebrew パッケージを管理するためのモダンな 
 ## License
 
 <!-- 
-This project is licensed under the GPL 3.0+ License. See the [LICENSE](LICENSE) file for details.                                                               
+This project is licensed under the GPL 3.0+ License. See the [LICENSE](LICENSE) file for details.
  -->
 
-本プロジェクトは GPL3.0以降ライセンスの下で提供されています。詳細は [LICENSE](LICENSE) ファイルを参照してください。                                             
+本プロジェクトは GPL3.0以降ライセンスの下で提供されています。詳細は [LICENSE](LICENSE) ファイルを参照してください。
 
 ## Support and Contact
 
 <!-- 
-For support, feature requests, or bug reports, please visit the [GitHub Issues](https://github.com/stein2nd/s2j-cozy-brew/issues) page.                      
+For support, feature requests, or bug reports, please visit the [GitHub Issues](https://github.com/stein2nd/s2j-cozy-brew/issues) page.
  -->
 
-サポート、機能リクエスト、またはバグ報告については、[GitHub Issues](https://github.com/stein2nd/s2j-cozy-brew/issues) ページをご覧ください。                 
+サポート、機能リクエスト、またはバグ報告については、[GitHub Issues](https://github.com/stein2nd/s2j-cozy-brew/issues) ページをご覧ください。
 
 ---
 
@@ -76,20 +76,20 @@ To build the application from source:
 <!-- 
 1. Clone the repository:
 
-   ```bash
+   ```zsh
    git clone https://github.com/stein2nd/s2j-cozy-brew.git
    cd s2j-cozy-brew
    ```
 
 2. Generate the Xcode project (if needed):
 
-   ```bash
+   ```zsh
    xcodegen generate
    ```
 
 3. Open the project in Xcode:
 
-   ```bash
+   ```zsh
    open CozyBrew.xcodeproj
    ```
 
@@ -98,20 +98,20 @@ To build the application from source:
 
 1. リポジトリをクローンします:
 
-   ```bash
+   ```zsh
    git clone https://github.com/stein2nd/s2j-cozy-brew.git
    cd s2j-cozy-brew
    ```
 
 2. Xcode プロジェクトを生成します (必要な場合):
 
-   ```bash
+   ```zsh
    xcodegen generate
    ```
 
 3. Xcode でプロジェクトを開きます:
 
-   ```bash
+   ```zsh
    open CozyBrew.xcodeproj
    ```
 
@@ -232,76 +232,76 @@ To set up the development environment for this project:
 <!-- 
 1. Clone the repository:
 
-   ```bash
+   ```zsh
    git clone https://github.com/stein2nd/s2j-cozy-brew.git
    cd s2j-cozy-brew
    ```
 
 2. Install dependencies:
 
-   ```bash
+   ```zsh
    npm install
    ```
 
 3. Generate the Xcode project:
 
-   ```bash
+   ```zsh
    xcodegen generate
    ```
 
 4. Open the project in Xcode:
 
-   ```bash
+   ```zsh
    open CozyBrew.xcodeproj
    ```
 
 5. Build the project:
 
-   ```bash
+   ```zsh
    swift build
    ```
 
 6. Run tests:
 
-   ```bash
+   ```zsh
    swift test
    ```
  -->
 
 1. リポジトリをクローンします:
 
-   ```bash
+   ```zsh
    git clone https://github.com/stein2nd/s2j-cozy-brew.git
    cd s2j-cozy-brew
    ```
 
 2. 依存関係をインストールします:
 
-   ```bash
+   ```zsh
    npm install
    ```
 
 3. Xcode プロジェクトを生成します:
 
-   ```bash
+   ```zsh
    xcodegen generate
    ```
 
 4. Xcode でプロジェクトを開きます:
 
-   ```bash
+   ```zsh
    open CozyBrew.xcodeproj
    ```
 
 5. プロジェクトをビルドします:
 
-   ```bash
+   ```zsh
    swift build
    ```
 
 6. テストを実行します:
 
-   ```bash
+   ```zsh
    swift test
    ```
 
@@ -317,7 +317,7 @@ To build the project, use:
 
 プロジェクトをビルドするには:
 
-```bash
+```zsh
 swift build
 ```
 
@@ -327,7 +327,7 @@ To run tests with code coverage:
 
 コードカバレッジ付きでテストを実行するには:
 
-```bash
+```zsh
 swift test --enable-code-coverage
 ```
 
@@ -337,7 +337,7 @@ To update Swift Package dependencies:
 
 Swift Package の依存関係を更新するには:
 
-```bash
+```zsh
 npm run swift:update
 ```
 
@@ -360,7 +360,7 @@ We welcome your contributions. Please follow these steps:
 1. リポジトリをフォークしてください。
 2. 機能ブランチを作成してください (`git checkout -b feature/amazing-feature`)。
 3. 変更をコミットしてください (`git commit -m 'Add some amazing feature'`)。
-4. 機能ブランチにプッシュしてください (`git push origin feature/amazing-feature`)。                                                                             
+4. 機能ブランチにプッシュしてください (`git push origin feature/amazing-feature`)。
 5. Pull Request を開いてください。
 
 <!-- 
@@ -372,10 +372,10 @@ We welcome your contributions. Please follow these steps:
 ## Contributors & Developers
 
 <!-- 
-**"S2J CozyBrew"** is open-source software. The following individuals have contributed to this project:                                                      
+**"S2J CozyBrew"** is open-source software. The following individuals have contributed to this project:
  -->
 
-**"S2J CozyBrew"** はオープンソース・ソフトウェアです。以下の皆様がこのプロジェクトに貢献しています。                                                        
+**"S2J CozyBrew"** はオープンソース・ソフトウェアです。以下の皆様がこのプロジェクトに貢献しています。
 
 <!-- 
 * **Developer**: Koutarou ISHIKAWA
@@ -386,9 +386,9 @@ We welcome your contributions. Please follow these steps:
 ## Acknowledgments
 
 <!-- 
-* Based on [Cakebrew](https://github.com/brunophilipe/Cakebrew) by Bruno Philipe                                                                        
+* Based on [Cakebrew](https://github.com/brunophilipe/Cakebrew) by Bruno Philipe
 * Built with SwiftUI and Swift Package Manager
  -->
 
-* Bruno Philipe 制作 [Cakebrew](https://github.com/brunophilipe/Cakebrew) をもとに作成                                                                  
+* Bruno Philipe 制作 [Cakebrew](https://github.com/brunophilipe/Cakebrew) をもとに作成
 * SwiftUI および Swift Package Manager で構築
