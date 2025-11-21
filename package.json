@@ -1,8 +1,7 @@
 {
   "name": "s2j-cozy-brew",
   "version": "1.0.0",
-  "description": "Using SwiftUI, reimplement the AppKit-based “Cakebrew”.",
-  "main": "index.js",
+  "description": "Using SwiftUI, reimplement the AppKit-based \"Cakebrew\".",
   "directories": {
     "doc": "docs"
   },

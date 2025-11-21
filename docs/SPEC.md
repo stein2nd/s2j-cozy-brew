@@ -17,7 +17,7 @@
   * アプリケーション本体は Xcode App Target (CozyBrew.app) で管理します。
 * **対応 OS:** macOS v12.0以上 (可能なら macOS v13+ の API をオプションで活用)
 * 設計方針の核:
-  * **再利用性 (Package) と実行可能アプリケーション (App Target) の分離**。
+  * **再利用性 (Package) と実行可能アプリケーション (App Target) の分離** です。
   * UI 再利用部品や Brew 操作ロジックは Swift Package として設計・テスト可能にし、アプリケーション固有のバンドル資産、Info.plist、署名等は App Target に置きます。
 
 S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装された既存の **Cakebrew** を、**SwiftUI / Swift** ベースに再実装してモダナイズすることを目的とします。
@@ -46,8 +46,8 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
   * Swift Package (`s2j-cozy-brew`) として管理し、SwiftPM でビルド可能とします。
   * UI は SwiftUI (可能なら macOS v13の `Observation` を利用しますが、最低限 macOS v12対応を保ちます)。
   * セキュリティ: brew 実行は、サンドボックス外のプロセス・コールを行うため、権限/経路の取り扱いを厳密にします。
-  * ローカライズ対応 (英語・日本語を初期対応)。
-  * アクセシビリティ (VoiceOver 等) への対応。
+  * ローカライズ対応 (英語・日本語を初期対応とします)。
+  * アクセシビリティ (VoiceOver 等) への対応を実装します。
   * CI: GitHub Actions を用いて macOS ビルド・ユニットテストを実行します。
 
 ## 3. 準拠仕様
@@ -85,7 +85,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
   * 目的:
     * アプリケーション固有のリソース (Assets、Info.plist、App Sandbox/entitlements、メニュー定義、配布設定) を管理します。
   * 依存:
-    * `s2j-cozy-brew` (ライブラリ製品) と外部 S2J パッケージ群。
+    * `s2j-cozy-brew` (ライブラリ製品) と外部 S2J パッケージ群です。
 
 * **s2j-cozy-brew (Swift Package)**
 
@@ -185,7 +185,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 
 ### 4.3.1. マイグレーションと互換性 / Cakebrew からの留意点
 
-* Cakebrew は Objective-C / AppKit 実装であるため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈**して SwiftUI に適した状態駆動の設計へ変換します。
+* Cakebrew は Objective-C / AppKit 実装です。そのため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈**して SwiftUI に適した状態駆動の設計へ変換します。
 * Cakebrew のコード (Objective-C) でのライセンス、リソース (アイコン、翻訳) を確認し、再利用条件を満たします。
 * Cakebrew の preferences やインストール履歴を引き継ぐ場合:
   * 初回起動時に `Cakebrew` の設定ファイル (保存場所や形式) を検出し、移行ウィザードを表示します (オプション)。
@@ -198,15 +198,15 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 
 * **機能**
   * brew バイナリ検出 (`BrewBinaryLocator`):
-    * Apple Silicon (`/opt/homebrew/bin/brew`) と Intel (`/usr/local/bin/brew`) を判定、`which brew` の代替。環境 PATH の補正ロジック。
+    * Apple Silicon (`/opt/homebrew/bin/brew`) と Intel (`/usr/local/bin/brew`) を判定し、`which brew` の代替として機能します。環境 PATH の補正ロジックを実装します。
   * `Process` コマンド実行ラッパー (`BrewCommand` / `BrewProcess`):
-    * brew 実行、環境 PATH 解決、出力エンコーディング、エラー処理を一元化。
-    * `/usr/bin/env brew ...` を非同期に実行し stdout/stderr/exitCode を返す。標準入出力をストリームへ流すため、リアルタイムログに対応。
+    * brew 実行、環境 PATH 解決、出力エンコーディング、エラー処理を一元化します。
+    * `/usr/bin/env brew ...` を非同期に実行し stdout/stderr/exitCode を返します。標準入出力をストリームへ流すため、リアルタイム・ログに対応します。
   * 権限・実行コンテキスト管理:
-    * brew の実行ユーザー権限、環境変数 (HOMEBREW_PREFIX) の把握。
+    * brew の実行ユーザー権限、環境変数 (HOMEBREW_PREFIX) を把握します。
   * インストーラー (`BrewInstaller`):
-    * brew 未導入時の公式インストール・スクリプトの実行補助 (ユーザー許諾確認、ログ表示、失敗時の対処説明)。
-    * 導入スクリプト実行ロジック (ユーザー承認の UI フローを前提)。
+    * brew 未導入時の公式インストール・スクリプトの実行補助を行います (ユーザー許諾確認、ログ表示、失敗時の対処説明を含みます)。
+    * 導入スクリプト実行ロジックを実装します (ユーザー承認の UI フローを前提とします)。
 
 * **API 設計 (例)**
 
@@ -246,7 +246,7 @@ struct BrewCommand {
 ### 4.3.4. BrewService (s2j-cozy-brew / CozyBrewService)
 
 * **機能**
-  * `Package` / `Formula` / `Cask` / `Tap` を表現する `Codable` モデル (`brew info --json=v2` の構造に合わせる)。
+  * `Package` / `Formula` / `Cask` / `Tap` を表現する `Codable` モデルを実装します (`brew info --json=v2` の構造に合わせます)。
   * キャッシュ機構 (`BrewCache`):
     * JSON とローカル DB (軽量: SQLite or realm or simple file) によるキャッシュ管理を実装します。
     * ローカル JSON キャッシュ + TTL を持たせます。オプションで SQLite (GRDB 等) を選択可能とします。
@@ -264,17 +264,17 @@ struct BrewCommand {
 
 * **UI 要素**
   * `PackageRowView`:
-    * アイコン、名前、バージョン、バッジ表示 (アップデート有無)、インストール/アンインストール・ボタン。
+    * アイコン、名前、バージョン、バッジ表示 (アップデート有無)、インストール/アンインストール・ボタンを表示します。
   * `PackageDetailView`:
-    * `brew info` 情報、依存関係ツリー、README 表示 (Markdown)、ホームページ・リンク。
+    * `brew info` 情報、依存関係ツリー、README 表示 (Markdown)、ホームページ・リンクを表示します。
   * `InstallProgressView`:
-    * ログストリーム、キャンセルボタン。
+    * ログストリーム、キャンセルボタンを表示します。
   * `BrewAlertView`:
-    * friendly error + raw log toggle。
+    * friendly error + raw log toggle を表示します。
   * `MainWindow`:
-    * Sidebar (S2J Source List) + Content Area (パッケージ一覧、検索、ステータスバー)。
+    * Sidebar (S2J Source List) + Content Area (パッケージ一覧、検索、ステータスバー) を表示します。
   * `InstallFlowView`:
-    * 確認ダイアログ、進行状況 (ログ表示)、失敗時のロールバック案内。
+    * 確認ダイアログ、進行状況 (ログ表示)、失敗時のロールバック案内を表示します。
 
 * **サイドバー**
   * `S2JSourceListAdapter` は既存の S2J Source List を SwiftUI から利用しやすくする薄い適合レイヤを提供します。
@@ -355,12 +355,12 @@ let package = Package(
 
 **設計上の注意**:
   * 自動導入は *opt-in*、つまり、ユーザー承諾必須です。強制的な sudo は避けます。
-  * スクリプトの実行は標準出力です。エラーをリアルタイム表示し、失敗時のログ保存を行います。
+  * スクリプトの実行は標準出力で行います。エラーをリアルタイム表示し、失敗時のログ保存を行います。
   * インストール中は明確な進捗とロールバック手順を表示します。
 
 ### 4.3.8.2. 一般的フロー (パッケージ操作)
 
-* 検索 → 一覧 → 詳細 → Install / Uninstall / Upgrade。
+* 検索 → 一覧 → 詳細 → Install / Uninstall / Upgrade を実行します。
   * インストールを含む各操作は、非同期でプログレス表示し、完了/失敗通知を UI に反映します (キャンセル可能とします)。
 * Upgrade All は明確な確認プロンプトを表示します (依存関係の大きな変更に対する注意喚起)。
 * 失敗時は CLI のエラーメッセージをフレンドリーな文に意訳して提示しつつ、"Show raw log" も表示します。
@@ -395,7 +395,7 @@ let package = Package(
 ## 6. テスト戦略
 
 * **ユニットテスト** (swift test):
-  * BrewCore (コマンド構築・パース)、BrewService (JSON パース)、ViewModel ロジック。
+  * BrewCore (コマンド構築・パース)、BrewService (JSON パース)、ViewModel ロジックをテストします。
 * **擬似 Integration テスト (モック & フェイク)**:
   * `brew` コマンド呼び出しは (実際に呼ばずに) モック可能なインターフェイスを提供して CI 上で deterministic な (エンド・ツー・エンドの振る舞い確認) テストを実行します。
 * **UI テスト**:
@@ -408,12 +408,12 @@ let package = Package(
   * `vMAJOR.MINOR.PATCH`
 * **GitHub Actions**:
   * ワークフロー (macOS runner) で `swift build` / `swift test` を実行します。
-  * Pull Request に対して SwiftLint とビルド確認。
+  * Pull Request に対して SwiftLint とビルド確認を実行します。
 * **Release**:
   * Xcode の Archive を利用したビルド `xcodebuild` (Universal Binary 推奨) を実行します。
   * Notarize / Notarization ステップは手順化します (可能なら自動化スクリプトを提供します)。
   * 生成されたリリース用ビルドは、Artifacts として管理します。
-  * リリース・アセット: ソース + API Reference ドキュメント。
+  * リリース・アセット: ソース + API Reference ドキュメントを含みます。
 
 ## 8. 開発スケジュール (提案)
 
@@ -490,6 +490,13 @@ let package = Package(
 * ✅ `CozyBrewCoreTests` - BrewBinaryLocator、BrewProcess の基本テスト
 * ✅ `CozyBrewServiceTests` - Models、BrewCache の基本テスト
 
+#### 11.1.7. CI/CD ワークフロー
+* ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー
+  * ✅ Swift Package テスト (`swift test --enable-code-coverage`)
+  * ✅ Xcode プロジェクトテスト (XcodeGen で生成後、`xcodebuild test`)
+  * ✅ リリースビルド
+  * ✅ コードカバレッジの Codecov へのアップロード
+
 ### 11.2. ほとんど実装済み機能 (85-95% 完了)
 
 #### 11.2.1. About Window 統合
@@ -511,9 +518,9 @@ let package = Package(
 * ❌ `Localizable.strings`、`Localizable.stringsdict`
 
 #### 11.3.2. CI/CD
-* ❌ `.github/workflows/` ディレクトリが存在しない
+* ✅ `.github/workflows/` ディレクトリを作成済み
+* ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー (Swift Package テスト、Xcode プロジェクトテスト、リリースビルド)
 * ❌ `.github/workflows/docs-linter.yml` - ドキュメント・リント・ワークフロー
-* ❌ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー
 
 #### 11.3.3. その他
 * ❌ Cakebrew からの設定移行の機能
@@ -538,10 +545,10 @@ let package = Package(
 | CozyBrewApp Target | 95% | 基本の実装完了、リソース作成済み、About ウィンドウの Close ボタン動作実装済み、S2JAboutWindow 未統合 |
 | テストコード | 70% | 基本テスト実装済み、カバレッジ向上が必要 |
 | ローカライズ | 0% | 未実装 |
-| CI/CD | 0% | 未実装 |
+| CI/CD | 50% | Swift テスト・ワークフロー実装済み、ドキュメント・リント・ワークフロー未実装 |
 | Xcode プロジェクト | 100% | XcodeGen で生成済み、リソース作成済み |
 
-**全体実装の完了率**: **約75%**
+**全体実装の完了率**: **約78%**
 
 * コア機能 (Package、Core、Service) は、100% 完了
 * UI Components は実装済みだが、S2JSourceList の統合が未完了
@@ -549,7 +556,7 @@ let package = Package(
 * About ウィンドウの Close ボタン動作は実装済み
 * 依存関係の更新スクリプトを追加済み
 * テスト・カバレッジは基本実装のみ
-* CI/CD ワークフローは未実装
+* CI/CD ワークフロー: Swift テスト・ワークフローを実装済み (`.github/workflows/swift-test.yml`)
 * ローカライズは未実装
 
 ### 11.5. 品質評価
@@ -602,9 +609,13 @@ let package = Package(
   * 主要 UI 要素の翻訳
 
 #### 12.1.3. CI/CD ワークフロー
-* `.github/workflows/docs-linter.yml` の作成
-* `.github/workflows/swift-test.yml` の作成
-* テストカバレッジレポートの生成
+* ✅ `.github/workflows/swift-test.yml` の作成 (完了)
+  * Swift Package テスト
+  * Xcode プロジェクトテスト (XcodeGen で生成)
+  * リリースビルド
+  * コードカバレッジのアップロード (Codecov)
+* ❌ `.github/workflows/docs-linter.yml` の作成 (未実装)
+* ⚠️ テストカバレッジレポートの生成 (部分実装 - Codecov へのアップロードは実装済み)
 
 #### 12.1.4. テストカバレッジ向上
 * BrewManager の統合テスト
@@ -712,13 +723,17 @@ let package = Package(
 
 ### 5. CI ワークフロー補足
 
-**実装状況**: ❌ **未実装** - GitHub Actions ワークフローは未実装
+**実装状況**: ⚠️ **部分実装** - Swift テスト・ワークフローは実装済み、ドキュメント・リント・ワークフローは未実装
 
-* 本プロジェクトでは、以下の GitHub Actions ワークフローを導入予定です。
-    * `docs-linter.yml`: Markdown ドキュメントの表記揺れ検出 (Docs Linter) (❌ 未実装)
-    * `swift-test.yml`: Swift Package のユニットテストおよび UI スナップショットテストの自動実行 (❌ 未実装)
+* 本プロジェクトでは、以下の GitHub Actions ワークフローを導入しています。
+    * ✅ `swift-test.yml`: Swift Package のユニットテストおよび Xcode プロジェクトテストの自動実行 (実装済み)
+      * Swift Package テスト (`swift test --enable-code-coverage`)
+      * Xcode プロジェクトテスト (XcodeGen で生成後、`xcodebuild test`)
+      * リリースビルド
+      * コードカバレッジの Codecov へのアップロード
+    * ❌ `docs-linter.yml`: Markdown ドキュメントの表記揺れ検出 (Docs Linter) (未実装)
 * macOS Runner では `swift test --enable-code-coverage` を実行し、テストカバレッジを出力します。
-* iPadOS 互換性テストは、`xcodebuild test -scheme S2JSourceList -destination 'platform=iOS Simulator,name=iPad Pro (12.9-inch)'` で検証します。
+* 本プロジェクトは macOS 専用のため、iPadOS 互換性テストは対象外です。
 
 ## Appendix B: 開発上の留意点 (短文まとめ)
 
