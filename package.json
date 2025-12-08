@@ -2,33 +2,36 @@
   "name": "s2j-cozy-brew",
   "version": "1.0.0",
   "description": "Using SwiftUI, reimplement the AppKit-based \"Cakebrew\".",
-  "directories": {
-    "doc": "docs"
-  },
-  "scripts": {
-    "postinstall": "cd tools/docs-linter && npm install",
-    "prelint:docs": "cd tools/docs-linter && git restore . && cd ../.. && git submodule update --remote --merge && cd tools/docs-linter && (npm ci || (rm -f package-lock.json && npm install)) && npm run build && cd node_modules/textlint-rule-preset-swift-docs-ja && (npm install || true) && (test -f vite.config.ts || test -f vite.config.js) && npm run build || true && cd ../../..",
-    "lint:docs": "NODE_PATH=./tools/docs-linter/node_modules textlint --config ./tools/docs-linter/swift/.textlintrc.swift.json ./README.md ./docs/**/*.md",
-    "swift:update": "swift package update",
-    "swift:resolve": "swift package resolve",
-    "swift:show-deps": "swift package show-dependencies"
-  },
+  "type": "module",
+  "author": "Koutarou ISHIKAWA",
+  "license": "GPL-3.0-or-later",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stein2nd/s2j-cozy-brew.git"
   },
-  "keywords": [],
-  "author": "Koutarou ISHIKAWA",
-  "license": "GPL-3.0-or-later",
-  "type": "module",
+  "homepage": "https://github.com/stein2nd/s2j-cozy-brew#readme",
   "bugs": {
     "url": "https://github.com/stein2nd/s2j-cozy-brew/issues"
   },
-  "homepage": "https://github.com/stein2nd/s2j-cozy-brew#readme",
+  "keywords": [],
+  "directories": {
+    "doc": "docs"
+  },
   "files": [
     "README.md",
     "COMMON_SPEC.md",
     "LICENSE",
     "tools/"
-  ]
+  ],
+  "scripts": {
+    "postinstall": "cd tools/docs-linter && npm install",
+    "prelint:docs": "cd tools/docs-linter && git restore . && cd ../.. && git submodule update --remote --merge && cd tools/docs-linter && (npm ci || (rm -f package-lock.json && npm install)) && npm run build && cd node_modules/textlint-rule-preset-swift-docs-ja && (npm install || true) && (test -f vite.config.ts || test -f vite.config.js) && npm run build || true && cd ../../..",
+    "lint:docs": "NODE_PATH=./tools/docs-linter/node_modules textlint --config ./tools/docs-linter/presets/swift/.textlintrc.swift.json ./README.md ./docs/**/*.md",
+    "swift:update": "swift package update",
+    "swift:resolve": "swift package resolve",
+    "swift:show-deps": "swift package show-dependencies",
+    "test:local": "./scripts/test-local.sh",
+    "test:local:macOS": "./scripts/test-local_macOS.sh",
+    "test:local:iOSfull": "./scripts/test-local.sh --ios-device \"iPad Pro\" --ios-version \"15.0\" --enable-xcode-project --xcodegen-auto-install"
+  }
 }
