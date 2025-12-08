@@ -517,12 +517,17 @@ let package = Package(
 
 #### 11.1.7. CI/CD ワークフロー
 * ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー
-  * ✅ `test-swift-package` ジョブ: Swift Package テスト (`swift test --enable-code-coverage`)
-  * ✅ `test-xcode-project` ジョブ: Xcode プロジェクトテスト (XcodeGen で生成後、`xcodebuild test`)
-    * ✅ XcodeGen の自動インストール (`brew install xcodegen`)
-    * ✅ スキーム `CozyBrewApp` でのテスト実行
-  * ✅ `build-release` ジョブ: リリースビルド (`xcodebuild build`)
-  * ✅ コードカバレッジの Codecov へのアップロード (各ジョブで個別にアップロード)
+  * ✅ `test-macos` ジョブ: Swift Package テスト (`swift test --enable-code-coverage`)
+    * ✅ コード・カバレッジの Codecov へのアップロード (`macos` フラグ)
+  * ✅ `build-release` ジョブ: リリース・ビルド (`swift build -c release`)
+    * ✅ ビルド成果物のアップロード (Artifacts)
+    * ✅ `test-macos` ジョブの成功後に実行
+* ✅ `.github/workflows/docs-linter.yml` - ドキュメント・リント・ワークフロー
+  * ✅ `docs-linter` ジョブ: Markdown ドキュメントの表記揺れ検出 (Docs Linter)
+    * ✅ Git サブモジュールのチェックアウト
+    * ✅ Node.js 環境のセットアップ
+    * ✅ npm 依存関係のキャッシュ
+    * ✅ textlint によるドキュメント品質チェック (`README.md`、`docs/**/*.md`)
 * ✅ `scripts/test-local.sh` - ローカル・テスト実行スクリプト (統合版)
   * ✅ macOS/iPadOS 対応の汎用スクリプト
   * ✅ Swift Package テストの実行
@@ -554,17 +559,24 @@ let package = Package(
 
 #### 11.3.2. CI/CD
 * ✅ `.github/workflows/` ディレクトリを作成済み
-* ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー (Swift Package テスト、Xcode プロジェクトテスト、リリースビルド)
-  * ✅ 3つのジョブ構成: `test-swift-package`、`test-xcode-project`、`build-release`
-  * ✅ XcodeGen の自動インストールとプロジェクト生成
-  * ✅ コードカバレッジの Codecov へのアップロード (各ジョブで個別にアップロード)
+* ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー
+  * ✅ 2つのジョブ構成: `test-macos`、`build-release`
+  * ✅ Swift Package テスト (`swift test --enable-code-coverage`)
+  * ✅ コードカバレッジの Codecov へのアップロード (`macos` フラグ)
+  * ✅ リリースビルド (`swift build -c release`)
+  * ✅ ビルド成果物のアップロード (Artifacts)
+* ✅ `.github/workflows/docs-linter.yml` - ドキュメント・リント・ワークフロー
+  * ✅ `docs-linter` ジョブ: Markdown ドキュメントの表記揺れ検出 (Docs Linter)
+  * ✅ Git サブモジュールのチェックアウト
+  * ✅ Node.js 環境のセットアップ
+  * ✅ npm 依存関係のキャッシュ
+  * ✅ textlint によるドキュメント品質チェック (`README.md`、`docs/**/*.md`)
 * ✅ `scripts/test-local.sh` - ローカルテスト実行スクリプト (統合版)
   * ✅ コミット前にCI/CDと同じテストを実行して問題を早期発見
   * ✅ macOS/iPadOS 対応の汎用スクリプト
   * ✅ Package.swift からのデフォルト値自動検出
   * ✅ 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
   * ✅ 環境変数による柔軟なカスタマイズ
-* ❌ `.github/workflows/docs-linter.yml` - ドキュメント・リント・ワークフロー
 
 #### 11.3.3. その他
 * ❌ Cakebrew からの設定移行の機能
@@ -589,10 +601,10 @@ let package = Package(
 | CozyBrewApp Target | 98% | 基本の実装完了、リソース作成済み、About ウィンドウの Close ボタン動作実装済み、AppDelegate によるウィンドウ表示問題解決済み、S2JAboutWindow 未統合 |
 | テストコード | 70% | 基本テスト実装済み、カバレッジ向上が必要 |
 | ローカライズ | 0% | 未実装 |
-| CI/CD | 75% | Swift テスト・ワークフロー実装済み、ローカル・テストスクリプト追加済み、ドキュメント・リント・ワークフロー未実装 |
+| CI/CD | 100% | Swift テスト・ワークフロー実装済み、ドキュメント・リント・ワークフロー実装済み、ローカル・テストスクリプト追加済み |
 | Xcode プロジェクト | 100% | XcodeGen で生成済み、リソース作成済み |
 
-**全体実装の完了率**: **約80%**
+**全体実装の完了率**: **約82%**
 
 * コア機能 (Package、Core、Service) は、100% 完了
 * UI Components は実装済みだが、S2JSourceList の統合が未完了
@@ -601,9 +613,12 @@ let package = Package(
 * AppDelegate によるウィンドウ表示問題を解決済み (Xcode で Run ボタンをクリックしたときにウィンドウが表示される)
 * 依存関係の更新スクリプトを追加済み
 * テスト・カバレッジは基本実装のみ
-* CI/CD ワークフロー: Swift テスト・ワークフローを実装済み (`.github/workflows/swift-test.yml`)
-  * 3つのジョブ構成 (`test-swift-package`、`test-xcode-project`、`build-release`)
-  * コード・カバレッジの Codecov へのアップロード
+* CI/CD ワークフロー: 完全実装済み
+  * ✅ Swift テスト・ワークフロー (`.github/workflows/swift-test.yml`)
+    * 2つのジョブ構成 (`test-macos`、`build-release`)
+    * コード・カバレッジの Codecov へのアップロード (`macos` フラグ)
+  * ✅ ドキュメント・リント・ワークフロー (`.github/workflows/docs-linter.yml`)
+    * textlint によるドキュメント品質チェック
 * ローカル・テストスクリプト: `scripts/test-local.sh` を追加済み (macOS/iPadOS 対応の汎用スクリプト)
   * Package.swift からのデフォルト値自動検出機能を実装済み
   * 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
@@ -660,18 +675,23 @@ let package = Package(
 
 #### 12.1.3. CI/CD ワークフロー
 * ✅ `.github/workflows/swift-test.yml` の作成 (完了)
-  * ✅ `test-swift-package` ジョブ: Swift Package テスト (`swift test --enable-code-coverage`)
-  * ✅ `test-xcode-project` ジョブ: Xcode プロジェクトテスト (XcodeGen で生成後、`xcodebuild test`)
-  * ✅ `build-release` ジョブ: リリースビルド (`xcodebuild build`)
-  * ✅ コード・カバレッジの Codecov へのアップロード (各ジョブで個別にアップロード)
+  * ✅ `test-macos` ジョブ: Swift Package テスト (`swift test --enable-code-coverage`)
+  * ✅ `build-release` ジョブ: リリースビルド (`swift build -c release`)
+  * ✅ コード・カバレッジの Codecov へのアップロード (`macos` フラグ)
+  * ✅ ビルド成果物のアップロード (Artifacts)
+* ✅ `.github/workflows/docs-linter.yml` の作成 (完了)
+  * ✅ `docs-linter` ジョブ: Markdown ドキュメントの表記揺れ検出 (Docs Linter)
+  * ✅ Git サブモジュールのチェックアウト
+  * ✅ Node.js 環境のセットアップ
+  * ✅ npm 依存関係のキャッシュ
+  * ✅ textlint によるドキュメント品質チェック (`README.md`、`docs/**/*.md`)
 * ✅ `scripts/test-local.sh` の作成 (完了)
   * ✅ macOS/iPadOS 対応の汎用ローカルテストスクリプト
   * ✅ Swift Package テスト、Xcode プロジェクト生成とテスト、iOS/iPadOS テストを統合
   * ✅ Package.swift からのデフォルト値自動検出機能を実装
   * ✅ 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
   * ✅ 環境変数によるカスタマイズ対応
-* ❌ `.github/workflows/docs-linter.yml` の作成 (未実装)
-* ⚠️ テストカバレッジレポートの生成 (部分実装 - Codecov へのアップロードは実装済み)
+* ✅ テスト・カバレッジ・レポートの生成 (実装済み - Codecov へのアップロード)
 
 #### 12.1.4. テストカバレッジ向上
 * BrewManager の統合テスト
@@ -779,24 +799,23 @@ let package = Package(
 
 ### 5. CI ワークフロー補足
 
-**実装状況**: ⚠️ **部分実装** - Swift テスト・ワークフローは実装済み、ドキュメント・リント・ワークフローは未実装
+**実装状況**: ✅ **完全実装** - Swift テスト・ワークフローとドキュメント・リント・ワークフローが実装済み
 
 * 本プロジェクトでは、以下の GitHub Actions ワークフローを導入しています。
-    * ✅ `swift-test.yml`: Swift Package のユニットテストおよび Xcode プロジェクトテストの自動実行 (実装済み)
-      * **`test-swift-package` ジョブ**:
+    * ✅ `swift-test.yml`: Swift Package のユニットテストの自動実行 (実装済み)
+      * **`test-macos` ジョブ**:
         * Swift Package テスト (`swift test --enable-code-coverage`)
-        * コードカバレッジの Codecov へのアップロード (`swift-package` フラグ)
-      * **`test-xcode-project` ジョブ**:
-        * XcodeGen の自動インストール (`brew install xcodegen`)
-        * Xcode プロジェクト生成 (`xcodegen generate`)
-        * Xcode プロジェクトテスト (`xcodebuild test -scheme CozyBrewApp`)
-        * コードカバレッジの Codecov へのアップロード (`xcode-project` フラグ)
+        * コード・カバレッジの Codecov へのアップロード (`macos` フラグ)
       * **`build-release` ジョブ**:
-        * `test-swift-package` と `test-xcode-project` の成功後に実行
-        * Xcode プロジェクト生成
-        * リリースビルド (`xcodebuild build -configuration Release`)
+        * `test-macos` ジョブの成功後に実行
+        * リリース・ビルド (`swift build -c release`)
         * ビルド成果物のアップロード (Artifacts)
-    * ❌ `docs-linter.yml`: Markdown ドキュメントの表記揺れ検出 (Docs Linter) (未実装)
+    * ✅ `docs-linter.yml`: Markdown ドキュメントの表記揺れ検出 (Docs Linter) (実装済み)
+      * **`docs-linter` ジョブ**:
+        * Git サブモジュールのチェックアウト
+        * Node.js 環境のセットアップ
+        * npm 依存関係のキャッシュ
+        * textlint によるドキュメント品質チェック (`README.md`、`docs/**/*.md`)
 * **ローカルテストスクリプト**:
   * ✅ `scripts/test-local.sh`: コミット前にCI/CDと同じテストを実行して問題を早期発見
     * macOS/iPadOS 対応の汎用スクリプト
