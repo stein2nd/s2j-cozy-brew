@@ -1,0 +1,183 @@
+name: Docs Linter
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  docs-linter:
+    runs-on: ubuntu-latest
+    env:
+      # docs-linter のディレクトリパス
+      DOCS_LINTER_DIR: tools/docs-linter
+      # プロジェクトルート（GitHub Actions のワークスペース）
+      PROJECT_ROOT: ${{ github.workspace }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    # npm キャッシュの最適化 (実行速度が約3倍になる、パッケージ破損防止にも効果的)
+    - name: Cache npm dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.npm
+        key: ${{ runner.os }}-npm-${{ hashFiles('tools/docs-linter/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-npm-
+
+    - name: Install dependencies
+      run: |
+        cd "$DOCS_LINTER_DIR"
+        npm ci
+        npm run build
+        # 依存関係の確認
+        echo "=== Checking installed packages ==="
+        ls -la node_modules | head -20
+        echo "=== Checking textlint ==="
+        ./node_modules/.bin/textlint --version || echo "textlint not found"
+        echo "=== Checking textlint rules ==="
+        ls -d node_modules/textlint-rule-* 2>/dev/null | head -10 || echo "No textlint rules found"
+        echo "=== Checking preset packages ==="
+        ls -d node_modules/textlint-rule-preset-* 2>/dev/null || echo "No preset packages found"
+        echo "=== Checking swift-docs-ja preset ==="
+        ls -d node_modules/textlint-rule-preset-swift-docs-ja 2>/dev/null || echo "swift-docs-ja preset not found"
+        echo "=== Checking if rules can be resolved ==="
+        node -e "console.log(require.resolve('textlint-rule-preset-jtf-style'))" 2>&1 || echo "Cannot resolve preset-jtf-style"
+        echo "=== Checking NODE_PATH ==="
+        NODE_PATH=./node_modules node -e "console.log(require.resolve('textlint-rule-preset-jtf-style'))" 2>&1 || echo "Cannot resolve with NODE_PATH"
+
+    - name: Show textlint config
+      run: |
+        shopt -s globstar nullglob
+        # 対象ファイルを1つ選んで設定を確認（docs-linterディレクトリからの相対パス）
+        TARGET_FILE=""
+        if [ -f ../../README.md ]; then
+          TARGET_FILE="../../README.md"
+        elif [ -d ../../docs ]; then
+          # 最初に見つかったMarkdownファイルを使用
+          for file in ../../docs/**/*.md; do
+            if [ -f "$file" ]; then
+              TARGET_FILE="$file"
+              break
+            fi
+          done
+        fi
+        if [ -n "$TARGET_FILE" ]; then
+          echo "=== Debug extends resolving ==="
+          CONFIG_PATH="./presets/swift/.textlintrc.swift.json"
+          NODE_PATH=./node_modules npx textlint --print-config --config "$CONFIG_PATH" "$TARGET_FILE" 2>&1 | head -100 || true
+        fi
+      working-directory: ${{ env.DOCS_LINTER_DIR }}
+
+    - name: Run docs linter
+      run: |
+        shopt -s globstar nullglob
+
+        # 対象ファイルのパスを調整（docs-linter ディレクトリからの相対パス）
+        # docs-linterディレクトリは tools/docs-linter なので、プロジェクトルートへの相対パスは ../../
+        LINT_TARGETS=()
+        if [ -f ../../README.md ]; then
+          LINT_TARGETS+=("../../README.md")
+        fi
+        if [ -d ../../docs ]; then
+          for file in ../../docs/**/*.md; do
+            [ -f "$file" ] && LINT_TARGETS+=("$file")
+          done
+        fi
+
+        if [ ${#LINT_TARGETS[@]} -eq 0 ]; then
+          echo "No target files found"
+          exit 0
+        fi
+
+        echo "=== START textlint ==="
+        echo "Target files: ${LINT_TARGETS[*]}"
+
+        # 設定ファイルの存在確認
+        echo "=== Checking config file ==="
+        if [ -f ./presets/swift/.textlintrc.swift.json ]; then
+          echo "Config file exists: ./presets/swift/.textlintrc.swift.json"
+          cat ./presets/swift/.textlintrc.swift.json
+        else
+          echo "ERROR: Config file not found: ./presets/swift/.textlintrc.swift.json"
+          exit 1
+        fi
+
+        # ベース設定ファイルの存在確認
+        echo "=== Checking base config file ==="
+        if [ -f ./presets/base/.textlintrc.base.json ]; then
+          echo "Base config file exists: ./presets/base/.textlintrc.base.json"
+          echo "Base config content:"
+          cat ./presets/base/.textlintrc.base.json
+        else
+          echo "ERROR: Base config file not found: ./presets/base/.textlintrc.base.json"
+          exit 1
+        fi
+
+        # 現在のディレクトリとNODE_PATHの確認
+        echo "=== Current directory ==="
+        pwd
+        echo "=== NODE_PATH ==="
+        NODE_MODULES_PATH="$(pwd)/node_modules"
+        echo "NODE_PATH will be set to: $NODE_MODULES_PATH"
+        echo "=== Verifying node_modules exists ==="
+        ls -la "$NODE_MODULES_PATH" | head -5 || echo "node_modules not found"
+        echo "=== Verifying rule packages exist ==="
+        ls -d "$NODE_MODULES_PATH"/textlint-rule-preset-* 2>/dev/null | head -5 || echo "No preset packages found"
+        echo "=== Testing rule package resolution ==="
+        export NODE_PATH="$NODE_MODULES_PATH"
+        node -e "console.log(require.resolve('textlint-rule-preset-jtf-style'))" 2>&1 || echo "Cannot resolve preset-jtf-style"
+        echo "=== Verifying NODE_PATH is set ==="
+        echo "NODE_PATH=$NODE_PATH"
+
+        # textlintの設定解決を確認
+        echo "=== Testing textlint config resolution ==="
+        # NODE_PATHは絶対パスで指定する必要がある
+        CONFIG_PATH="./presets/swift/.textlintrc.swift.json"
+        export NODE_PATH="$NODE_MODULES_PATH"
+        # node_modules/.bin/textlintを直接実行することで、NODE_PATHが正しく機能する
+        TEXTLINT_BIN="./node_modules/.bin/textlint"
+        if [ ! -f "$TEXTLINT_BIN" ]; then
+          echo "ERROR: textlint binary not found at $TEXTLINT_BIN"
+          exit 1
+        fi
+
+        # textlintがルールを解決できるかテスト
+        echo "=== Testing rule resolution with NODE_PATH ==="
+        export NODE_PATH="$NODE_MODULES_PATH"
+        node -e "console.log('NODE_PATH:', process.env.NODE_PATH); console.log('Resolved preset-jtf-style:', require.resolve('textlint-rule-preset-jtf-style')); console.log('Resolved preset-ja-technical-writing:', require.resolve('textlint-rule-preset-ja-technical-writing'));" 2>&1 || echo "Rule resolution test failed"
+
+        # textlintの設定解決をテスト（--rules-base-directoryなしで）
+        echo "=== Testing textlint config resolution (without --rules-base-directory) ==="
+        export NODE_PATH="$NODE_MODULES_PATH"
+        "$TEXTLINT_BIN" --print-config --config "$CONFIG_PATH" "${LINT_TARGETS[0]}" 2>&1 | head -50 || echo "Config resolution test failed"
+
+        # extends は設定ファイル（swift/.textlintrc.swift.json）基準で解決されるため、
+        # 実行対象のMarkdownのパスは docs-linter/ からの相対パスにする必要がある
+        echo "=== Running textlint ==="
+        # NODE_PATHを環境変数として設定し、node_modules/.bin/textlintを直接実行することで、
+        # ルールパッケージが見つけられるようになる
+        # --rules-base-directoryオプションは使用せず、NODE_PATHのみでルールを解決する
+        export NODE_PATH="$NODE_MODULES_PATH"
+        echo "NODE_PATH: $NODE_PATH"
+        echo "Config file: $CONFIG_PATH"
+        echo "Target files: ${LINT_TARGETS[*]}"
+        "$TEXTLINT_BIN" --config "$CONFIG_PATH" "${LINT_TARGETS[@]}"
+      working-directory: ${{ env.DOCS_LINTER_DIR }}
+
+    - name: Log summary
+      if: always()
+      run: |
+        echo "=== textlint finished ==="
+        echo "Exit code: $?"
