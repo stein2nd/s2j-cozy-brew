@@ -146,35 +146,54 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 │└─ `SPEC.md`  # 本ドキュメント
 ├┬─ tools/
 │└─ docs-linter  # Git サブモジュール『Docs Linter』
+├┬─ scripts/
+│├─ test-local_macOS.sh
+│└─ test-local.sh
 ├┬─ CozyBrew.xcodeproj  # Xcode プロジェクト (XcodeGen で生成済み)
-│└─ Info.plist, Assets.xcassets, CozyBrewApp.entitlements  # アプリリソース (作成済み)
-├┬─ CozyBrewApp/  # アプリプロジェクト (SwiftUI App Target `CozyBrew.app`)
-│├─ CozyBrewApp.swift  # アプリエントリーポイント (Homebrew 未検出時のインストールフロー含む)
-│└─ ContentView.swift  # メインコンテンツビュー
-├┬─ Sources/  # Swift Package ソースコード
-│├┬─ CozyBrewCore/  # コアモジュール (brew バイナリ検出、プロセス実行、インストーラー)
+│├─ project.pbxproj
+│└┬─ project.xcworkspace/
+│　├─ contents.xcworkspacedata
+│　├── xcuserdata/
+│　└┬─ xcshareddata/
+│　　├─ WorkspaceSettings.xcsettings
+│　　├┬─ swiftpm/
+│　　│├─ Package.resolved
+│　　│└─ configuration/
+│　　└┬─ xcschemes/
+│　　　└─ CozyBrewApp.xcscheme
+├┬─ CozyBrewApp/  # アプリケーション・プロジェクト (SwiftUI App Target `CozyBrew.app`)
+│├─ CozyBrewApp.swift  # アプリケーション・エントリーポイント (Homebrew 未検出時のインストール・フロー含む)
+│├─ CozyBrewApp.entitlements  # アプリケーション・リソース (作成済み)
+│├─ ContentView.swift  # メイン・コンテンツ・ビュー
+│├─ Info.plist  # アプリケーション・リソース (作成済み)
+│└┬─ Assets.xcassets/  # アプリケーション・リソース (作成済み)
+│　├┬─ AppIcon.appiconset
+│　│└─ Contents.json
+│　└─ Contents.json
+├┬ Sources/  # Swift Package ソースコード
+│├┬─ CozyBrewCore/  # コア・モジュール (brew バイナリ検出、プロセス実行、インストーラー)
 ││├─ BrewBinaryLocator.swift  # brew バイナリ検出 (Apple Silicon/Intel 対応)
-││├─ BrewProcess.swift  # 非同期 brew コマンド実行ラッパー
 ││├─ BrewInstaller.swift  # Homebrew インストール補助
-││└─ BrewResult.swift  # 実行結果型定義
-│├┬─ CozyBrewService/  # サービスモジュール (モデル、ViewModel、キャッシュ)
-││├─ Models.swift  # Formula、Cask、Tap、Package モデル定義
+││├─ BrewProcess.swift  # 非同期 brew コマンド実行ラッパー
+││└─ BrewResult.swift  # 実行結果の型定義
+│├┬─ CozyBrewService/  # サービス・モジュール (モデル、ViewModel、キャッシュ)
+││├─ BrewCache.swift  # JSON キャッシュ機構 (TTL 対応)
 ││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理)
-││└─ BrewCache.swift  # JSON キャッシュ機構 (TTL 対応)
-│└┬─ CozyBrewUIComponents/  # UI コンポーネントモジュール
-│　├─ PackageRowView.swift  # パッケージ一覧の行表示
-│　├─ PackageDetailView.swift  # パッケージ詳細表示
-│　├─ InstallProgressView.swift  # インストール進捗表示
+││└─ Models.swift  # Formula、Cask、Tap、Package モデル定義
+│└┬─ CozyBrewUIComponents/  # UI コンポーネント・モジュール
+│　├─ MainWindowView.swift  # メイン・ウィンドウ (macOS 12.0/13.0 対応)
 │　├─ BrewAlertView.swift  # エラー表示
-│　├─ MainWindowView.swift  # メインウィンドウ (macOS 12.0/13.0 対応)
-│　└─ InstallFlowView.swift  # インストールフロー
+│　├─ InstallFlowView.swift  # インストール・フロー
+│　├─ InstallProgressView.swift  # インストール進捗表示
+│　├─ PackageDetailView.swift  # パッケージ詳細表示
+│　└─ PackageRowView.swift  # パッケージ一覧の行表示
 └┬─ Tests/  # テストコード
 　├┬─ CozyBrewCoreTests/
 　│├─ BrewBinaryLocatorTests.swift
 　│└─ BrewProcessTests.swift
 　└┬─ CozyBrewServiceTests/
-　　├─ ModelsTests.swift
-　　└─ BrewCacheTests.swift
+　　├─ BrewCacheTests.swift
+　　└─ ModelsTests.swift
 ```
 
 **依存パッケージ** (Package.swift で定義)
@@ -206,7 +225,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
     * brew の実行ユーザー権限、環境変数 (HOMEBREW_PREFIX) を把握します。
   * インストーラー (`BrewInstaller`):
     * brew 未導入時の公式インストール・スクリプトの実行補助を行います (ユーザー許諾確認、ログ表示、失敗時の対処説明を含みます)。
-    * 導入スクリプト実行ロジックを実装します (ユーザー承認の UI フローを前提とします)。
+    * 導入スクリプト実行ロジックを実装します (ユーザー承認の UI フローが前提)。
 
 * **API 設計 (例)**
 
@@ -476,15 +495,15 @@ let package = Package(
 * ✅ `InstallFlowView` - インストール・フロー (確認ダイアログ、進行状況、エラー処理)
 
 #### 11.1.5. CozyBrewApp Target
-* ✅ `CozyBrewApp.swift` - アプリエントリーポイント
+* ✅ `CozyBrewApp.swift` - アプリケーション・エントリーポイント
   * ✅ Homebrew 未検出時のインストールフロー実装
   * ✅ 自動インストールオプション (opt-in)
   * ✅ About ウィンドウ統合準備
   * ✅ About ウィンドウの Close ボタン動作実装 (`@Environment(\.dismiss)` を使用)
-  * ✅ `AppDelegate` クラスの実装 - macOS アプリのライフサイクル管理
-    * ✅ `applicationDidFinishLaunching` - アプリ起動時にウィンドウを前面に表示
+  * ✅ `AppDelegate` クラスの実装 - macOS アプリケーションのライフサイクル管理
+    * ✅ `applicationDidFinishLaunching` - アプリケーション起動時にウィンドウを前面に表示
     * ✅ `applicationShouldHandleReopen` - Dock アイコンクリック時にウィンドウを表示
-    * ✅ `@NSApplicationDelegateAdaptor` を使用して SwiftUI アプリに統合
+    * ✅ `@NSApplicationDelegateAdaptor` を使用して SwiftUI アプリケーションに統合
 * ✅ `ContentView.swift` - メインコンテンツビュー
   * ✅ ウィンドウ表示の改善 (`onAppear` でウィンドウを確実に前面に表示)
 * ✅ `CozyBrew.xcodeproj` - Xcode プロジェクトファイル (XcodeGen で生成)
@@ -800,8 +819,8 @@ let package = Package(
       # コマンドライン引数で直接指定する場合
       ./scripts/test-local.sh --scheme-name MyApp --ios-device "iPhone 15" --skip-ios
       ```
-* macOS Runner では `swift test --enable-code-coverage` を実行し、テストカバレッジを出力します。
-* 本プロジェクトは macOS 専用のため、iPadOS 互換性テストは対象外です。
+* macOS Runner では `swift test --enable-code-coverage` を実行し、テスト・カバレッジを出力します
+* 本プロジェクトは macOS 専用のため、iPadOS 互換性テストは対象外です
 
 ## Appendix B: 開発上の留意点 (短文まとめ)
 
