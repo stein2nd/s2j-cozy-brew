@@ -22,6 +22,12 @@ public struct InstalledVersion: Codable {
         self.installedOnRequest = installedOnRequest
         self.installedAsDependency = installedAsDependency
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case version
+        case installedOnRequest = "installed_on_request"
+        case installedAsDependency = "installed_as_dependency"
+    }
 }
 
 /// Formula（ソースからビルドするパッケージ）
@@ -78,6 +84,48 @@ public struct Formula: BrewPackage {
         self.disabled = disabled
         self.disableReason = disableReason
     }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case fullName = "full_name"
+        case desc
+        case homepage
+        case version
+        case installed
+        case dependencies
+        case buildDependencies = "build_dependencies"
+        case conflictsWith = "conflicts_with"
+        case pinned
+        case outdated
+        case deprecated
+        case deprecationReason = "deprecation_reason"
+        case disabled
+        case disableReason = "disable_reason"
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // `id` は API から返らないため `name` で代用する
+        self.id = try container.decodeIfPresent(String.self, forKey: .id)
+            ?? container.decode(String.self, forKey: .name)
+        self.name = try container.decode(String.self, forKey: .name)
+        self.fullName = try container.decodeIfPresent(String.self, forKey: .fullName) ?? name
+        self.desc = try container.decodeIfPresent(String.self, forKey: .desc)
+        self.homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
+        self.version = try container.decodeIfPresent(String.self, forKey: .version)
+        self.installed = try container.decodeIfPresent([InstalledVersion].self, forKey: .installed)
+        self.dependencies = try container.decodeIfPresent([String].self, forKey: .dependencies)
+        self.buildDependencies = try container.decodeIfPresent([String].self, forKey: .buildDependencies)
+        self.conflictsWith = try container.decodeIfPresent([String].self, forKey: .conflictsWith)
+        self.pinned = try container.decodeIfPresent(Bool.self, forKey: .pinned)
+        self.outdated = try container.decodeIfPresent(Bool.self, forKey: .outdated)
+        self.deprecated = try container.decodeIfPresent(Bool.self, forKey: .deprecated)
+        self.deprecationReason = try container.decodeIfPresent(String.self, forKey: .deprecationReason)
+        self.disabled = try container.decodeIfPresent(Bool.self, forKey: .disabled)
+        self.disableReason = try container.decodeIfPresent(String.self, forKey: .disableReason)
+    }
 }
 
 /// Cask（バイナリ配布パッケージ）
@@ -130,6 +178,53 @@ public struct Cask: BrewPackage {
         self.disableReason = disableReason
         self.appcast = appcast
         self.url = url
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case fullName = "full_name"
+        case desc
+        case homepage
+        case version
+        case installed
+        case token
+        case outdated
+        case deprecated
+        case deprecationReason = "deprecation_reason"
+        case disabled
+        case disableReason = "disable_reason"
+        case appcast
+        case url
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+
+        // `id` は存在しないため token を優先、無ければ name の先頭を使用する
+        let decodedToken = try container.decodeIfPresent(String.self, forKey: .token)
+        let decodedNameArray = try container.decodeIfPresent([String].self, forKey: .name)
+        let decodedName = try container.decodeIfPresent(String.self, forKey: .name)
+            ?? decodedNameArray?.first
+            ?? ""
+
+        self.id = try container.decodeIfPresent(String.self, forKey: .id)
+            ?? decodedToken
+            ?? decodedName
+        self.token = decodedToken ?? decodedName
+        self.name = decodedName
+        self.fullName = try container.decodeIfPresent(String.self, forKey: .fullName) ?? decodedName
+        self.desc = try container.decodeIfPresent(String.self, forKey: .desc)
+        self.homepage = try container.decodeIfPresent(String.self, forKey: .homepage)
+        self.version = try container.decodeIfPresent(String.self, forKey: .version)
+        self.installed = try container.decodeIfPresent([InstalledVersion].self, forKey: .installed)
+        self.outdated = try container.decodeIfPresent(Bool.self, forKey: .outdated)
+        self.deprecated = try container.decodeIfPresent(Bool.self, forKey: .deprecated)
+        self.deprecationReason = try container.decodeIfPresent(String.self, forKey: .deprecationReason)
+        self.disabled = try container.decodeIfPresent(Bool.self, forKey: .disabled)
+        self.disableReason = try container.decodeIfPresent(String.self, forKey: .disableReason)
+        self.appcast = try container.decodeIfPresent(String.self, forKey: .appcast)
+        self.url = try container.decodeIfPresent(String.self, forKey: .url)
     }
 }
 
