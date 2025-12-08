@@ -108,13 +108,13 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
   * 依存関係を最新の状態に更新するには、以下の方法があります:
 
     * **方法1: npm スクリプトを使用 (推奨)**
-      ```bash
+      ```zsh
       npm run swift:update
       ```
       * `package.json` に定義されたスクリプトを使用して、すべての依存関係を最新の `main` ブランチに更新します。
 
     * **方法2: Swift Package Manager を直接使用**
-      ```bash
+      ```zsh
       swift package update
       ```
       * Swift Package Manager のコマンドを直接実行して依存関係を更新します。
@@ -123,7 +123,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
       * Xcode でプロジェクトを開き、`File → Packages → Update to Latest Package Versions` を選択します。
 
     * **依存関係の状態確認**
-      ```bash
+      ```zsh
       npm run swift:show-deps
       ```
       * 現在の依存関係ツリーを表示します。
@@ -257,7 +257,7 @@ struct BrewCommand {
     * インストール、アンインストール、アップデートの実行と進行管理を実装します。
 
 * **失敗ハンドリング**
-  * ユーザー向けメッセージ翻訳レイヤを挟みます (dev message -> friendly message)。
+  * ユーザー向けメッセージ翻訳レイヤを挟みます (dev message → friendly message)。
   * 詳細ログは UI から "Show log" で閲覧可能です。
 
 ### 4.3.5. BrewUIComponents (s2j-cozy-brew / CozyBrewUIComponents)
@@ -311,7 +311,7 @@ struct CozyBrewApp: App {
 ### 4.3.7. パッケージ記述例 (Package.swift 抜粋)
 
 ```swift
-// swift-tools-version:5.7
+// swift-tools-version:5.9
 import PackageDescription
 
 let package = Package(
@@ -408,7 +408,7 @@ let package = Package(
   * `vMAJOR.MINOR.PATCH`
 * **GitHub Actions**:
   * ワークフロー (macOS runner) で `swift build` / `swift test` を実行します。
-  * Pull Request に対して SwiftLint とビルド確認を実行します。
+  * Pull Request に対して「SwiftLint」と「ビルド確認」を実行します。
 * **Release**:
   * Xcode の Archive を利用したビルド `xcodebuild` (Universal Binary 推奨) を実行します。
   * Notarize / Notarization ステップは手順化します (可能なら自動化スクリプトを提供します)。
@@ -445,6 +445,7 @@ let package = Package(
 
 #### 11.1.1. Swift Package 基盤
 * ✅ `Package.swift` - Swift Package 定義 (CozyBrewCore、CozyBrewService、CozyBrewUIComponents)
+  * ✅ `swift-tools-version: 5.9` に更新済み
 * ✅ 依存関係の管理 (s2j-source-list、s2j-about-window)
 * ✅ 依存関係の更新スクリプト (`package.json` に `swift:update`、`swift:resolve`、`swift:show-deps` を追加)
 * ✅ ビルド成功確認
@@ -480,7 +481,12 @@ let package = Package(
   * ✅ 自動インストールオプション (opt-in)
   * ✅ About ウィンドウ統合準備
   * ✅ About ウィンドウの Close ボタン動作実装 (`@Environment(\.dismiss)` を使用)
+  * ✅ `AppDelegate` クラスの実装 - macOS アプリのライフサイクル管理
+    * ✅ `applicationDidFinishLaunching` - アプリ起動時にウィンドウを前面に表示
+    * ✅ `applicationShouldHandleReopen` - Dock アイコンクリック時にウィンドウを表示
+    * ✅ `@NSApplicationDelegateAdaptor` を使用して SwiftUI アプリに統合
 * ✅ `ContentView.swift` - メインコンテンツビュー
+  * ✅ ウィンドウ表示の改善 (`onAppear` でウィンドウを確実に前面に表示)
 * ✅ `CozyBrew.xcodeproj` - Xcode プロジェクトファイル (XcodeGen で生成)
 * ✅ `Info.plist` - アプリケーション情報設定
 * ✅ `Assets.xcassets` - アセットカタログ (アイコン、画像)
@@ -492,10 +498,20 @@ let package = Package(
 
 #### 11.1.7. CI/CD ワークフロー
 * ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー
-  * ✅ Swift Package テスト (`swift test --enable-code-coverage`)
-  * ✅ Xcode プロジェクトテスト (XcodeGen で生成後、`xcodebuild test`)
-  * ✅ リリースビルド
-  * ✅ コードカバレッジの Codecov へのアップロード
+  * ✅ `test-swift-package` ジョブ: Swift Package テスト (`swift test --enable-code-coverage`)
+  * ✅ `test-xcode-project` ジョブ: Xcode プロジェクトテスト (XcodeGen で生成後、`xcodebuild test`)
+    * ✅ XcodeGen の自動インストール (`brew install xcodegen`)
+    * ✅ スキーム `CozyBrewApp` でのテスト実行
+  * ✅ `build-release` ジョブ: リリースビルド (`xcodebuild build`)
+  * ✅ コードカバレッジの Codecov へのアップロード (各ジョブで個別にアップロード)
+* ✅ `scripts/test-local.sh` - ローカル・テスト実行スクリプト (統合版)
+  * ✅ macOS/iPadOS 対応の汎用スクリプト
+  * ✅ Swift Package テストの実行
+  * ✅ Xcode プロジェクト生成とテスト (`project.yml` が存在する場合に自動有効化)
+  * ✅ iOS/iPadOS シミュレーターでのテスト (オプション)
+  * ✅ 環境変数によるカスタマイズ対応 (`SCHEME_NAME`、`ENABLE_XCODE_PROJECT`、`XCODEGEN_AUTO_INSTALL` など)
+  * ✅ Package.swift からのデフォルト値自動検出
+  * ✅ 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
 
 ### 11.2. ほとんど実装済み機能 (85-95% 完了)
 
@@ -520,6 +536,15 @@ let package = Package(
 #### 11.3.2. CI/CD
 * ✅ `.github/workflows/` ディレクトリを作成済み
 * ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー (Swift Package テスト、Xcode プロジェクトテスト、リリースビルド)
+  * ✅ 3つのジョブ構成: `test-swift-package`、`test-xcode-project`、`build-release`
+  * ✅ XcodeGen の自動インストールとプロジェクト生成
+  * ✅ コードカバレッジの Codecov へのアップロード (各ジョブで個別にアップロード)
+* ✅ `scripts/test-local.sh` - ローカルテスト実行スクリプト (統合版)
+  * ✅ コミット前にCI/CDと同じテストを実行して問題を早期発見
+  * ✅ macOS/iPadOS 対応の汎用スクリプト
+  * ✅ Package.swift からのデフォルト値自動検出
+  * ✅ 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
+  * ✅ 環境変数による柔軟なカスタマイズ
 * ❌ `.github/workflows/docs-linter.yml` - ドキュメント・リント・ワークフロー
 
 #### 11.3.3. その他
@@ -542,21 +567,27 @@ let package = Package(
 | CozyBrewCore | 100% | 全機能を実装済み |
 | CozyBrewService | 100% | 全機能を実装済み |
 | CozyBrewUIComponents | 90% | 全 UI コンポーネント実装済み、S2JSourceList 未統合 |
-| CozyBrewApp Target | 95% | 基本の実装完了、リソース作成済み、About ウィンドウの Close ボタン動作実装済み、S2JAboutWindow 未統合 |
+| CozyBrewApp Target | 98% | 基本の実装完了、リソース作成済み、About ウィンドウの Close ボタン動作実装済み、AppDelegate によるウィンドウ表示問題解決済み、S2JAboutWindow 未統合 |
 | テストコード | 70% | 基本テスト実装済み、カバレッジ向上が必要 |
 | ローカライズ | 0% | 未実装 |
-| CI/CD | 50% | Swift テスト・ワークフロー実装済み、ドキュメント・リント・ワークフロー未実装 |
+| CI/CD | 75% | Swift テスト・ワークフロー実装済み、ローカル・テストスクリプト追加済み、ドキュメント・リント・ワークフロー未実装 |
 | Xcode プロジェクト | 100% | XcodeGen で生成済み、リソース作成済み |
 
-**全体実装の完了率**: **約78%**
+**全体実装の完了率**: **約80%**
 
 * コア機能 (Package、Core、Service) は、100% 完了
 * UI Components は実装済みだが、S2JSourceList の統合が未完了
 * アプリケーション・リソース (Xcode プロジェクト、Info.plist、Assets、entitlements) は作成済み
 * About ウィンドウの Close ボタン動作は実装済み
+* AppDelegate によるウィンドウ表示問題を解決済み (Xcode で Run ボタンをクリックしたときにウィンドウが表示される)
 * 依存関係の更新スクリプトを追加済み
 * テスト・カバレッジは基本実装のみ
 * CI/CD ワークフロー: Swift テスト・ワークフローを実装済み (`.github/workflows/swift-test.yml`)
+  * 3つのジョブ構成 (`test-swift-package`、`test-xcode-project`、`build-release`)
+  * コード・カバレッジの Codecov へのアップロード
+* ローカル・テストスクリプト: `scripts/test-local.sh` を追加済み (macOS/iPadOS 対応の汎用スクリプト)
+  * Package.swift からのデフォルト値自動検出機能を実装済み
+  * 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
 * ローカライズは未実装
 
 ### 11.5. 品質評価
@@ -610,10 +641,16 @@ let package = Package(
 
 #### 12.1.3. CI/CD ワークフロー
 * ✅ `.github/workflows/swift-test.yml` の作成 (完了)
-  * Swift Package テスト
-  * Xcode プロジェクトテスト (XcodeGen で生成)
-  * リリースビルド
-  * コードカバレッジのアップロード (Codecov)
+  * ✅ `test-swift-package` ジョブ: Swift Package テスト (`swift test --enable-code-coverage`)
+  * ✅ `test-xcode-project` ジョブ: Xcode プロジェクトテスト (XcodeGen で生成後、`xcodebuild test`)
+  * ✅ `build-release` ジョブ: リリースビルド (`xcodebuild build`)
+  * ✅ コード・カバレッジの Codecov へのアップロード (各ジョブで個別にアップロード)
+* ✅ `scripts/test-local.sh` の作成 (完了)
+  * ✅ macOS/iPadOS 対応の汎用ローカルテストスクリプト
+  * ✅ Swift Package テスト、Xcode プロジェクト生成とテスト、iOS/iPadOS テストを統合
+  * ✅ Package.swift からのデフォルト値自動検出機能を実装
+  * ✅ 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
+  * ✅ 環境変数によるカスタマイズ対応
 * ❌ `.github/workflows/docs-linter.yml` の作成 (未実装)
 * ⚠️ テストカバレッジレポートの生成 (部分実装 - Codecov へのアップロードは実装済み)
 
@@ -719,7 +756,7 @@ let package = Package(
 | プラットフォーム | 実行確認ターゲット | 理由 |
 |---|---|---|
 | macOS | macOS v13 (Ventura) 以降 | `List` / `OutlineGroup` の動作確認 |
-| iPadOS | iPadOS v16以降 (iPad Pro シミュレータ) | `List` の UI 挙動確認 |
+| iPadOS | iPadOS v16以降 (iPad Pro シミュレーター) | `List` の UI 挙動確認 |
 
 ### 5. CI ワークフロー補足
 
@@ -727,11 +764,42 @@ let package = Package(
 
 * 本プロジェクトでは、以下の GitHub Actions ワークフローを導入しています。
     * ✅ `swift-test.yml`: Swift Package のユニットテストおよび Xcode プロジェクトテストの自動実行 (実装済み)
-      * Swift Package テスト (`swift test --enable-code-coverage`)
-      * Xcode プロジェクトテスト (XcodeGen で生成後、`xcodebuild test`)
-      * リリースビルド
-      * コードカバレッジの Codecov へのアップロード
+      * **`test-swift-package` ジョブ**:
+        * Swift Package テスト (`swift test --enable-code-coverage`)
+        * コードカバレッジの Codecov へのアップロード (`swift-package` フラグ)
+      * **`test-xcode-project` ジョブ**:
+        * XcodeGen の自動インストール (`brew install xcodegen`)
+        * Xcode プロジェクト生成 (`xcodegen generate`)
+        * Xcode プロジェクトテスト (`xcodebuild test -scheme CozyBrewApp`)
+        * コードカバレッジの Codecov へのアップロード (`xcode-project` フラグ)
+      * **`build-release` ジョブ**:
+        * `test-swift-package` と `test-xcode-project` の成功後に実行
+        * Xcode プロジェクト生成
+        * リリースビルド (`xcodebuild build -configuration Release`)
+        * ビルド成果物のアップロード (Artifacts)
     * ❌ `docs-linter.yml`: Markdown ドキュメントの表記揺れ検出 (Docs Linter) (未実装)
+* **ローカルテストスクリプト**:
+  * ✅ `scripts/test-local.sh`: コミット前にCI/CDと同じテストを実行して問題を早期発見
+    * macOS/iPadOS 対応の汎用スクリプト
+    * Swift Package テスト、Xcode プロジェクト生成とテスト、iOS/iPadOS テストを統合
+    * Package.swift からのデフォルト値自動検出機能を実装
+    * 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
+    * 環境変数によるカスタマイズ対応 (`SCHEME_NAME`、`ENABLE_XCODE_PROJECT`、`XCODEGEN_AUTO_INSTALL` など)
+    * **利用例**:
+      ```zsh
+      # 基本的な使用方法 (Package.swift から自動検出)
+      ./scripts/test-local.sh
+
+      # npm スクリプトから引数を渡す場合
+      npm run test:local -- --skip-ios
+      npm run test:local -- --scheme-name MyApp --ios-device "iPhone 15"
+
+      # 環境変数でカスタマイズする場合
+      SCHEME_NAME=MyApp IOS_DEVICE="iPhone 15" ./scripts/test-local.sh
+
+      # コマンドライン引数で直接指定する場合
+      ./scripts/test-local.sh --scheme-name MyApp --ios-device "iPhone 15" --skip-ios
+      ```
 * macOS Runner では `swift test --enable-code-coverage` を実行し、テストカバレッジを出力します。
 * 本プロジェクトは macOS 専用のため、iPadOS 互換性テストは対象外です。
 

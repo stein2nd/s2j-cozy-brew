@@ -341,6 +341,25 @@ Swift Package の依存関係を更新するには:
 npm run swift:update
 ```
 
+ローカルで CI/CD と同じテストを実行するには:
+
+```zsh
+# 基本的な使用方法 (Package.swift から自動検出)
+./scripts/test-local.sh
+
+# npm スクリプトから引数を渡す場合
+npm run test:local -- --skip-ios
+npm run test:local -- --scheme-name MyApp --ios-device "iPhone 15"
+
+# 環境変数でカスタマイズする場合
+SCHEME_NAME=MyApp IOS_DEVICE="iPhone 15" ./scripts/test-local.sh
+
+# コマンドライン引数で直接指定する場合
+./scripts/test-local.sh --scheme-name MyApp --ios-device "iPhone 15" --skip-ios
+```
+
+**優先順位**: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
+
 ## Contributing
 
 <!-- 
