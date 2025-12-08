@@ -1,18 +1,48 @@
 import SwiftUI
+import AppKit
 import CozyBrewService
 import CozyBrewUIComponents
 import CozyBrewCore
 import S2JAboutWindow
 
+class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // アプリ起動時にウィンドウを前面に表示
+        NSApplication.shared.setActivationPolicy(.regular)
+        NSApplication.shared.activate(ignoringOtherApps: true)
+        
+        // 少し遅延させてウィンドウを確実に前面に表示
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let window = NSApplication.shared.windows.first {
+                window.makeKeyAndOrderFront(nil)
+                window.orderFrontRegardless()
+            }
+        }
+    }
+
+    func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
+        // Dockアイコンをクリックしたときにウィンドウを表示
+        if !flag {
+            for window in sender.windows {
+                window.makeKeyAndOrderFront(nil)
+            }
+        }
+        return true
+    }
+}
+
 @main
 struct CozyBrewApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var manager = BrewManager()
     @State private var showAboutWindow = false
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView(manager: manager, showAboutWindow: $showAboutWindow)
+                .frame(minWidth: 800, minHeight: 600)
         }
+        .windowStyle(.automatic)
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button("About CozyBrew") {
@@ -109,7 +139,7 @@ struct BrewNotAvailableView: View {
             if result.isSuccess {
                 // インストール成功 - 再検出して再初期化
                 // 注: 実際のアプリでは再起動を推奨する場合がある
-                if let located = BrewBinaryLocator.locate() {
+                if BrewBinaryLocator.locate() != nil {
                     // Manager を再初期化（実際の実装では再起動が必要な場合がある）
                     // ここでは簡易的に再検出のみ行う
                     await manager.refreshInstalledPackages()
