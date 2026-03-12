@@ -1,5 +1,7 @@
 # S2J CozyBrew — ポーティング個別仕様書 (Swift Package + App Target 方針)
 
+> **仕様の細分化**: 本ドキュメントは包括版です。AI 伴走・メンテの観点では、[specs.md](specs.md) を起点に各 spec を参照する構成を推奨します。
+
 ## はじめに
 
 * 本ドキュメントでは、Swift アプリケーション「S2J CozyBrew」の専用仕様を定義します。
