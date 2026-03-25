@@ -1,3 +1,4 @@
 [submodule "tools/docs-linter"]
 	path = tools/docs-linter
 	url = https://github.com/stein2nd/docs-linter.git
+	branch = main
