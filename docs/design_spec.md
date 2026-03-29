@@ -31,7 +31,7 @@
 ## 4. フォント
 
 * UI: Apple の San Francisco を優先
-* ブランディング用ロゴ: 丸みフォント（例: SF Rounded 系、Nunito）
+* ブランディング用ロゴ: 丸みフォント (例: SF Rounded 系、Nunito)
 
 ---
 
