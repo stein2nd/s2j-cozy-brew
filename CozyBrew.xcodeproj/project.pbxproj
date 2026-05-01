@@ -113,7 +113,7 @@
 			);
 			mainGroup = AA00000B0000000000000001;
 			packageReferences = (
-				B4D90D222EC6E659007D71BE /* XCLocalSwiftPackageReference "../s2j-cozy-brew" */,
+				B4D90D222EC6E659007D71BE /* XCLocalSwiftPackageReference "." */,
 			);
 			productRefGroup = AA00000D0000000000000001 /* Products */;
 			projectDirPath = "";
@@ -362,23 +362,26 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		B4D90D222EC6E659007D71BE /* XCLocalSwiftPackageReference "../s2j-cozy-brew" */ = {
+		B4D90D222EC6E659007D71BE /* XCLocalSwiftPackageReference "." */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "../s2j-cozy-brew";
+			relativePath = ".";
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		B4D90D232EC6E659007D71BE /* CozyBrewCore */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = B4D90D222EC6E659007D71BE /* XCLocalSwiftPackageReference "." */;
 			productName = CozyBrewCore;
 		};
 		B4D90D252EC6E659007D71BE /* CozyBrewService */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = B4D90D222EC6E659007D71BE /* XCLocalSwiftPackageReference "." */;
 			productName = CozyBrewService;
 		};
 		B4D90D272EC6E659007D71BE /* CozyBrewUIComponents */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = B4D90D222EC6E659007D71BE /* XCLocalSwiftPackageReference "." */;
 			productName = CozyBrewUIComponents;
 		};
 /* End XCSwiftPackageProductDependency section */
