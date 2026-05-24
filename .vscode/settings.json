@@ -1,6 +1,6 @@
 {
-  "npm.exclude": ["**/tools/docs-linter"],
-  "textlint.configPath": "./tools/docs-linter/swift/.textlintrc.swift.json",
+  "npm.enableScriptExplorer": true,
+  "textlint.configPath": "./.textlintrc.json",
   "textlint.nodePath": "./node_modules",
   "textlint.enable": true,
   "textlint.autoFixOnSave": true,

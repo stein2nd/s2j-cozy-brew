@@ -1,0 +1,29 @@
+{
+    "extends": [
+      "./node_modules/@s2j/docs-linter/presets/swift/.textlintrc.swift.json"
+    ],
+    "filters": {
+      "allowlist": {
+        "allow": [
+          "/\\s>\\s/",
+          "/エントリー/",
+          "/エントリ/",
+          "/(?<!プ)レイヤー/",
+          "/(?<!プレ)レイヤ(?!ー)/",
+          "/ローダー/",
+          "/スクロール/",
+          "/ロールバック/",
+          "/@wordpress\\/[a-zA-Z0-9@._/-]*/i",
+          "/[.。]\\s*「/u"
+        ]
+      }
+    },
+    "rules": {
+      "prh": {
+        "rulePaths": [
+          "./node_modules/textlint-rule-preset-swift-docs-ja/prh-rules/swift.yml"
+        ],
+        "severity": "warning"
+      }
+    }
+}

@@ -5,7 +5,7 @@
 
 ## 1. モジュール分割 (推奨)
 
-* **CozyBrewApp (App target)**
+* **CozyBrewApp (App Target)**
 
   * 目的:
     * アプリケーション固有のリソース (Assets、Info.plist、App Sandbox/entitlements、メニュー定義、配布設定) を管理します。
