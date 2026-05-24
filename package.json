@@ -20,8 +20,7 @@
   "files": [
     "README.md",
     "COMMON_SPEC.md",
-    "LICENSE",
-    "tools/"
+    "LICENSE"
   ],
   "scripts": {
     "lint:docs": "s2j-docs-linter ./README.md ./docs/**/*.md",
