@@ -32,6 +32,6 @@
     "test:local:iOSfull": "./scripts/test-local.sh --ios-device \"iPad Pro\" --ios-version \"15.0\" --enable-xcode-project --xcodegen-auto-install"
   },
   "devDependencies": {
-    "@s2j/docs-linter": "^1.0.11"
+    "@s2j/docs-linter": "^1.0.15"
   }
 }

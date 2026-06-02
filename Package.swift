@@ -3,7 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "s2j-cozy-brew",
-    platforms: [.macOS(.v12)],
+    platforms: [.macOS(.v14)],
     products: [
         .library(name: "CozyBrewCore", targets: ["CozyBrewCore"]),
         .library(name: "CozyBrewService", targets: ["CozyBrewService"]),
