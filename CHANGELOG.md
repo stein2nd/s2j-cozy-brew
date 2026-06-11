@@ -2,6 +2,12 @@
 
 ## unreleased
 
+## 1.0.2 - 2026-06-11
+
+* `project.yml` に `projectFormat: xcode16_3` を追加し、`CozyBrew.xcodeproj` を Xcode v26.3形式（`objectVersion` 90）に更新
+* バージョンを v1.0.2に更新（`package.json`、`project.yml`、About 画面を含む）
+* `README.md` の macOS バッジを v14.0+に修正
+
 ## 1.0.1 - 2026-06-11
 
 * Swift v6.3.x および Xcode v26.x に対応

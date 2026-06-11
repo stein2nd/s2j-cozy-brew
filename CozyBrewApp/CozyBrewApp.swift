@@ -173,7 +173,7 @@ struct AboutWindowView: View {
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
             
-            Text("Version 1.0.1")
+            Text("Version 1.0.2")
                 .font(.caption)
                 .foregroundColor(.secondary)
             

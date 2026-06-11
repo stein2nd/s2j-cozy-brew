@@ -1,6 +1,6 @@
 {
   "name": "s2j-cozy-brew",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Using SwiftUI, reimplement the AppKit-based \"Cakebrew\".",
   "type": "module",
   "author": "Koutarou ISHIKAWA",
@@ -23,7 +23,7 @@
     "LICENSE"
   ],
   "scripts": {
-    "lint:docs": "s2j-docs-linter ./README.md ./docs/**/*.md",
+    "lint:docs": "s2j-docs-linter ./README.md ./CHANGELOG.md ./docs/**/*.md",
     "swift:update": "swift package update",
     "swift:resolve": "swift package resolve",
     "swift:show-deps": "swift package show-dependencies",
