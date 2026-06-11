@@ -1,7 +1,7 @@
 import Foundation
 
 /// brew コマンドを非同期で実行するプロセスラッパー
-public final class BrewProcess {
+public final class BrewProcess: Sendable {
     private let brewPath: String
     private let environment: [String: String]?
     

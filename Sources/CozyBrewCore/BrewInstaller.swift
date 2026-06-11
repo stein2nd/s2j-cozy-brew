@@ -8,9 +8,8 @@ public final class BrewInstaller {
     /// インストールスクリプトを実行する
     /// - Parameter outputHandler: リアルタイム出力ハンドラ（オプション）
     /// - Returns: インストール結果
-    public static func install(outputHandler: ((String) -> Void)? = nil) async throws -> BrewResult {
-        var outputData = Data()
-        var errorData = Data()
+    public static func install(outputHandler: (@Sendable (String) -> Void)? = nil) async throws -> BrewResult {
+        let collector = InstallStreamCollector(handler: outputHandler)
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/bin/bash")
         process.arguments = ["-c", "curl -fsSL \(installScriptURL) | bash"]
@@ -27,58 +26,36 @@ public final class BrewInstaller {
         process.standardError = errPipe
         
         // リアルタイム出力の監視（オプション）- プロセス実行前に設定
-        if let handler = outputHandler {
+        if outputHandler != nil {
             let outHandle = outPipe.fileHandleForReading
             let errHandle = errPipe.fileHandleForReading
             
-            // 非同期で出力を監視
-            let outTask = Task {
-                outHandle.waitForDataInBackgroundAndNotify()
-                NotificationCenter.default.addObserver(
-                    forName: .NSFileHandleDataAvailable,
-                    object: outHandle,
-                    queue: nil
-                ) { _ in
-                    let data = outHandle.availableData
-                    if !data.isEmpty {
-                        outputData.append(data)
-                        if let line = String(data: data, encoding: .utf8) {
-                            handler(line)
-                        }
-                        outHandle.waitForDataInBackgroundAndNotify()
-                    }
+            outHandle.readabilityHandler = { handle in
+                let data = handle.availableData
+                if data.isEmpty {
+                    handle.readabilityHandler = nil
+                } else {
+                    collector.appendStdout(data)
                 }
             }
             
-            let errTask = Task {
-                errHandle.waitForDataInBackgroundAndNotify()
-                NotificationCenter.default.addObserver(
-                    forName: .NSFileHandleDataAvailable,
-                    object: errHandle,
-                    queue: nil
-                ) { _ in
-                    let data = errHandle.availableData
-                    if !data.isEmpty {
-                        errorData.append(data)
-                        if let line = String(data: data, encoding: .utf8) {
-                            handler(line)
-                        }
-                        errHandle.waitForDataInBackgroundAndNotify()
-                    }
+            errHandle.readabilityHandler = { handle in
+                let data = handle.availableData
+                if data.isEmpty {
+                    handle.readabilityHandler = nil
+                } else {
+                    collector.appendStderr(data)
                 }
             }
-            
-            // プロセス実行
-            try process.run()
-            process.waitUntilExit()
-            
-            // タスクをキャンセル
-            outTask.cancel()
-            errTask.cancel()
-        } else {
-            // プロセス実行
-            try process.run()
-            process.waitUntilExit()
+        }
+        
+        // プロセス実行
+        try process.run()
+        process.waitUntilExit()
+        
+        if outputHandler != nil {
+            outPipe.fileHandleForReading.readabilityHandler = nil
+            errPipe.fileHandleForReading.readabilityHandler = nil
         }
         
         // 出力の読み取り
@@ -86,9 +63,9 @@ public final class BrewInstaller {
         let errData: Data
         
         if outputHandler != nil {
-            // リアルタイム出力を使用した場合は、既に収集したデータを使用
-            outData = outputData.isEmpty ? outPipe.fileHandleForReading.readDataToEndOfFile() : outputData
-            errData = errorData.isEmpty ? errPipe.fileHandleForReading.readDataToEndOfFile() : errorData
+            let (collectedOut, collectedErr) = collector.snapshot()
+            outData = collectedOut.isEmpty ? outPipe.fileHandleForReading.readDataToEndOfFile() : collectedOut
+            errData = collectedErr.isEmpty ? errPipe.fileHandleForReading.readDataToEndOfFile() : collectedErr
         } else {
             outData = outPipe.fileHandleForReading.readDataToEndOfFile()
             errData = errPipe.fileHandleForReading.readDataToEndOfFile()
@@ -117,6 +94,44 @@ public final class BrewInstaller {
         }
         
         return script
+    }
+}
+
+/// インストール時の標準出力・標準エラーをスレッドセーフに収集する
+private final class InstallStreamCollector: @unchecked Sendable {
+    private let lock = NSLock()
+    private var outputData = Data()
+    private var errorData = Data()
+    private let handler: (@Sendable (String) -> Void)?
+    
+    init(handler: (@Sendable (String) -> Void)?) {
+        self.handler = handler
+    }
+    
+    func appendStdout(_ data: Data) {
+        guard !data.isEmpty else { return }
+        lock.lock()
+        outputData.append(data)
+        lock.unlock()
+        if let handler, let line = String(data: data, encoding: .utf8) {
+            handler(line)
+        }
+    }
+    
+    func appendStderr(_ data: Data) {
+        guard !data.isEmpty else { return }
+        lock.lock()
+        errorData.append(data)
+        lock.unlock()
+        if let handler, let line = String(data: data, encoding: .utf8) {
+            handler(line)
+        }
+    }
+    
+    func snapshot() -> (Data, Data) {
+        lock.lock()
+        defer { lock.unlock() }
+        return (outputData, errorData)
     }
 }
 

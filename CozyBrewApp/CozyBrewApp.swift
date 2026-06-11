@@ -132,8 +132,10 @@ struct BrewNotAvailableView: View {
         installLog = ""
         
         do {
-            let result = try await BrewInstaller.install { logLine in
-                installLog += logLine + "\n"
+            let result = try await BrewInstaller.install { @Sendable logLine in
+                Task { @MainActor in
+                    installLog += logLine + "\n"
+                }
             }
             
             if result.isSuccess {

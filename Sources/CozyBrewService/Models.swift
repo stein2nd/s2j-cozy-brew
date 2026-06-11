@@ -203,10 +203,12 @@ public struct Cask: BrewPackage {
 
         // `id` は存在しないため token を優先、無ければ name の先頭を使用する
         let decodedToken = try container.decodeIfPresent(String.self, forKey: .token)
-        let decodedNameArray = try container.decodeIfPresent([String].self, forKey: .name)
-        let decodedName = try container.decodeIfPresent(String.self, forKey: .name)
-            ?? decodedNameArray?.first
-            ?? ""
+        let decodedName: String
+        if let nameArray = try? container.decode([String].self, forKey: .name) {
+            decodedName = nameArray.first ?? ""
+        } else {
+            decodedName = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        }
 
         self.id = try container.decodeIfPresent(String.self, forKey: .id)
             ?? decodedToken

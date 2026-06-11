@@ -56,10 +56,15 @@ final class ModelsTests: XCTestCase {
         """
         
         let data = json.data(using: .utf8)!
-        let decoder = JSONDecoder()
-        // 注: 実際の brew --json=v2 の構造に合わせて調整が必要
-        // ここでは簡易的なテスト
-        XCTAssertNotNil(data)
+        let cask = try JSONDecoder().decode(Cask.self, from: data)
+        
+        XCTAssertEqual(cask.token, "test-cask")
+        XCTAssertEqual(cask.name, "Test Cask")
+        XCTAssertEqual(cask.fullName, "test-cask")
+        XCTAssertEqual(cask.desc, "Test cask description")
+        XCTAssertEqual(cask.version, "1.0.0")
+        XCTAssertNotNil(cask.installed)
+        XCTAssertEqual(cask.installed?.count, 1)
     }
     
     func testPackageFromFormula() {

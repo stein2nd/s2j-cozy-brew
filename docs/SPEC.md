@@ -332,7 +332,7 @@ struct CozyBrewApp: App {
 ### 4.3.7. パッケージ記述例 (Package.swift 抜粋)
 
 ```swift
-// swift-tools-version:5.9
+// swift-tools-version:6.0
 import PackageDescription
 
 let package = Package(
@@ -466,7 +466,7 @@ let package = Package(
 
 #### 11.1.1. Swift Package 基盤
 * ✅ `Package.swift` - Swift Package 定義 (CozyBrewCore、CozyBrewService、CozyBrewUIComponents)
-  * ✅ `swift-tools-version: 5.9` に更新済み
+  * ✅ `swift-tools-version: 6.0` に更新済み (Swift v6.3.x 対応)
 * ✅ 依存関係の管理 (s2j-source-list、s2j-about-window)
 * ✅ 依存関係の更新スクリプト (`package.json` に `swift:update`、`swift:resolve`、`swift:show-deps` を追加)
 * ✅ ビルド成功確認
