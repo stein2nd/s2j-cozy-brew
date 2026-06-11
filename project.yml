@@ -46,7 +46,7 @@ targets:
         CFBundleInfoDictionaryVersion: "6.0"
         CFBundleName: $(PRODUCT_NAME)
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
-        CFBundleShortVersionString: "1.0.0"
+        CFBundleShortVersionString: "1.0.1"
         CFBundleVersion: 1
         LSMinimumSystemVersion: "14.6"
         NSHumanReadableCopyright: "Copyright © 2024 S2J. All rights reserved."
@@ -86,7 +86,7 @@ targets:
       GENERATE_INFOPLIST_FILE: YES
       CODE_SIGN_STYLE: Automatic
       CURRENT_PROJECT_VERSION: 1
-      MARKETING_VERSION: 1.0.0
+      MARKETING_VERSION: 1.0.1
 
   CozyBrewService:
     type: framework
@@ -105,7 +105,7 @@ targets:
       GENERATE_INFOPLIST_FILE: YES
       CODE_SIGN_STYLE: Automatic
       CURRENT_PROJECT_VERSION: 1
-      MARKETING_VERSION: 1.0.0
+      MARKETING_VERSION: 1.0.1
 
   CozyBrewUIComponents:
     type: framework
@@ -128,7 +128,7 @@ targets:
       GENERATE_INFOPLIST_FILE: YES
       CODE_SIGN_STYLE: Automatic
       CURRENT_PROJECT_VERSION: 1
-      MARKETING_VERSION: 1.0.0
+      MARKETING_VERSION: 1.0.1
 
 schemes:
   CozyBrewApp:
