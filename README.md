@@ -3,7 +3,7 @@
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://www.gnu.org/licenses/old-licenses/gpl-3.0.en.html)
 [![Xcode](https://img.shields.io/badge/Xcode-26.5%2B-blue?logo=Xcode&logoColor=white)](https://developer.apple.com/xcode/)
 [![Swift](https://img.shields.io/badge/Swift-6.3-blue?logo=Swift&logoColor=white)](https://www.swift.org)
-[![macOS](https://img.shields.io/badge/macOS-12.0%2B-blue?logo=Apple&logoColor=white)](https://www.apple.com/macos/)
+[![macOS](https://img.shields.io/badge/macOS-14.0%2B-blue?logo=Apple&logoColor=white)](https://www.apple.com/macos/)
 
 ## Description
 
