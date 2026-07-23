@@ -2,6 +2,8 @@
 
 ## unreleased
 
+## 1.0.3 - 2026-07-23
+
 * `@s2j/docs-linter` を v1.0.21に更新
 * `.npmrc` を追加（`legacy-peer-deps=true`、`allow-git=all` — npm v12+ で transitive GitHub 依存を許可）
 
