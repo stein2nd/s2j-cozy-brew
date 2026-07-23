@@ -2,6 +2,9 @@
 
 ## unreleased
 
+* `@s2j/docs-linter` を v1.0.21に更新
+* `.npmrc` を追加（`legacy-peer-deps=true`、`allow-git=all` — npm v12+ で transitive GitHub 依存を許可）
+
 ## 1.0.2 - 2026-06-11
 
 * `project.yml` に `projectFormat: xcode16_3` を追加し、`CozyBrew.xcodeproj` を Xcode v26.3形式（`objectVersion` 90）に更新
