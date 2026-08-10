@@ -2,6 +2,12 @@
 
 ## unreleased
 
+## 1.0.4 - 2026-08-10
+
+* `@s2j/docs-linter` を v1.0.22に更新
+* `package.json` に `allowScripts` を追加 (`@s2j/docs-linter` のスクリプト実行を許可)
+* バージョンを v1.0.4に更新 (`package.json`)
+
 ## 1.0.3 - 2026-07-23
 
 * `@s2j/docs-linter` を v1.0.21に更新
