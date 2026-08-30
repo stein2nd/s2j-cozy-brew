@@ -2,6 +2,12 @@
 
 ## unreleased
 
+## 1.0.5 - 2026-08-31
+
+* `@s2j/docs-linter` を v1.0.23に更新
+* SPM 依存を更新（`s2j-about-window` → `721db87` / v2.0.6、`s2j-source-list` → `8036167` / v2.0.4）
+* バージョンを v1.0.5に更新 (`package.json`)
+
 ## 1.0.4 - 2026-08-10
 
 * `@s2j/docs-linter` を v1.0.22に更新
