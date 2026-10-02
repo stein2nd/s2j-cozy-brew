@@ -1,6 +1,6 @@
 {
   "name": "s2j-cozy-brew",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Using SwiftUI, reimplement the AppKit-based \"Cakebrew\".",
   "type": "module",
   "author": "Koutarou ISHIKAWA",
@@ -32,7 +32,7 @@
     "test:local:iOSfull": "./scripts/test-local.sh --ios-device \"iPad Pro\" --ios-version \"15.0\" --enable-xcode-project --xcodegen-auto-install"
   },
   "devDependencies": {
-    "@s2j/docs-linter": "^1.0.23"
+    "@s2j/docs-linter": "^1.0.26"
   },
   "allowScripts": {
     "@s2j/docs-linter": true

@@ -2,6 +2,13 @@
 
 ## unreleased
 
+## 1.0.6 - 2026-10-02
+
+* `@s2j/docs-linter` を v1.0.26に更新
+* `.gitignore` に `*.code-workspace` を追加（ローカル workspace を除外）
+* 非推奨の `npm.enableScriptExplorer` を削除（`.vscode/settings.json`）
+* バージョンを v1.0.6に更新 (`package.json`)
+
 ## 1.0.5 - 2026-08-31
 
 * `@s2j/docs-linter` を v1.0.23に更新
