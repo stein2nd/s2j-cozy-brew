@@ -2,6 +2,12 @@
 
 ## unreleased
 
+## 1.0.7 - 2026-11-06
+
+* `MainWindowView` の `#available` 分岐を削除し、`NavigationSplitView` のみに統一（`ViewBuilder` の availability 警告を解消）
+* `@s2j/docs-linter` を v1.0.32に更新
+* バージョンを v1.0.7に更新 (`package.json`)
+
 ## 1.0.6 - 2026-10-02
 
 * `@s2j/docs-linter` を v1.0.26に更新

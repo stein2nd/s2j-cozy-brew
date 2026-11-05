@@ -13,74 +13,37 @@ public struct MainWindowView: View {
     }
     
     public var body: some View {
-        if #available(macOS 13.0, *) {
-            NavigationSplitView {
-                // サイドバー
-                SidebarView(selectedItem: $selectedSidebarItem)
-                    .navigationSplitViewColumnWidth(min: 200, ideal: 250)
-            } detail: {
-                // コンテンツエリア
-                ContentAreaView(
-                    manager: manager,
-                    selectedSidebarItem: selectedSidebarItem,
-                    searchText: $searchText,
-                    selectedPackage: $selectedPackage,
-                    selectedSidebarItemBinding: $selectedSidebarItem
-                )
-            }
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button(action: {
-                        Task {
-                            try? await manager.update()
-                        }
-                    }) {
-                        Label("Update", systemImage: "arrow.clockwise")
+        NavigationSplitView {
+            // サイドバー
+            SidebarView(selectedItem: $selectedSidebarItem)
+                .navigationSplitViewColumnWidth(min: 200, ideal: 250)
+        } detail: {
+            // コンテンツエリア
+            ContentAreaView(
+                manager: manager,
+                selectedSidebarItem: selectedSidebarItem,
+                searchText: $searchText,
+                selectedPackage: $selectedPackage,
+                selectedSidebarItemBinding: $selectedSidebarItem
+            )
+        }
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: {
+                    Task {
+                        try? await manager.update()
                     }
-                    .disabled(manager.isLoading || !manager.isBrewAvailable)
+                }) {
+                    Label("Update", systemImage: "arrow.clockwise")
                 }
+                .disabled(manager.isLoading || !manager.isBrewAvailable)
             }
-            .task {
-                if manager.isBrewAvailable {
-                    await manager.refreshInstalledPackages()
-                    await manager.refreshOutdatedPackages()
-                    await manager.refreshTaps()
-                }
-            }
-        } else {
-            // macOS 12.0 用の代替実装
-            HSplitView {
-                // サイドバー
-                SidebarView(selectedItem: $selectedSidebarItem)
-                    .frame(minWidth: 200, idealWidth: 250)
-                
-                // コンテンツエリア
-                ContentAreaView(
-                    manager: manager,
-                    selectedSidebarItem: selectedSidebarItem,
-                    searchText: $searchText,
-                    selectedPackage: $selectedPackage,
-                    selectedSidebarItemBinding: $selectedSidebarItem
-                )
-            }
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button(action: {
-                        Task {
-                            try? await manager.update()
-                        }
-                    }) {
-                        Label("Update", systemImage: "arrow.clockwise")
-                    }
-                    .disabled(manager.isLoading || !manager.isBrewAvailable)
-                }
-            }
-            .task {
-                if manager.isBrewAvailable {
-                    await manager.refreshInstalledPackages()
-                    await manager.refreshOutdatedPackages()
-                    await manager.refreshTaps()
-                }
+        }
+        .task {
+            if manager.isBrewAvailable {
+                await manager.refreshInstalledPackages()
+                await manager.refreshOutdatedPackages()
+                await manager.refreshTaps()
             }
         }
     }
