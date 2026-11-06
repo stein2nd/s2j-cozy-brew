@@ -2,6 +2,13 @@
 
 ## unreleased
 
+## 1.0.9 - 2026-11-06
+
+* GitHub Actions を Node.js v24対応に更新 (`actions/checkout@v5`、`codecov/codecov-action@v7`、`actions/upload-artifact@v6`)
+* `docs-lint` ワークフローの Node.js を v24に更新
+* CI 仕様を `docs/SPEC.md` / `overview.md` に反映
+* バージョンを v1.0.9に更新 (`package.json`)
+
 ## 1.0.8 - 2026-11-06
 
 * SPM 依存を更新 (`s2j-about-window` → `94a9690` / v2.0.10、`s2j-source-list` → `696ecd5` / v2.0.8)

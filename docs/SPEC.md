@@ -402,7 +402,8 @@ let package = Package(
   * `vMAJOR.MINOR.PATCH`
 * **GitHub Actions**:
   * ワークフロー (macOS runner) で `swift build` / `swift test` を実行します。
-  * Pull Request に対して「SwiftLint」と「ビルド確認」を実行します。
+  * Pull Request に対して Swift テスト・ビルド確認と、Markdown の Docs Linter を実行します。
+  * Node.js v20非推奨に合わせ、Action は Node.js v24対応版を使用します (`actions/checkout@v5`、`codecov/codecov-action@v7`、`actions/upload-artifact@v6`、`docs-lint` は Node.js v24)。
 * **Release**:
   * Xcode の Archive を利用したビルド `xcodebuild` (Universal Binary 推奨) を実行します。
   * Notarize / Notarization ステップは手順化します (可能なら自動化スクリプトを提供します)。
@@ -493,16 +494,16 @@ let package = Package(
 #### 11.1.7. CI/CD ワークフロー
 * ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー
   * ✅ `test-macos` ジョブ: Swift Package テスト (`swift test --enable-code-coverage`)
+    * ✅ `actions/checkout@v5`、`codecov/codecov-action@v7` (`files: .build/coverage/coverage.xml`)
     * ✅ コード・カバレッジの Codecov へのアップロード (`macos` フラグ)
   * ✅ `build-release` ジョブ: リリース・ビルド (`swift build -c release`)
+    * ✅ `actions/checkout@v5`、`actions/upload-artifact@v6`
     * ✅ ビルド成果物のアップロード (Artifacts)
     * ✅ `test-macos` ジョブの成功後に実行
-* ✅ `.github/workflows/docs-linter.yml` - ドキュメント・リント・ワークフロー
-  * ✅ `docs-linter` ジョブ: Markdown ドキュメントの表記揺れ検出 (Docs Linter)
-    * ✅ Git サブモジュールのチェックアウト
-    * ✅ Node.js 環境のセットアップ
-    * ✅ npm 依存関係のキャッシュ
-    * ✅ textlint によるドキュメント品質チェック (`README.md`、`docs/**/*.md`)
+* ✅ `.github/workflows/docs-lint.yml` - ドキュメント・リント・ワークフロー
+  * ✅ `lint-docs` ジョブ: Markdown ドキュメントの表記揺れ検出 (`@s2j/docs-linter`)
+    * ✅ `actions/checkout@v5`、Node.js v24 (`actions/setup-node@v4`)
+    * ✅ `npm ci` と `npm run lint:docs` (`README.md`、`CHANGELOG.md`、`docs/**/*.md`)
 * ✅ `scripts/test-local.sh` - ローカル・テスト実行スクリプト (統合版)
   * ✅ macOS/iPadOS 対応の汎用スクリプト
   * ✅ Swift Package テストの実行
@@ -540,12 +541,8 @@ let package = Package(
   * ✅ コードカバレッジの Codecov へのアップロード (`macos` フラグ)
   * ✅ リリースビルド (`swift build -c release`)
   * ✅ ビルド成果物のアップロード (Artifacts)
-* ✅ `.github/workflows/docs-linter.yml` - ドキュメント・リント・ワークフロー
-  * ✅ `docs-linter` ジョブ: Markdown ドキュメントの表記揺れ検出 (Docs Linter)
-  * ✅ Git サブモジュールのチェックアウト
-  * ✅ Node.js 環境のセットアップ
-  * ✅ npm 依存関係のキャッシュ
-  * ✅ textlint によるドキュメント品質チェック (`README.md`、`docs/**/*.md`)
+* ✅ `.github/workflows/docs-lint.yml` - ドキュメント・リント・ワークフロー
+  * ✅ `lint-docs` ジョブ: `@s2j/docs-linter` (Node.js v24、`npm ci` / `npm run lint:docs`)
 * ✅ `scripts/test-local.sh` - ローカルテスト実行スクリプト (統合版)
   * ✅ コミット前にCI/CDと同じテストを実行して問題を早期発見
   * ✅ macOS/iPadOS 対応の汎用スクリプト
@@ -592,7 +589,7 @@ let package = Package(
   * ✅ Swift テスト・ワークフロー (`.github/workflows/swift-test.yml`)
     * 2つのジョブ構成 (`test-macos`、`build-release`)
     * コード・カバレッジの Codecov へのアップロード (`macos` フラグ)
-  * ✅ ドキュメント・リント・ワークフロー (`.github/workflows/docs-linter.yml`)
+  * ✅ ドキュメント・リント・ワークフロー (`.github/workflows/docs-lint.yml`)
     * textlint によるドキュメント品質チェック
 * ローカル・テストスクリプト: `scripts/test-local.sh` を追加済み (macOS/iPadOS 対応の汎用スクリプト)
   * Package.swift からのデフォルト値自動検出機能を実装済み
@@ -654,12 +651,8 @@ let package = Package(
   * ✅ `build-release` ジョブ: リリースビルド (`swift build -c release`)
   * ✅ コード・カバレッジの Codecov へのアップロード (`macos` フラグ)
   * ✅ ビルド成果物のアップロード (Artifacts)
-* ✅ `.github/workflows/docs-linter.yml` の作成 (完了)
-  * ✅ `docs-linter` ジョブ: Markdown ドキュメントの表記揺れ検出 (Docs Linter)
-  * ✅ Git サブモジュールのチェックアウト
-  * ✅ Node.js 環境のセットアップ
-  * ✅ npm 依存関係のキャッシュ
-  * ✅ textlint によるドキュメント品質チェック (`README.md`、`docs/**/*.md`)
+* ✅ `.github/workflows/docs-lint.yml` の作成 (完了)
+  * ✅ `lint-docs` ジョブ: `@s2j/docs-linter` (Node.js v24)
 * ✅ `scripts/test-local.sh` の作成 (完了)
   * ✅ macOS/iPadOS 対応の汎用ローカルテストスクリプト
   * ✅ Swift Package テスト、Xcode プロジェクト生成とテスト、iOS/iPadOS テストを統合
@@ -735,7 +728,7 @@ let package = Package(
 **補足**:
 * 本プロジェクトは Swift Package として他アプリケーションに組み込まれることを前提とします。そのため、Xcode ウィザードで「App」テンプレートを選ぶ必要はありません。
 * macOS/iPadOS 両対応の Swift Package として作成する場合は、「Framework」または「Swift Package」テンプレートを使用し、対応プラットフォームを .macOS (.v12)、.iOS (.v15) と指定します。
-* また、本リポジトリでは Git サブモジュール [Docs Linter](https://github.com/stein2nd/docs-linter) を導入し、ドキュメント品質 (表記揺れや用語統一) の検証を CI で実施します。
+* また、本リポジトリでは npm パッケージ [`@s2j/docs-linter`](https://github.com/stein2nd/docs-linter) を用い、ドキュメント品質 (表記揺れや用語統一) の検証を CI (`docs-lint.yml`) で実施します。
 * **注意**: 実際のプロジェクトでは、XcodeGen (`project.yml`) を使用して Xcode プロジェクトを生成しています。このセクションは、手動で Xcode プロジェクトを作成する場合の参考情報です。
 
 ### 1. テンプレート選択
@@ -778,19 +771,19 @@ let package = Package(
 
 * 本プロジェクトでは、下記の GitHub Actions ワークフローを導入しています。
     * ✅ `swift-test.yml`: Swift Package のユニットテストの自動実行 (実装済み)
-      * **`test-macos` ジョブ**:
+      * **`test-macos` ジョブ** (`runs-on: macos-latest`):
+        * `actions/checkout@v5`、`maxim-lobanov/setup-xcode@v1` (`latest-stable`)
         * Swift Package テスト (`swift test --enable-code-coverage`)
-        * コード・カバレッジの Codecov へのアップロード (`macos` フラグ)
+        * Codecov へのアップロード (`codecov/codecov-action@v7`、`macos` フラグ)
       * **`build-release` ジョブ**:
         * `test-macos` ジョブの成功後に実行
         * リリース・ビルド (`swift build -c release`)
-        * ビルド成果物のアップロード (Artifacts)
-    * ✅ `docs-linter.yml`: Markdown ドキュメントの表記揺れ検出 (Docs Linter) (実装済み)
-      * **`docs-linter` ジョブ**:
-        * Git サブモジュールのチェックアウト
-        * Node.js 環境のセットアップ
-        * npm 依存関係のキャッシュ
-        * textlint によるドキュメント品質チェック (`README.md`、`docs/**/*.md`)
+        * ビルド成果物のアップロード (`actions/upload-artifact@v6`)
+    * ✅ `docs-lint.yml`: Markdown ドキュメントの表記揺れ検出 (Docs Linter) (実装済み)
+      * **`lint-docs` ジョブ** (`runs-on: ubuntu-latest`):
+        * `actions/checkout@v5`、Node.js v24
+        * `npm ci` と `npm run lint:docs`
+        * 対象: `README.md`、`CHANGELOG.md`、`docs/**/*.md`
 * **ローカルテストスクリプト**:
   * ✅ `scripts/test-local.sh`: コミット前にCI/CDと同じテストを実行して問題を早期発見
     * macOS/iPadOS 対応の汎用スクリプト

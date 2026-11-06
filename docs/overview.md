@@ -44,7 +44,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
   * セキュリティ: brew 実行は、サンドボックス外のプロセス・コールを行うため、権限/経路の取り扱いを厳密にします。
   * ローカライズ対応 (英語・日本語を初期対応とします)。
   * アクセシビリティ (VoiceOver 等) への対応を実装します。
-  * CI: GitHub Actions を用いて macOS ビルド・ユニットテストを実行します。
+  * CI: GitHub Actions を用いて macOS ビルド・ユニットテストと Docs Linter を実行します (Node.js v24対応 Action)。
 
 ---
 

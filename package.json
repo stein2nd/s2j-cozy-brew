@@ -1,6 +1,6 @@
 {
   "name": "s2j-cozy-brew",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Using SwiftUI, reimplement the AppKit-based \"Cakebrew\".",
   "type": "module",
   "author": "Koutarou ISHIKAWA",
