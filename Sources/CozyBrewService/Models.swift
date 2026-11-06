@@ -30,7 +30,7 @@ public struct InstalledVersion: Codable {
     }
 }
 
-/// Formula（ソースからビルドするパッケージ）
+/// Formula (ソースからビルドするパッケージ)
 public struct Formula: BrewPackage {
     public let id: String
     public let name: String
@@ -128,7 +128,7 @@ public struct Formula: BrewPackage {
     }
 }
 
-/// Cask（バイナリ配布パッケージ）
+/// Cask (バイナリ配布パッケージ)
 public struct Cask: BrewPackage {
     public let id: String
     public let name: String
@@ -230,7 +230,7 @@ public struct Cask: BrewPackage {
     }
 }
 
-/// Tap（リポジトリ）
+/// Tap (リポジトリ)
 public struct Tap: Codable, Identifiable {
     public let id: String
     public let name: String
@@ -302,7 +302,7 @@ public enum PackageType {
     case cask
 }
 
-/// パッケージの統一表現（UI 表示用）
+/// パッケージの統一表現 (UI 表示用)
 public struct Package: Identifiable, Hashable {
     public let id: String
     public let name: String

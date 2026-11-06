@@ -2,9 +2,9 @@
 
 本ドキュメントでは、Swift アプリケーション「S2J CozyBrew」の仕様を細分化した各ファイルへのリンクを提供します。
 
-* 本アプリケーションの設計は、以下の共通 SPEC に準拠します。
+* 本アプリケーションの設計は、下記の共通 SPEC に準拠します。
     * [Swift/SwiftUI 共通仕様](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md)
-* 以下は、本アプリケーション固有の仕様をまとめたものです。
+* 下記は、本アプリケーション固有の仕様をまとめたものです。
 
 ---
 
@@ -19,6 +19,7 @@
 | [ux_flows_spec.md](ux_flows_spec.md) | 初回起動・パッケージ操作の UX フロー定義 |
 | [security_spec.md](security_spec.md) | 権限・サンドボックス・スクリプト実行・アクセシビリティの定義 |
 | [design_spec.md](design_spec.md) | デザイン・ブランディングの定義 |
+| [dependency_updates.md](dependency_updates.md) | npm / SPM 依存の確認・更新手順 |
 
 ---
 

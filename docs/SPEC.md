@@ -5,9 +5,9 @@
 ## はじめに
 
 * 本ドキュメントでは、Swift アプリケーション「S2J CozyBrew」の専用仕様を定義します。
-* 本アプリケーションの設計は、以下の共通 SPEC に準拠します。
+* 本アプリケーションの設計は、下記の共通 SPEC に準拠します。
     * [Swift/SwiftUI 共通仕様](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md)
-* 以下は、本アプリケーション固有の仕様をまとめたものです。
+* 下記は、本アプリケーション固有の仕様をまとめたものです。
 
 ## 1. プロジェクト概要
 
@@ -103,37 +103,10 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
   * `s2j-source-list` (サイドバー)
   * `s2j-about-window` (About ウィンドウ)
 
-* **依存関係の更新方法**
+* **依存関係の更新**
 
-  * 本プロジェクトでは、Swift Package Manager (SPM) を使用して外部依存パッケージを管理しています。
-  * 依存関係の定義は `Package.swift` に記載されており、現在は各パッケージの `main` ブランチを参照しています。
-  * 依存関係を最新の状態に更新するには、以下の方法があります:
-
-    * **方法1: npm スクリプトを使用 (推奨)**
-      ```zsh
-      npm run swift:update
-      ```
-      * `package.json` に定義されたスクリプトを使用して、すべての依存関係を最新の `main` ブランチに更新します。
-
-    * **方法2: Swift Package Manager を直接使用**
-      ```zsh
-      swift package update
-      ```
-      * Swift Package Manager のコマンドを直接実行して依存関係を更新します。
-
-    * **方法3: Xcode から更新**
-      * Xcode でプロジェクトを開き、`File → Packages → Update to Latest Package Versions` を選択します。
-
-    * **依存関係の状態確認**
-      ```zsh
-      npm run swift:show-deps
-      ```
-      * 現在の依存関係ツリーを表示します。
-
-  * **注意事項**:
-    * 現在の設定では、`Package.swift` で `branch: main` を指定しているため、`swift package update` を実行すると、常に各リポジトリの `main` ブランチの最新コミットを取得します。
-    * 特定のバージョンに固定したい場合は、`Package.swift` でバージョンやタグを指定できます (例: `.package(url: "...", from: "1.0.0")`)。
-    * 現在のリビジョンは `Package.resolved` に記録されているため、いつでも確認できます。
+  * npm と SPM の手順は [dependency_updates.md](dependency_updates.md) を参照してください。
+  * SPM 推奨: `npm run swift:ncu` → `npm run swift:ncu:update` → ビルド確認。確定 revision は `Package.resolved` にコミットします。
 
 ### 4.2. 主要コンポーネント (アーキテクチャー)
 
@@ -206,7 +179,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 
 ### 4.3.1. マイグレーションと互換性 / Cakebrew からの留意点
 
-* Cakebrew は Objective-C / AppKit 実装です。そのため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈**して SwiftUI に適した状態駆動の設計へ変換します。
+* Cakebrew は Objective-C / AppKit 実装です。そのため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈**して SwiftUI に適した状態駆動の設計に変換します。
 * Cakebrew のコード (Objective-C) でのライセンス、リソース (アイコン、翻訳) を確認し、再利用条件を満たします。
 * Cakebrew の preferences やインストール履歴を引き継ぐ場合:
   * 初回起動時に `Cakebrew` の設定ファイル (保存場所や形式) を検出し、移行ウィザードを表示します (オプション)。
@@ -222,7 +195,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
     * Apple Silicon (`/opt/homebrew/bin/brew`) と Intel (`/usr/local/bin/brew`) を判定し、`which brew` の代替として機能します。環境 PATH の補正ロジックを実装します。
   * `Process` コマンド実行ラッパー (`BrewCommand` / `BrewProcess`):
     * brew 実行、環境 PATH 解決、出力エンコーディング、エラー処理を一元化します。
-    * `/usr/bin/env brew ...` を非同期に実行し stdout/stderr/exitCode を返します。標準入出力をストリームへ流すため、リアルタイム・ログに対応します。
+    * `/usr/bin/env brew ...` を非同期に実行し stdout/stderr/exitCode を返します。標準入出力をストリームに流すため、リアルタイム・ログに対応します。
   * 権限・実行コンテキスト管理:
     * brew の実行ユーザー権限、環境変数 (HOMEBREW_PREFIX) を把握します。
   * インストーラー (`BrewInstaller`):
@@ -468,7 +441,7 @@ let package = Package(
 * ✅ `Package.swift` - Swift Package 定義 (CozyBrewCore、CozyBrewService、CozyBrewUIComponents)
   * ✅ `swift-tools-version: 6.0` に更新済み (Swift v6.3.x 対応)
 * ✅ 依存関係の管理 (s2j-source-list、s2j-about-window)
-* ✅ 依存関係の更新スクリプト (`package.json` に `swift:update`、`swift:resolve`、`swift:show-deps` を追加)
+* ✅ 依存関係の更新スクリプト (`swift:ncu` / `swift:ncu:update` / `swift:install`、`scripts/swift-deps.sh`、手順は [dependency_updates.md](dependency_updates.md))
 * ✅ ビルド成功確認
 
 #### 11.1.2. CozyBrewCore モジュール
@@ -731,7 +704,7 @@ let package = Package(
 
 ### 12.3. 長期での改善予定 (6ヵ月以上)
 
-以下の機能は、将来の拡張として検討する項目です。
+下記の機能は、将来の拡張として検討する項目です。
 
 #### 12.3.1. 高度な機能
 * パッケージのバックアップ/リストア機能
@@ -803,7 +776,7 @@ let package = Package(
 
 **実装状況**: ✅ **完全実装** - Swift テスト・ワークフローとドキュメント・リント・ワークフローが実装済み
 
-* 本プロジェクトでは、以下の GitHub Actions ワークフローを導入しています。
+* 本プロジェクトでは、下記の GitHub Actions ワークフローを導入しています。
     * ✅ `swift-test.yml`: Swift Package のユニットテストの自動実行 (実装済み)
       * **`test-macos` ジョブ**:
         * Swift Package テスト (`swift test --enable-code-coverage`)

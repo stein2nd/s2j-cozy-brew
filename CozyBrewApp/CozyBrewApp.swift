@@ -142,7 +142,7 @@ struct BrewNotAvailableView: View {
                 // インストール成功 - 再検出して再初期化
                 // 注: 実際のアプリでは再起動を推奨する場合がある
                 if BrewBinaryLocator.locate() != nil {
-                    // Manager を再初期化（実際の実装では再起動が必要な場合がある）
+                    // Manager を再初期化 (実際の実装では再起動が必要な場合がある)
                     // ここでは簡易的に再検出のみ行う
                     await manager.refreshInstalledPackages()
                 }
@@ -159,7 +159,7 @@ struct BrewNotAvailableView: View {
     }
 }
 
-/// About Window View（S2JAboutWindow のプレースホルダー）
+/// About Window View (S2JAboutWindow のプレースホルダー)
 struct AboutWindowView: View {
     @Environment(\.dismiss) private var dismiss
     

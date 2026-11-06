@@ -75,7 +75,7 @@ get_package_name() {
 get_library_name() {
     if [ -f "Package.swift" ]; then
         # .library(name: "LibraryName", ...) からライブラリ名を取得
-        # 複数行にわたる可能性があるため、-A オプションで次の数行も取得
+        # 複数行にわたる可能性があるため、-A オプションで下記の数行も取得
         grep -A 3 "\.library" Package.swift | grep -E "name:[[:space:]]*\"" | head -1 | sed -E 's/.*name:[[:space:]]*"([^"]+)".*/\1/' | xargs
     else
         echo ""
@@ -478,7 +478,7 @@ if [ "$SKIP_IOS_TESTS" != "true" ]; then
     echo ""
     echo -e "${BLUE}📱 iOS/iPadOS シミュレーターの確認中...${NC}"
 
-    # Xcode のパスを確認して設定（まだ設定されていない場合）
+    # Xcode のパスを確認して設定 (まだ設定されていない場合)
     if [ -z "$DEVELOPER_DIR" ] && [ -d "/Applications/Xcode.app/Contents/Developer" ]; then
         export DEVELOPER_DIR="/Applications/Xcode.app/Contents/Developer"
     fi

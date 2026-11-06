@@ -22,7 +22,7 @@ public struct PackageRowView: View {
     
     public var body: some View {
         HStack {
-            // アイコン（将来実装）
+            // アイコン (将来実装)
             Image(systemName: package.type == .formula ? "cube.box" : "app.badge")
                 .foregroundColor(package.type == .formula ? .blue : .green)
                 .frame(width: 24, height: 24)

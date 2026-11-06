@@ -125,7 +125,7 @@ To build the application from source:
 The core logic is available as a Swift Package. Add the following to your `Package.swift` file:
  -->
 
-コアロジックは Swift Package として利用可能です。`Package.swift` ファイルに以下を追加します:
+コアロジックは Swift Package として利用可能です。`Package.swift` ファイルに下記を追加します:
 
 ```swift
 dependencies: [
@@ -137,7 +137,7 @@ dependencies: [
 The package provides the following products:
  -->
 
-パッケージは以下の製品を提供します:
+パッケージは下記の製品を提供します:
 
 * `CozyBrewCore` - Core functionality for Homebrew operations
 * `CozyBrewService` - Service layer with models and ViewModels
@@ -333,15 +333,19 @@ To run tests with code coverage:
 swift test --enable-code-coverage
 ```
 
-<!-- 
-To update Swift Package dependencies:
- -->
+### 依存モジュールの更新
 
-Swift Package の依存関係を更新するには:
+npm (ドキュメント lint) と SPM (`s2j-source-list` / `s2j-about-window`) の更新手順は [docs/dependency_updates.md](docs/dependency_updates.md) に記載しています。
+
+**SPM (推奨):**
 
 ```zsh
-npm run swift:update
+npm run swift:ncu          # 更新があるか確認 (ncu 相当)
+npm run swift:ncu:update   # 最新に更新して入れ直し (ncu -u + npm install 相当)
+swift build
 ```
+
+**npm (`@s2j/docs-linter` など):** `ncu` → `ncu -u` → `node_modules` と `package-lock.json` を削除して `npm install` (詳細は上記ドキュメント)。
 
 ローカルで CI/CD と同じテストを実行するには:
 
@@ -368,7 +372,7 @@ SCHEME_NAME=MyApp IOS_DEVICE="iPhone 15" ./scripts/test-local.sh
 We welcome your contributions. Please follow these steps:
  -->
 
-貢献をお待ちしています。以下の手順に従ってください。
+貢献をお待ちしています。下記の手順に従ってください。
 
 <!-- 
 1. Fork the repository.
@@ -396,7 +400,7 @@ We welcome your contributions. Please follow these steps:
 **"S2J CozyBrew"** is open-source software. The following individuals have contributed to this project:
  -->
 
-**"S2J CozyBrew"** はオープンソース・ソフトウェアです。以下の皆様がこのプロジェクトに貢献しています。
+**"S2J CozyBrew"** はオープンソース・ソフトウェアです。下記の皆様がこのプロジェクトに貢献しています。
 
 <!-- 
 * **Developer**: Koutarou ISHIKAWA

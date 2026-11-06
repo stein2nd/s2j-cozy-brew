@@ -6,7 +6,7 @@ public final class BrewInstaller {
     public static let installScriptURL = "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"
     
     /// インストールスクリプトを実行する
-    /// - Parameter outputHandler: リアルタイム出力ハンドラ（オプション）
+    /// - Parameter outputHandler: リアルタイム出力ハンドラ (オプション)
     /// - Returns: インストール結果
     public static func install(outputHandler: (@Sendable (String) -> Void)? = nil) async throws -> BrewResult {
         let collector = InstallStreamCollector(handler: outputHandler)
@@ -14,7 +14,7 @@ public final class BrewInstaller {
         process.executableURL = URL(fileURLWithPath: "/bin/bash")
         process.arguments = ["-c", "curl -fsSL \(installScriptURL) | bash"]
         
-        // 環境変数の設定（非インタラクティブモード）
+        // 環境変数の設定 (非インタラクティブモード)
         var env = ProcessInfo.processInfo.environment
         env["NONINTERACTIVE"] = "1"
         process.environment = env
@@ -25,7 +25,7 @@ public final class BrewInstaller {
         process.standardOutput = outPipe
         process.standardError = errPipe
         
-        // リアルタイム出力の監視（オプション）- プロセス実行前に設定
+        // リアルタイム出力の監視 (オプション) - プロセス実行前に設定
         if outputHandler != nil {
             let outHandle = outPipe.fileHandleForReading
             let errHandle = errPipe.fileHandleForReading
@@ -81,7 +81,7 @@ public final class BrewInstaller {
         )
     }
     
-    /// インストールスクリプトの内容を取得する（検証用）
+    /// インストールスクリプトの内容を取得する (検証用)
     /// - Returns: スクリプトの内容
     public static func fetchInstallScript() async throws -> String {
         guard let url = URL(string: installScriptURL) else {

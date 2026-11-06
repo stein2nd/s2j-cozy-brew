@@ -39,11 +39,11 @@ final class BrewCacheTests: XCTestCase {
         // 保存
         try cache.save(testData, forKey: .installedFormulae)
         
-        // すぐに読み込み（有効期限内）
+        // すぐに読み込み (有効期限内)
         let loaded1: [String]? = try cache.load([String].self, forKey: .installedFormulae, ttl: 3600)
         XCTAssertNotNil(loaded1)
         
-        // TTL を 0 にして読み込み（期限切れ）
+        // TTL を 0 にして読み込み (期限切れ)
         let loaded2: [String]? = try cache.load([String].self, forKey: .installedFormulae, ttl: 0)
         XCTAssertNil(loaded2)
     }
@@ -57,7 +57,7 @@ final class BrewCacheTests: XCTestCase {
         // 削除
         try cache.remove(forKey: .installedFormulae)
         
-        // 読み込み（nil が返るはず）
+        // 読み込み (nil が返るはず)
         let loaded: [String]? = try cache.load([String].self, forKey: .installedFormulae)
         XCTAssertNil(loaded)
     }

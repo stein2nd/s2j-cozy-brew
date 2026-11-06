@@ -70,7 +70,7 @@ get_package_name() {
 get_library_name() {
     if [ -f "Package.swift" ]; then
         # .library(name: "LibraryName", ...) からライブラリ名を取得
-        # 複数行にわたる可能性があるため、-A オプションで次の数行も取得
+        # 複数行にわたる可能性があるため、-A オプションで下記の数行も取得
         grep -A 3 "\.library" Package.swift | grep -E "name:[[:space:]]*\"" | head -1 | sed -E 's/.*name:[[:space:]]*"([^"]+)".*/\1/' | xargs
     else
         echo ""

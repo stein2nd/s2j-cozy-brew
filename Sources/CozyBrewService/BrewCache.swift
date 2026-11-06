@@ -42,7 +42,7 @@ public final class BrewCache {
         let url = cacheDirectory.appendingPathComponent(key.rawValue)
         try encoded.write(to: url)
         
-        // メタデータ（タイムスタンプ）を保存
+        // メタデータ (タイムスタンプ) を保存
         let metadata = CacheMetadata(timestamp: Date())
         let metadataURL = cacheDirectory.appendingPathComponent("\(key.rawValue).meta")
         let metadataData = try JSONEncoder().encode(metadata)
@@ -53,7 +53,7 @@ public final class BrewCache {
     /// - Parameters:
     ///   - type: データ型
     ///   - key: キャッシュキー
-    ///   - ttl: 有効期限（秒）。nil の場合はデフォルト TTL を使用
+    ///   - ttl: 有効期限 (秒)。nil の場合はデフォルト TTL を使用
     /// - Returns: キャッシュされたデータ。見つからないか期限切れの場合は nil
     public func load<T: Codable>(_ type: T.Type, forKey key: CacheKey, ttl: TimeInterval? = nil) throws -> T? {
         let url = cacheDirectory.appendingPathComponent(key.rawValue)
@@ -64,7 +64,7 @@ public final class BrewCache {
             return nil
         }
         
-        // メタデータを確認（TTL チェック）
+        // メタデータを確認 (TTL チェック)
         if let metadataData = try? Data(contentsOf: metadataURL),
            let metadata = try? JSONDecoder().decode(CacheMetadata.self, from: metadataData) {
             let ttlValue = ttl ?? defaultTTL

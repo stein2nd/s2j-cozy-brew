@@ -29,7 +29,7 @@ public struct InstallFlowView: View {
                     title: "Installing \(package.name)...",
                     logOutput: logOutput,
                     onCancel: {
-                        // キャンセル処理（将来実装）
+                        // キャンセル処理 (将来実装)
                         onCancel()
                     },
                     isCancellable: false

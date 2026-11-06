@@ -17,7 +17,7 @@ public struct BrewResult {
         exitCode == 0
     }
     
-    /// エラーメッセージ（stderr が空の場合は stdout から取得）
+    /// エラーメッセージ (stderr が空の場合は stdout から取得)
     public var errorMessage: String {
         if !stderr.isEmpty {
             return stderr

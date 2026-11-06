@@ -23,8 +23,8 @@ public final class BrewProcess: Sendable {
     
     /// brew コマンドを実行する
     /// - Parameters:
-    ///   - args: brew コマンドの引数（例: ["list", "--formula"]）
-    ///   - environment: 追加の環境変数（nil の場合は初期化時の環境変数を使用）
+    ///   - args: brew コマンドの引数 (例: ["list", "--formula"])
+    ///   - environment: 追加の環境変数 (nil の場合は初期化時の環境変数を使用)
     /// - Returns: 実行結果
     public func run(_ args: [String], environment: [String: String]? = nil) async throws -> BrewResult {
         let process = Process()
