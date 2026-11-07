@@ -1,0 +1,36 @@
+# SPM / Xcode 生成物と依存チェックアウトは対象外
+excluded:
+  - .build
+
+line_length:
+  warning: 120
+  error: 200
+  ignores_urls: true
+
+file_length:
+  warning: 1000
+  error: 1200
+
+type_body_length:
+  warning: 600
+  error: 700
+
+function_body_length:
+  warning: 65
+  error: 80
+
+cyclomatic_complexity:
+  warning: 15
+  error: 20
+
+nesting:
+  type_level: 2
+
+large_tuple:
+  warning: 3
+  error: 4
+
+# SwiftFormat と矛盾するルールは無効化 (末尾カンマ / 複数行 if の改行ブレース)
+disabled_rules:
+  - trailing_comma
+  - opening_brace

@@ -1,6 +1,3 @@
-<!-- 
-目的：Formula / Cask / Tap モデル (brew info --json=v2) の定義
- -->
 # S2J CozyBrew — モデル定義仕様
 
 本ドキュメントでは、Homebrew パッケージを表現する `Codable` モデルと、`brew info --json=v2` の構造への対応を定義します。BrewService (CozyBrewService) モジュールの型定義を明文化します。
@@ -40,7 +37,7 @@ public protocol BrewPackage: Codable, Identifiable {
 インストール済みバージョン情報です。
 
 | プロパティ | 型 | JSON キー | 説明 |
-|------------|-----|-----------|------|
+| --- | --- | --- | --- |
 | version | String | `version` | バージョン文字列 |
 | installedOnRequest | Bool | `installed_on_request` | ユーザー要求でインストールされたか |
 | installedAsDependency | Bool | `installed_as_dependency` | 依存関係としてインストールされたか |
@@ -52,7 +49,7 @@ public protocol BrewPackage: Codable, Identifiable {
 ### 4.1. 主要プロパティ
 
 | プロパティ | 型 | 説明 |
-|------------|-----|------|
+| --- | --- | --- |
 | id | String | 一意識別子 |
 | name | String | パッケージ名 |
 | fullName | String | 完全名 (Tap 付き) |
@@ -87,7 +84,7 @@ public protocol BrewPackage: Codable, Identifiable {
 Formula と共通の基本プロパティに加え、Cask 固有のプロパティがあります。
 
 | プロパティ | 型 | 説明 |
-|------------|-----|------|
+| --- | --- | --- |
 | tap | String? | 属する Tap |
 | token | String? | Cask トークン |
 | artst | [String]? | アプリ名等 |
@@ -100,7 +97,7 @@ Formula と共通の基本プロパティに加え、Cask 固有のプロパテ�
 ### 6.1. 主要プロパティ
 
 | プロパティ | 型 | 説明 |
-|------------|-----|------|
+| --- | --- | --- |
 | name | String | Tap 名 |
 | fullName | String | 完全名 |
 | その他 | — | `brew tap` / `brew info` の出力に合わせる |
@@ -134,11 +131,16 @@ Formula と共通の基本プロパティに加え、Cask 固有のプロパテ�
 ### 9.1. 公開 API (@Published)
 
 | プロパティ | 型 | 説明 |
-|------------|-----|------|
+| --- | --- | --- |
 | installed | [Package] | インストール済みパッケージ一覧 |
 | outdated | [Package] | アップデート可能パッケージ一覧 |
 | taps | [Tap] | Tap 一覧 |
 | searchResults | [Package] | 検索結果 |
+| catalogFormulaeGeneration / catalogCasksGeneration | Int | カタログ再構築の世代（巨大配列を `@Published` で渡さない） |
+| catalogFormulaeIsLoading / catalogCasksIsLoading | Bool | カタログ HTTP 取得中 |
+| catalogFormulaeErrorMessage / catalogCasksErrorMessage | String? | カタログ取得・デコード失敗 |
+
+カタログ本体は `BrewManager` 内に保持し、UI は `catalogFormulaePage` / `catalogFormulaeSnapshot` 等でページ分を取得します。データ源は [brew_integration_spec.md](brew_integration_spec.md) §9 を参照。
 
 ### 9.2. 操作
 
@@ -156,10 +158,25 @@ Formula と共通の基本プロパティに加え、Cask 固有のプロパテ�
 ## 10. JSON 取得コマンド例
 
 | 用途 | コマンド |
-|------|----------|
-| インストール済み Formula | `brew list --formula --json=v2` |
-| インストール済み Cask | `brew list --cask --json=v2` |
-| パッケージ詳細 | `brew info --json=v2 <name>` |
+| --- | --- |
+| インストール済み一覧 (Homebrew v4–6) | `brew list --json=v2` |
+| インストール済み一覧 (Homebrew v7+) | `brew list --versions --json` |
+| アップデート可能一覧 | `brew outdated --json=v2` |
+| パッケージ詳細 (詳細画面) | `brew info --json=v2 <name>` — 一覧の `Package` とマージ |
 | 検索 | `brew search --json=v2 <query>` |
+| Formulae カタログ (HTTP) | `GET https://formulae.brew.sh/api/formula.json` |
+| Casks カタログ (HTTP) | `GET https://formulae.brew.sh/api/cask.json` |
+
+### `brew outdated --json=v2` の形
+
+`brew list` / `brew info` とは別スキーマです。各 Formula / Cask はおおむね次のみです。
+
+| フィールド | 意味 |
+| --- | --- |
+| `installed_versions` | 現在入っているバージョン (文字列配列) |
+| `current_version` | アップグレード先 |
+| `pinned` | pin されているか |
+
+デコード時は `installed_versions` → `installed`、`current_version` → `version` に正規化し、`isInstalled` / `isOutdated` を立てます。
 
 * 出力形式は Homebrew の仕様に依存するため、破壊的変更がある場合は本 spec を更新します。

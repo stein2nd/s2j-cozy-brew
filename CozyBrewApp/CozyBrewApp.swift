@@ -1,16 +1,15 @@
-import SwiftUI
 import AppKit
+import CozyBrewCore
 import CozyBrewService
 import CozyBrewUIComponents
-import CozyBrewCore
-import S2JAboutWindow
+import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-    func applicationDidFinishLaunching(_ notification: Notification) {
+    func applicationDidFinishLaunching(_: Notification) {
         // アプリ起動時にウィンドウを前面に表示
         NSApplication.shared.setActivationPolicy(.regular)
         NSApplication.shared.activate(ignoringOtherApps: true)
-        
+
         // 少し遅延させてウィンドウを確実に前面に表示
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
             if let window = NSApplication.shared.windows.first {
@@ -60,30 +59,30 @@ struct BrewNotAvailableView: View {
     @State private var installLog = ""
     @State private var showInstallError = false
     @State private var installError: String?
-    
+
     var body: some View {
         VStack(spacing: 24) {
             Image(systemName: "exclamationmark.triangle.fill")
                 .font(.system(size: 64))
                 .foregroundColor(.orange)
-            
+
             Text("Homebrew Not Found")
                 .font(.title)
                 .fontWeight(.bold)
-            
+
             Text("Homebrew is required to use CozyBrew. Please install Homebrew to continue.")
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
                 .padding(.horizontal)
-            
+
             VStack(alignment: .leading, spacing: 12) {
                 Text("Installation Instructions:")
                     .font(.headline)
-                
+
                 Text("1. Open Terminal")
                 Text("2. Run the installation command:")
                     .padding(.top, 4)
-                
+
                 Text("/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"")
                     .font(.system(.body, design: .monospaced))
                     .padding()
@@ -93,7 +92,7 @@ struct BrewNotAvailableView: View {
             }
             .padding()
             .frame(maxWidth: 500)
-            
+
             if isInstalling {
                 InstallProgressView(
                     title: "Installing Homebrew...",
@@ -110,7 +109,7 @@ struct BrewNotAvailableView: View {
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
             }
-            
+
             if showInstallError, let error = installError {
                 Text(error)
                     .font(.caption)
@@ -124,20 +123,20 @@ struct BrewNotAvailableView: View {
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-    
+
     private func installHomebrew() async {
         isInstalling = true
         installError = nil
         showInstallError = false
         installLog = ""
-        
+
         do {
             let result = try await BrewInstaller.install { @Sendable logLine in
                 Task { @MainActor in
                     installLog += logLine + "\n"
                 }
             }
-            
+
             if result.isSuccess {
                 // インストール成功 - 再検出して再初期化
                 // 注: 実際のアプリでは再起動を推奨する場合がある
@@ -154,42 +153,7 @@ struct BrewNotAvailableView: View {
             installError = error.localizedDescription
             showInstallError = true
         }
-        
-        isInstalling = false
-    }
-}
 
-/// About Window View (S2JAboutWindow のプレースホルダー)
-struct AboutWindowView: View {
-    @Environment(\.dismiss) private var dismiss
-    
-    var body: some View {
-        VStack(spacing: 16) {
-            Text("CozyBrew")
-                .font(.largeTitle)
-                .fontWeight(.bold)
-            
-            Text("A modern SwiftUI app for managing Homebrew packages")
-                .multilineTextAlignment(.center)
-                .foregroundColor(.secondary)
-            
-            Text("Version 1.0.2")
-                .font(.caption)
-                .foregroundColor(.secondary)
-            
-            Divider()
-            
-            VStack(alignment: .leading, spacing: 8) {
-                Link("GitHub Repository", destination: URL(string: "https://github.com/stein2nd/s2j-cozy-brew")!)
-                Link("License", destination: URL(string: "https://github.com/stein2nd/s2j-cozy-brew/blob/main/LICENSE")!)
-            }
-            
-            Button("Close") {
-                dismiss()
-            }
-            .buttonStyle(.borderedProminent)
-        }
-        .padding()
-        .frame(width: 400)
+        isInstalling = false
     }
 }

@@ -6,9 +6,7 @@ public struct InstallProgressView: View {
     let logOutput: String
     let onCancel: (() -> Void)?
     let isCancellable: Bool
-    
-    @State private var isExpanded: Bool = true
-    
+
     public init(
         title: String,
         logOutput: String,
@@ -20,26 +18,26 @@ public struct InstallProgressView: View {
         self.onCancel = onCancel
         self.isCancellable = isCancellable
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
                 ProgressView()
                     .scaleEffect(0.8)
-                
+
                 Text(title)
                     .font(.headline)
-                
+
                 Spacer()
-                
-                if isCancellable, let onCancel = onCancel {
+
+                if isCancellable, let onCancel {
                     Button("Cancel", action: onCancel)
                         .buttonStyle(.bordered)
                 }
             }
-            
+
             // ログ出力
-            DisclosureGroup("Show Log", isExpanded: $isExpanded) {
+            DisclosureGroup("Show Log") {
                 ScrollView {
                     Text(logOutput)
                         .font(.system(.body, design: .monospaced))

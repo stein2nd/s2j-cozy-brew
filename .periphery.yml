@@ -1,0 +1,6 @@
+project: CozyBrew.xcodeproj
+schemes:
+  - CozyBrewApp
+retain_public: true
+retain_codable_properties: true
+disable_redundant_public_analysis: true

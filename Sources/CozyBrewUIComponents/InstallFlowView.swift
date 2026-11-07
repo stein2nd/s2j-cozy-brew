@@ -1,17 +1,16 @@
-import SwiftUI
 import CozyBrewService
+import SwiftUI
 
 /// インストールフロービュー
 public struct InstallFlowView: View {
     let package: Package
     let onConfirm: () async throws -> Void
     let onCancel: () -> Void
-    
+
     @State private var isInstalling = false
     @State private var logOutput = ""
     @State private var errorMessage: String?
-    @State private var showError = false
-    
+
     public init(
         package: Package,
         onConfirm: @escaping () async throws -> Void,
@@ -21,7 +20,7 @@ public struct InstallFlowView: View {
         self.onConfirm = onConfirm
         self.onCancel = onCancel
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             if isInstalling {
@@ -34,7 +33,7 @@ public struct InstallFlowView: View {
                     },
                     isCancellable: false
                 )
-            } else if let errorMessage = errorMessage {
+            } else if let errorMessage {
                 BrewAlertView(
                     title: "Installation Failed",
                     message: errorMessage,
@@ -49,13 +48,13 @@ public struct InstallFlowView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text("Install \(package.name)?")
                         .font(.headline)
-                    
+
                     if let desc = package.desc {
                         Text(desc)
                             .font(.body)
                             .foregroundColor(.secondary)
                     }
-                    
+
                     HStack {
                         Text("Type:")
                             .font(.caption)
@@ -63,7 +62,7 @@ public struct InstallFlowView: View {
                         Text(package.type == .formula ? "Formula" : "Cask")
                             .font(.caption)
                     }
-                    
+
                     if let version = package.version {
                         HStack {
                             Text("Version:")
@@ -75,7 +74,7 @@ public struct InstallFlowView: View {
                     }
                 }
                 .padding()
-                
+
                 HStack {
                     Spacer()
                     Button("Cancel", action: onCancel)
@@ -92,12 +91,12 @@ public struct InstallFlowView: View {
         }
         .frame(minWidth: 400, minHeight: 200)
     }
-    
+
     private func performInstall() async {
         isInstalling = true
         errorMessage = nil
         logOutput = ""
-        
+
         do {
             try await onConfirm()
             // インストール成功

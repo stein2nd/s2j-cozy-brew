@@ -11,7 +11,7 @@
 ## 仕様書一覧
 
 | ファイル | 役割 |
-|----------|------|
+| --- | --- |
 | [overview.md](overview.md) | プロジェクトの存在理由・目的・要件ゴールの明文化 |
 | [architecture.md](architecture.md) | コード構造と責務の明文化 |
 | [brew_integration_spec.md](brew_integration_spec.md) | brew CLI 契約・バイナリ検出・プロセス実行の定義 |

@@ -1,6 +1,3 @@
-<!-- 
-目的：ユーザーフロー (初回起動・パッケージ操作) の定義
- -->
 # S2J CozyBrew — UX フロー仕様
 
 本ドキュメントでは、アプリケーションの主要なユーザーフローを定義します。初回起動からパッケージ操作までの流れを明文化します。
@@ -52,9 +49,16 @@
 検索 → 一覧 → 詳細 → Install / Uninstall / Upgrade
 ```
 
+### 2.1.1. 一覧内検索 (フィルタ)
+
+* 検索バーは **現在のサイドバー一覧をクライアント側で絞り込み** ます (名前・full_name・説明の部分一致、大文字小文字無視)。
+* Enter や `brew search` は呼びません。0件の場合は **No matching packages** と表示し、別処理 (Tap 取得失敗等) のエラーは混ぜません。
+
 ### 2.2. 操作の共通仕様
 
 * インストール・アンインストール・アップグレードは、非同期でプログレス表示
+* **Upgrade** (一覧・詳細とも) は最前面のモーダル風オーバーレイ (`Upgrading…`) で他操作をブロックする
+* **Cask の Upgrade** では macOS の管理者認証が入ることがあり、**暗幕付き全画面オーバーレイは使わない** (`passwordFriendly`: 右上の進行カードのみ・背面ヒット透過)。システムのパスワードダイアログが前面に出やすいようにする。一覧・詳細は `disabled` で誤操作を防ぐ。
 * 完了 / 失敗通知を UI に反映
 * キャンセル可能とする
 
@@ -92,9 +96,22 @@
 
 ## 4. サイドバー・ナビゲーション
 
-* セクション: Installed / Outdated / Taps / Casks / Formulae
+* セクション: **Warnings** / Installed / Outdated / Taps / Formulae / Casks（`SidebarItem` の `CaseIterable` 順）
+* **Warnings**: `brew doctor` の出力をパースして表示。起動時とタブ選択時に `refreshDoctorWarnings()`。Warning ブロック数をオレンジのバッジで表示。検索バーは非表示。ツールバー Refresh で再実行。
 * S2J Source List を用いた分類表示
 * 選択に応じてコンテンツエリアを切り替え
+* **Formulae / Casks**: formulae.brew.sh の JSON API から全件を取得 (キャッシュあり)。一覧は **先頭文字のページ** (A–E / F–J / … / 1–5 / 6–0) で分割表示し、常に 1 ページ分だけ `List` に載せる。検索入力時は全ページ横断でフィルタ。
+
+### 4.1. 一覧 → 詳細 → 戻る
+
+* 行タップで詳細を表示しても、**サイドバーで選んでいるセクション** (Installed / Outdated 等) は維持します。
+* **[戻る]** では同一セクションの一覧に戻ります (別タブには自動遷移しません)。
+* 詳細のナビゲーションタイトルは **パッケージ名** のみです。直前が Outdated 由来か Installed 由来かは、サイドバーのハイライトで判別します。
+* 詳細の Upgrade / Status は `brew outdated` 一覧と照合した結果を優先し、操作後の再読み込みで更新します。
+
+### 4.2. Installed 一覧での Upgrade
+
+* `brew list` 単体では `isOutdated` が付かないため、表示時に **`brew outdated` と名前・種別 (Formula/Cask) を照合** し、一致する行に Update Available バッジと [Upgrade] を出します。
 
 ---
 

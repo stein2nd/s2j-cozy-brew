@@ -1,6 +1,3 @@
-<!-- 
-目的：デザイン・ブランディング方針の定義
- -->
 # S2J CozyBrew — デザイン・ブランディング仕様
 
 本ドキュメントでは、Cozy ブランドに基づくビジュアル・デザインの指針を定義します。詳細なデザイン規約は [COMMON_SPEC.md](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md) に準拠します。
@@ -17,7 +14,8 @@
 ## 2. アプリケーション・アイコン
 
 * 1024×1024px PNG / SVG を用意します。
-* `Assets.xcassets` 内の `AppIcon.appiconset` で管理します。
+* `Assets.xcassets` 内の `AppIcon.appiconset` で管理します（実装済み。ソース画像は `CozyBrewApp/Resources/AppIcon-source.jpg` を参照可）。
+* About シートおよび Dock はバンドル `AppIcon`（`AboutView` は `NSApplication.shared.applicationIconImage`）を表示します。
 
 ---
 

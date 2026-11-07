@@ -1,6 +1,3 @@
-<!-- 
-目的：「コード構造と責務」の明文化
- -->
 # S2J CozyBrew — コード構造と責務
 
 ## 1. モジュール分割 (推奨)
@@ -122,7 +119,8 @@
 
 ### 3.2. About Window
 
-* [S2J About Window](https://github.com/stein2nd/s2j-about-window) を組込み、`About` ボタンから `S2JAboutWindow` を表示します。About の Contents に `CozyBrew` ロゴ、ライセンス、サポート・リンクを含めます。
+* [S2J About Window](https://github.com/stein2nd/s2j-about-window) の `AboutView` を `CozyBrewAboutSheet`（`CozyBrewApp/CozyBrewAbout.swift`）経由でシート表示します。
+* アイコン・タイトル・バージョン・著作権はライブラリヘッダー、本文は Markdown（GitHub / License リンク）。メニュー **About CozyBrew** と同一 UI です。
 
 ### 3.3. BrewUIComponents (CozyBrewUIComponents)
 

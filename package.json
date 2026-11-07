@@ -1,6 +1,6 @@
 {
   "name": "s2j-cozy-brew",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Using SwiftUI, reimplement the AppKit-based \"Cakebrew\".",
   "type": "module",
   "author": "Koutarou ISHIKAWA",
@@ -24,6 +24,16 @@
   ],
   "scripts": {
     "lint:docs": "s2j-docs-linter ./README.md ./CHANGELOG.md ./docs/**/*.md",
+    "lint:swift": "npm run lint:swiftlint && npm run lint:swiftformat && npm run lint:periphery",
+    "lint:swiftlint": "swiftlint lint --strict Sources Tests CozyBrewApp Package.swift",
+    "lint:swiftformat": "swiftformat --lint .",
+    "lint:periphery": "periphery scan --strict",
+    "format:swift": "swiftformat .",
+    "profile:swift": "xcrun xctrace",
+
+    "lint:build": "xcodebuild build -project CozyBrew.xcodeproj -scheme CozyBrewApp -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO",
+    "analyze:swift": "xcodebuild analyze -project CozyBrew.xcodeproj -scheme CozyBrewApp -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO",
+
     "swift:ncu": "./scripts/swift-deps.sh check",
     "swift:ncu:update": "./scripts/swift-deps.sh update",
     "swift:install": "./scripts/swift-deps.sh install",

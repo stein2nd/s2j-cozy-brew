@@ -2,6 +2,20 @@
 
 ## unreleased
 
+## 1.0.10 - 2026-11-08
+
+* SPM 依存を更新 (`s2j-about-window` → `97d4d26` / v2.0.12、`s2j-source-list` → `b700ea4` / v2.0.10)
+* About ウィンドウを `S2JAboutWindow.AboutView` に統合し、プレースホルダー `AboutWindowView` を削除 (`CozyBrewAbout.swift`)
+* アプリアイコンを `Assets.xcassets` に追加（Dock 表示用）
+* Formulae / Casks サイドバーで未インストールパッケージのカタログ表示を追加 (`formulae.brew.sh` API、`BrewFormulaeAPIClient`、カタログ用モデル・パース)
+* カタログ一覧の A–E 等ページ切替と検索、読み込み・エラー表示を `MainWindowView` に実装
+* カタログ取得時のクラッシュ対策 (`Info.plist` の `CFBundleVersion` を文字列化、明示的 `User-Agent`)
+* Swift 向け lint / ビルド用 npm スクリプトを拡張 (`lint:swiftlint`、`lint:swiftformat`、`lint:periphery`、`lint:build` 等) と設定ファイル (`.swiftlint.yml`、`.periphery.yml`、`.swift-version`)
+* Xcode ビルド・解析スキームを `CozyBrewApp` に統一
+* カタログ・API パース・モデル周りのユニットテストを追加・更新
+* 仕様ドキュメント (`docs/*`) をカタログ UI・Homebrew 連携の実装に合わせて更新
+* バージョンを v1.0.10に更新 (`package.json`)
+
 ## 1.0.9 - 2026-11-06
 
 * GitHub Actions を Node.js v24対応に更新 (`actions/checkout@v5`、`codecov/codecov-action@v7`、`actions/upload-artifact@v6`)

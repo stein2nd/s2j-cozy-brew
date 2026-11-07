@@ -1,6 +1,3 @@
-<!-- 
-目的：権限・スクリプト実行・プライバシーの定義
- -->
 # S2J CozyBrew — セキュリティ・権限・プライバシー仕様
 
 本ドキュメントでは、実行権限、スクリプト実行、プライバシー、アクセシビリティに関する仕様を定義します。
@@ -63,3 +60,20 @@
 * `CozyBrewApp.entitlements` でアプリケーション権限を管理します。
 * 配布用のコード署名 / notarize は App Target のビルド設定で実施します。
 * サンドボックス外で brew を実行するため、必要に応じて entitlement を設定します (例: ネットワークアクセス、特定ディレクトリへのアクセス)。
+
+---
+
+## 6. カタログ HTTP と Info.plist
+
+* formulae.brew.sh への HTTPS は App Transport Security 既定（任意ロードなし）のまま行います。
+* `BrewFormulaeAPIClient` はリクエストごとに **User-Agent** を設定し、バンドル識別子・バージョンを文字列で含めます。
+* `CozyBrewApp/Info.plist` の `CFBundleVersion` は **`<string>`** とし、数値のみの plist 型で CFNetwork が User-Agent 組み立てに失敗しないようにします。
+
+---
+
+## 7. macOS「アプリの管理」(App Management)
+
+* Cask の Upgrade / Install で **他のアプリ** (`/Applications` 内など) を書き換えると、macOS は **プライバシーとセキュリティ** の通知で変更を阻止することがあります。
+* これは TCC の **App Management** によるもので、CozyBrew 単体の entitlement では自動付与できず、**ユーザーがシステム設定で CozyBrew を許可**する必要があります。
+* 手順 (日本語 UI): **システム設定 → プライバシーとセキュリティ → アプリの管理** で CozyBrew をオン。
+* 許可後に同じ Cask を再度 Upgrade する。拒否を続ける場合は Terminal で `brew upgrade --cask <name>` を案内する。

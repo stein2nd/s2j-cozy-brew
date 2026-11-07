@@ -6,9 +6,7 @@ public struct BrewAlertView: View {
     let message: String
     let rawLog: String?
     let onDismiss: () -> Void
-    
-    @State private var showRawLog = false
-    
+
     public init(
         title: String,
         message: String,
@@ -20,31 +18,31 @@ public struct BrewAlertView: View {
         self.rawLog = rawLog
         self.onDismiss = onDismiss
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             HStack {
                 Image(systemName: "exclamationmark.triangle.fill")
                     .foregroundColor(.red)
                     .font(.title2)
-                
+
                 Text(title)
                     .font(.headline)
-                
+
                 Spacer()
-                
+
                 Button(action: onDismiss) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.secondary)
                 }
                 .buttonStyle(.plain)
             }
-            
+
             Text(message)
                 .font(.body)
-            
-            if let rawLog = rawLog, !rawLog.isEmpty {
-                DisclosureGroup("Show Raw Log", isExpanded: $showRawLog) {
+
+            if let rawLog, !rawLog.isEmpty {
+                DisclosureGroup("Show Raw Log") {
                     ScrollView {
                         Text(rawLog)
                             .font(.system(.body, design: .monospaced))
@@ -56,7 +54,7 @@ public struct BrewAlertView: View {
                     .frame(maxHeight: 200)
                 }
             }
-            
+
             HStack {
                 Spacer()
                 Button("OK", action: onDismiss)
