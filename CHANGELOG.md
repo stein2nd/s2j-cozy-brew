@@ -2,6 +2,9 @@
 
 ## unreleased
 
+* `Package.swift` の最小 macOS を 14.6 に上げ、SPM 依存 (S2JSourceList / S2JAboutWindow) との整合を修正
+* `lint-docs` ワークフローを Node.js v24・`actions/setup-node@v5`・`ubuntu-24.04` に更新
+
 ## 1.0.10 - 2026-11-08
 
 * SPM 依存を更新 (`s2j-about-window` → `97d4d26` / v2.0.12、`s2j-source-list` → `b700ea4` / v2.0.10)

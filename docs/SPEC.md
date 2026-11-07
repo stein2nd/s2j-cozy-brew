@@ -509,7 +509,7 @@ let package = Package(
     * ✅ `test-macos` ジョブの成功後に実行
 * ✅ `.github/workflows/docs-lint.yml` - ドキュメント・リント・ワークフロー
   * ✅ `lint-docs` ジョブ: Markdown ドキュメントの表記揺れ検出 (`@s2j/docs-linter`)
-    * ✅ `actions/checkout@v5`、Node.js v24 (`actions/setup-node@v4`)
+    * ✅ `actions/checkout@v5`、Node.js v24 (`actions/setup-node@v5`)、Runner `ubuntu-24.04`
     * ✅ `npm ci` と `npm run lint:docs` (`README.md`、`CHANGELOG.md`、`docs/**/*.md`)
 * ✅ `scripts/test-local.sh` - ローカル・テスト実行スクリプト (統合版)
   * ✅ macOS/iPadOS 対応の汎用スクリプト
@@ -768,8 +768,8 @@ let package = Package(
         * リリース・ビルド (`swift build -c release`)
         * ビルド成果物のアップロード (`actions/upload-artifact@v6`)
     * ✅ `docs-lint.yml`: Markdown ドキュメントの表記揺れ検出 (Docs Linter) (実装済み)
-      * **`lint-docs` ジョブ** (`runs-on: ubuntu-latest`):
-        * `actions/checkout@v5`、Node.js v24
+      * **`lint-docs` ジョブ** (`runs-on: ubuntu-24.04`):
+        * `actions/checkout@v5`、Node.js v24 (`actions/setup-node@v5`)
         * `npm ci` と `npm run lint:docs`
         * 対象: `README.md`、`CHANGELOG.md`、`docs/**/*.md`
 * **ローカルテストスクリプト**:
