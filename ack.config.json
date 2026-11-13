@@ -1,0 +1,38 @@
+{
+  "preset": "macos-app",
+  "output": "CozyBrewApp/Resources/ACKNOWLEDGEMENTS.md",
+  "workDir": "build/oss-notice",
+  "scan": {
+    "exclude": [
+      "**/.github/**",
+      "**/.git/**",
+      "**/node_modules/**"
+    ]
+  },
+  "tools": {
+    "venvPath": "venv"
+  },
+  "pipeline": {
+    "feluda": true,
+    "feludaArgs": [
+      "--sbom-input",
+      "{sbom}",
+      "--sbom-enriched",
+      "{sbom}"
+    ],
+    "noticeDenylist": [
+      "actions/*",
+      "codecov/*",
+      "maxim-lobanov/*"
+    ],
+    "onotFormat": "md",
+    "onotConfig": "onot.yaml"
+  },
+  "xcode": {
+    "project": "CozyBrew.xcodeproj",
+    "scheme": "CozyBrewApp",
+    "configuration": "Release",
+    "productName": "CozyBrewApp.app",
+    "merge": ["app", "spm-checkouts"]
+  }
+}

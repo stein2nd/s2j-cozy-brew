@@ -8,7 +8,7 @@
 * **目的:** AppKit ベースの「Cakebrew」を SwiftUI / Swift を用いて再実装します。
   * コアロジックや再利用可能な部品は Swift Package 化します (s2j-cozy-brew 等)。
   * アプリケーション本体は Xcode App Target (CozyBrew.app) で管理します。
-* **対応 OS:** macOS v12.0以上 (可能なら macOS v13+ の API をオプションで活用)
+* **対応 OS:** macOS v15.0 以上
 * 設計方針の核:
   * **再利用性 (Package) と実行可能アプリケーション (App Target) の分離** です。
   * UI 再利用部品や Brew 操作ロジックは Swift Package として設計・テスト可能にし、アプリケーション固有のバンドル資産、Info.plist、署名等は App Target に置きます。
@@ -37,7 +37,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 * brew の内部実装を再作成しません (CLI をラップします)。
 * brew が管理するパッケージの完全な CI 自動テストは本プロジェクトの範囲外です (実環境でのインストールはユーザー端末で行います)。
   * Swift Package (`s2j-cozy-brew`) として管理し、SwiftPM でビルド可能とします。
-  * UI は SwiftUI (可能なら macOS v13の `Observation` を利用しますが、最低限 macOS v12対応を保ちます)。
+  * UI は SwiftUI (macOS v15.0 以上を前提)。
   * セキュリティ: brew 実行は、サンドボックス外のプロセス・コールを行うため、権限/経路の取り扱いを厳密にします。
   * ローカライズ対応 (英語・日本語を初期対応とします)。
   * アクセシビリティ (VoiceOver 等) への対応を実装します。

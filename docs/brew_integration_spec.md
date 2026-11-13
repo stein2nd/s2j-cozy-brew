@@ -168,10 +168,10 @@ brew 未導入ユーザーに対して、公式インストール・スクリプ
 
 ## 8. `brew doctor` (Warnings タブ)
 
-* コマンド: `["doctor"]`（JSON API なし、プレーンテキストのみ）。
-* **stdout と stderr を結合** して `BrewDoctorParser` に渡します（Warning 本文は stderr に出ることが多い）。
+* コマンド: `["doctor"]` (JSON API なし、プレーンテキストのみ)。
+* **stdout と stderr を結合** して `BrewDoctorParser` に渡します (Warning 本文は stderr に出ることが多い)。
 * **終了コード 1** でも Warning がパースできれば成功扱いとし、`doctorErrorMessage` は立てません。
-* Disclaimer 行は `preamble`、各 `Warning:` ブロックは `BrewDoctorWarning`（`title` / `bodyLines` / 先頭インデント行の `items`）に分割します。
+* Disclaimer 行は `preamble`、各 `Warning:` ブロックは `BrewDoctorWarning` (`title` / `bodyLines` / 先頭インデント行の `items`) に分割します。
 * 空出力かつ非ゼロ終了のみを実行失敗とみなします。
 
 ---
@@ -182,7 +182,7 @@ brew 未導入ユーザーに対して、公式インストール・スクリプ
 * 応答を `Formula` / `Cask` としてデコードし `Package` 化。ローカル `brew list` と名前照合してインストール状態を上書きします。
 * 一覧は **名前順**。UI では先頭文字の **7 ページ** (A–E … 6–0) に分割し、検索なし時は 1 ページ分のみ表示する (全件を 1 つの `List` に載せない)。
 * 生 JSON を 6 時間キャッシュ。decode はバックグラウンド、`Package` 配列を UI に反映します。
-* HTTP は `BrewFormulaeAPIClient` が `URLSession` で取得します。**`User-Agent` を明示**（`cozyBrewUserAgent()`）。`Info.plist` の `CFBundleShortVersionString` / `CFBundleVersion` は **文字列型** とし、CFNetwork がバージョンを文字列として読めるようにします（`CFBundleVersion` が整数のみだと HTTPS 初期化時にクラッシュしうる）。
+* HTTP は `BrewFormulaeAPIClient` が `URLSession` で取得します。**`User-Agent` を明示** (`cozyBrewUserAgent()`)。`Info.plist` の `CFBundleShortVersionString` / `CFBundleVersion` は **文字列型** とし、CFNetwork がバージョンを文字列として読めるようにします (`CFBundleVersion` が整数のみだと HTTPS 初期化時にクラッシュしうる)。
 
 ---
 

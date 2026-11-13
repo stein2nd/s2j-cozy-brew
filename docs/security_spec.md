@@ -65,7 +65,7 @@
 
 ## 6. カタログ HTTP と Info.plist
 
-* formulae.brew.sh への HTTPS は App Transport Security 既定（任意ロードなし）のまま行います。
+* formulae.brew.sh への HTTPS は App Transport Security 既定 (任意ロードなし) のまま行います。
 * `BrewFormulaeAPIClient` はリクエストごとに **User-Agent** を設定し、バンドル識別子・バージョンを文字列で含めます。
 * `CozyBrewApp/Info.plist` の `CFBundleVersion` は **`<string>`** とし、数値のみの plist 型で CFNetwork が User-Agent 組み立てに失敗しないようにします。
 

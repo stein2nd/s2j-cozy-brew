@@ -14,8 +14,8 @@
 ## 2. アプリケーション・アイコン
 
 * 1024×1024px PNG / SVG を用意します。
-* `Assets.xcassets` 内の `AppIcon.appiconset` で管理します（実装済み。ソース画像は `CozyBrewApp/Resources/AppIcon-source.jpg` を参照可）。
-* About シートおよび Dock はバンドル `AppIcon`（`AboutView` は `NSApplication.shared.applicationIconImage`）を表示します。
+* `Assets.xcassets` 内の `AppIcon.appiconset` で管理します (実装済み。ソース画像は `CozyBrewApp/Resources/AppIcon-source.jpg` を参照可)。
+* About シートおよび Dock はバンドル `AppIcon` (`AboutView` は `NSApplication.shared.applicationIconImage`) を表示します。
 
 ---
 

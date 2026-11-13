@@ -87,7 +87,7 @@
 ││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理)
 ││└─ Models.swift  # Formula、Cask、Tap、Package モデル定義
 │└┬─ CozyBrewUIComponents/  # UI コンポーネント・モジュール
-│　├─ MainWindowView.swift  # メイン・ウィンドウ (macOS 12.0/13.0 対応)
+│　├─ MainWindowView.swift  # メイン・ウィンドウ (macOS 15.0+)
 │　├─ BrewAlertView.swift  # エラー表示
 │　├─ InstallFlowView.swift  # インストール・フロー
 │　├─ InstallProgressView.swift  # インストール進捗表示
@@ -119,8 +119,8 @@
 
 ### 3.2. About Window
 
-* [S2J About Window](https://github.com/stein2nd/s2j-about-window) の `AboutView` を `CozyBrewAboutSheet`（`CozyBrewApp/CozyBrewAbout.swift`）経由でシート表示します。
-* アイコン・タイトル・バージョン・著作権はライブラリヘッダー、本文は Markdown（GitHub / License リンク）。メニュー **About CozyBrew** と同一 UI です。
+* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (≥ v3.0.0) の `AboutView` を `CozyBrewAboutSheet` (`CozyBrewApp/CozyBrewAbout.swift`) 経由でシート表示します。
+* アイコン・タイトル・バージョン・著作権はライブラリヘッダー、本文は Markdown (GitHub)。**License** / **Acknowledgements** でバンドル `LICENSE.txt` と `ACKNOWLEDGEMENTS.md` をアプリ内表示。メニュー **About CozyBrew** と同一 UI です。
 
 ### 3.3. BrewUIComponents (CozyBrewUIComponents)
 

@@ -1,6 +1,6 @@
 {
   "name": "s2j-cozy-brew",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Using SwiftUI, reimplement the AppKit-based \"Cakebrew\".",
   "type": "module",
   "author": "Koutarou ISHIKAWA",
@@ -23,17 +23,15 @@
     "LICENSE"
   ],
   "scripts": {
-    "lint:docs": "s2j-docs-linter ./README.md ./CHANGELOG.md ./docs/**/*.md",
+    "lint:docs": "s2j-docs-linter ./README.md ./CHANGELOG.md ./docs/*.md ./docs/**/*.md",
     "lint:swift": "npm run lint:swiftlint && npm run lint:swiftformat && npm run lint:periphery",
     "lint:swiftlint": "swiftlint lint --strict Sources Tests CozyBrewApp Package.swift",
     "lint:swiftformat": "swiftformat --lint .",
     "lint:periphery": "periphery scan --strict",
     "format:swift": "swiftformat .",
     "profile:swift": "xcrun xctrace",
-
     "lint:build": "xcodebuild build -project CozyBrew.xcodeproj -scheme CozyBrewApp -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO",
     "analyze:swift": "xcodebuild analyze -project CozyBrew.xcodeproj -scheme CozyBrewApp -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO",
-
     "swift:ncu": "./scripts/swift-deps.sh check",
     "swift:ncu:update": "./scripts/swift-deps.sh update",
     "swift:install": "./scripts/swift-deps.sh install",
@@ -42,9 +40,12 @@
     "swift:show-deps": "swift package show-dependencies",
     "test:local": "./scripts/test-local.sh",
     "test:local:macOS": "./scripts/test-local_macOS.sh",
-    "test:local:iOSfull": "./scripts/test-local.sh --ios-device \"iPad Pro\" --ios-version \"15.0\" --enable-xcode-project --xcodegen-auto-install"
+    "test:local:iOSfull": "./scripts/test-local.sh --ios-device \"iPad Pro\" --ios-version \"15.0\" --enable-xcode-project --xcodegen-auto-install",
+    "ack:doctor": "s2j-acknowledgements doctor --config ack.config.json",
+    "ack:generate": "s2j-acknowledgements generate --config ack.config.json"
   },
   "devDependencies": {
+    "@s2j/acknowledgements": "^0.1.12",
     "@s2j/docs-linter": "^1.0.32"
   },
   "allowScripts": {

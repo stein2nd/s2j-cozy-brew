@@ -96,7 +96,7 @@
 
 ## 4. サイドバー・ナビゲーション
 
-* セクション: **Warnings** / Installed / Outdated / Taps / Formulae / Casks（`SidebarItem` の `CaseIterable` 順）
+* セクション: **Warnings** / Installed / Outdated / Taps / Formulae / Casks (`SidebarItem` の `CaseIterable` 順)
 * **Warnings**: `brew doctor` の出力をパースして表示。起動時とタブ選択時に `refreshDoctorWarnings()`。Warning ブロック数をオレンジのバッジで表示。検索バーは非表示。ツールバー Refresh で再実行。
 * S2J Source List を用いた分類表示
 * 選択に応じてコンテンツエリアを切り替え

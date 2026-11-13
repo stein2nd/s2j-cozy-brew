@@ -2,7 +2,7 @@ name: CozyBrew
 options:
   bundleIdPrefix: com.s2j
   deploymentTarget:
-    macOS: "14.6"
+    macOS: "15.0"
   developmentLanguage: en
   xcodeVersion: "26.3"
   projectFormat: xcode16_3
@@ -14,7 +14,7 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MACOSX_DEPLOYMENT_TARGET: "14.6"
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
     LOCALIZATION_PREFERS_STRING_CATALOGS: YES
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     STRING_CATALOG_GENERATE_SYMBOLS: YES
@@ -33,11 +33,15 @@ targets:
   CozyBrewApp:
     type: application
     platform: macOS
-    deploymentTarget: "14.6"
+    deploymentTarget: "15.0"
     sources:
       - path: CozyBrewApp
+        excludes:
+          - Resources/AppIcon-source.jpg
     resources:
       - path: CozyBrewApp/Assets.xcassets
+      - path: CozyBrewApp/Resources/LICENSE.txt
+      - path: CozyBrewApp/Resources/ACKNOWLEDGEMENTS.md
     info:
       path: CozyBrewApp/Info.plist
       properties:
@@ -47,9 +51,9 @@ targets:
         CFBundleInfoDictionaryVersion: "6.0"
         CFBundleName: $(PRODUCT_NAME)
         CFBundlePackageType: $(PRODUCT_BUNDLE_PACKAGE_TYPE)
-        CFBundleShortVersionString: "1.0.10"
-        CFBundleVersion: "2"
-        LSMinimumSystemVersion: "14.6"
+        CFBundleShortVersionString: "1.0.11"
+        CFBundleVersion: "3"
+        LSMinimumSystemVersion: "15.0"
         NSHumanReadableCopyright: "Copyright © 2024 S2J. All rights reserved."
         NSPrincipalClass: NSApplication
         NSHighResolutionCapable: true
@@ -61,7 +65,7 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrew
       PRODUCT_NAME: $(TARGET_NAME)
       SWIFT_VERSION: "6.0"
-      MACOSX_DEPLOYMENT_TARGET: "14.6"
+      MACOSX_DEPLOYMENT_TARGET: "15.0"
       CODE_SIGN_ENTITLEMENTS: CozyBrewApp/CozyBrewApp.entitlements
       CODE_SIGN_STYLE: Automatic
       DEVELOPMENT_TEAM: ""
@@ -75,14 +79,14 @@ targets:
   CozyBrewCore:
     type: framework
     platform: macOS
-    deploymentTarget: "14.6"
+    deploymentTarget: "15.0"
     sources:
       - path: Sources/CozyBrewCore
     settings:
       PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewCore
       PRODUCT_NAME: CozyBrewCore
       SWIFT_VERSION: "6.0"
-      MACOSX_DEPLOYMENT_TARGET: "14.6"
+      MACOSX_DEPLOYMENT_TARGET: "15.0"
       DEFINES_MODULE: true
       GENERATE_INFOPLIST_FILE: YES
       CODE_SIGN_STYLE: Automatic
@@ -92,7 +96,7 @@ targets:
   CozyBrewService:
     type: framework
     platform: macOS
-    deploymentTarget: "14.6"
+    deploymentTarget: "15.0"
     sources:
       - path: Sources/CozyBrewService
     dependencies:
@@ -101,7 +105,7 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewService
       PRODUCT_NAME: CozyBrewService
       SWIFT_VERSION: "6.0"
-      MACOSX_DEPLOYMENT_TARGET: "14.6"
+      MACOSX_DEPLOYMENT_TARGET: "15.0"
       DEFINES_MODULE: true
       GENERATE_INFOPLIST_FILE: YES
       CODE_SIGN_STYLE: Automatic
@@ -111,7 +115,7 @@ targets:
   CozyBrewUIComponents:
     type: framework
     platform: macOS
-    deploymentTarget: "14.6"
+    deploymentTarget: "15.0"
     sources:
       - path: Sources/CozyBrewUIComponents
     dependencies:
@@ -124,7 +128,7 @@ targets:
       PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewUIComponents
       PRODUCT_NAME: CozyBrewUIComponents
       SWIFT_VERSION: "6.0"
-      MACOSX_DEPLOYMENT_TARGET: "14.6"
+      MACOSX_DEPLOYMENT_TARGET: "15.0"
       DEFINES_MODULE: true
       GENERATE_INFOPLIST_FILE: YES
       CODE_SIGN_STYLE: Automatic

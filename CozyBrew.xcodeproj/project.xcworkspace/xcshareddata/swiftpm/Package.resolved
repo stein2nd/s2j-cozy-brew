@@ -1,5 +1,5 @@
 {
-  "originHash" : "12fcf27ebdf19316c4138b01f414b069b53ea0c1e25fb7a1d053c160f87517fe",
+  "originHash" : "62b61d642141e86ef0c6138bff49b87375a355ff4eb374e04f7addae2f524c41",
   "pins" : [
     {
       "identity" : "s2j-about-window",
@@ -7,7 +7,7 @@
       "location" : "https://github.com/stein2nd/s2j-about-window.git",
       "state" : {
         "branch" : "main",
-        "revision" : "97d4d267da044bfdecaffd4120290005387f238d"
+        "revision" : "dafc738defb26551f7636b578533a0380abd736a"
       }
     },
     {
@@ -17,6 +17,33 @@
       "state" : {
         "branch" : "main",
         "revision" : "b700ea44f1201eee76d0c3379ad382e5ffd3f14b"
+      }
+    },
+    {
+      "identity" : "swift-concurrency-extras",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-concurrency-extras",
+      "state" : {
+        "revision" : "8a4260f7373493435bd21194585c95b72bfdd401",
+        "version" : "1.4.3"
+      }
+    },
+    {
+      "identity" : "swiftui-math",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gonzalezreal/swiftui-math",
+      "state" : {
+        "revision" : "0b5c2cfaaec8d6193db206f675048eeb5ce95f71",
+        "version" : "0.1.0"
+      }
+    },
+    {
+      "identity" : "textual",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gonzalezreal/textual",
+      "state" : {
+        "revision" : "01b51875a5406eefc95f52a058cb059e7bc94dc4",
+        "version" : "0.5.0"
       }
     }
   ],

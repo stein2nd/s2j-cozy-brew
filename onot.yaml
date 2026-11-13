@@ -1,0 +1,10 @@
+# macOS app host — customize before generate.
+# onot 1.2.x: company metadata lives under `company:` (not top-level).
+# See presets/shared/onot.yaml.example and upstream onot documentation.
+
+company:
+  organization: S2J
+  copyright_holder: S2J
+  copyright_year: 2026
+  contact_email: stein2nd@gmail.com
+  source_download_url: https://github.com/stein2nd/s2j-cozy-brew

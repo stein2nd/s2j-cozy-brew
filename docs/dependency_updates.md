@@ -88,6 +88,25 @@ npm run swift:show-deps   # 依存ツリー表示
 
 Xcode から更新する場合: `File → Packages → Update to Latest Package Versions`
 
+### Xcode と `Package.swift` の二重管理 (重要)
+
+CozyBrew では SPM 依存が **2 経路**あります。
+
+| 経路 | 定義 | ロック |
+| --- | --- | --- |
+| **CLI / `swift build`** | ルート `Package.swift` | ルート `Package.resolved` |
+| **Xcode (`CozyBrew.xcodeproj`)** | `project.yml` の `packages:` → `xcodegen` が `project.pbxproj` に書く | `CozyBrew.xcodeproj/.../swiftpm/Package.resolved` |
+
+`project.yml` で `branch: main` にしても、**`xcodegen generate` 前の `project.pbxproj` に `minimumVersion` が残っている**と、Xcode の **Reset Package Caches** 後に **semver (例: 3.0.1) 表示に戻ります**。
+
+**`main` 追従に揃えたあと**
+
+1. `project.yml` で `branch: main` を確認
+2. `xcodegen generate` (`pbxproj` の `requirement` が `kind = branch` になること)
+3. `npm run swift:install` (ルート `Package.resolved` を更新し、Xcode 側にコピー)
+
+Xcode の Package Dependencies パネルでは、`main` 指定でも **近い tag 番号が併記される**ことがあります。正は **`Package.resolved` の `state.branch`** です。
+
 ---
 
 ## 更新後

@@ -136,7 +136,7 @@ Formula と共通の基本プロパティに加え、Cask 固有のプロパテ�
 | outdated | [Package] | アップデート可能パッケージ一覧 |
 | taps | [Tap] | Tap 一覧 |
 | searchResults | [Package] | 検索結果 |
-| catalogFormulaeGeneration / catalogCasksGeneration | Int | カタログ再構築の世代（巨大配列を `@Published` で渡さない） |
+| catalogFormulaeGeneration / catalogCasksGeneration | Int | カタログ再構築の世代 (巨大配列を `@Published` で渡さない) |
 | catalogFormulaeIsLoading / catalogCasksIsLoading | Bool | カタログ HTTP 取得中 |
 | catalogFormulaeErrorMessage / catalogCasksErrorMessage | String? | カタログ取得・デコード失敗 |
 

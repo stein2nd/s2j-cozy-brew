@@ -2,14 +2,26 @@
 
 ## unreleased
 
+## 1.0.11 - 2026-11-13
+
+* デプロイメントターゲットを **macOS v15.0** に引き上げ (`Package.swift`、`project.yml`、`Info.plist`)
+* `s2j-about-window` を **`main` 追従** (v3 / Textual。`s2j-source-list` と同様、`Package.resolved` で revision 固定)
+* About で `LICENSE.txt` と `ACKNOWLEDGEMENTS.md` をバンドル同梱し、`licenseResourceName` / `acknowledgementsResourceName` でシート表示
+* OSS Notice 生成: `@s2j/acknowledgements` (`ack:doctor` / `ack:generate`)、`ack.config.json` / `onot.yaml`、出力先 `CozyBrewApp/Resources/ACKNOWLEDGEMENTS.md`
+* Python v3.13 用 `.python-version`、ローカル `venv/` と `build/oss-notice/` を `.gitignore` に追加
+* `README.md` の要件表記を macOS v15.0+ に更新
+* `docs/SPEC.md`、`docs/overview.md`、`docs/architecture.md` を v15 / About v3 / Acknowledgements 前提に更新
+* `docs/dependency_updates.md` に Xcode (`project.yml` → `xcodegen`) と `Package.swift` の SPM 二重管理の手順を追記
+* SPM 依存を更新 (`s2j-about-window` → `dafc738` / `main`、`Package.resolved` 同期)
+
 ## 1.0.10 - 2026-11-08
 
-* `Package.swift` の最小 macOS を 14.6 に上げ、SPM 依存 (S2JSourceList / S2JAboutWindow) との整合を修正
+* `Package.swift` の最小 macOS を v14.6 に上げ、SPM 依存 (S2JSourceList / S2JAboutWindow) との整合を修正
 * `lint-docs` ワークフローを Node.js v24・`actions/setup-node@v5`・`ubuntu-24.04` に更新
 
 * SPM 依存を更新 (`s2j-about-window` → `97d4d26` / v2.0.12、`s2j-source-list` → `b700ea4` / v2.0.10)
 * About ウィンドウを `S2JAboutWindow.AboutView` に統合し、プレースホルダー `AboutWindowView` を削除 (`CozyBrewAbout.swift`)
-* アプリアイコンを `Assets.xcassets` に追加（Dock 表示用）
+* アプリアイコンを `Assets.xcassets` に追加 (Dock 表示用)
 * Formulae / Casks サイドバーで未インストールパッケージのカタログ表示を追加 (`formulae.brew.sh` API、`BrewFormulaeAPIClient`、カタログ用モデル・パース)
 * カタログ一覧の A–E 等ページ切替と検索、読み込み・エラー表示を `MainWindowView` に実装
 * カタログ取得時のクラッシュ対策 (`Info.plist` の `CFBundleVersion` を文字列化、明示的 `User-Agent`)
