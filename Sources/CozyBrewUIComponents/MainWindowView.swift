@@ -4,7 +4,7 @@ import SwiftUI
 /// メインウィンドウビュー
 public struct MainWindowView: View {
     @ObservedObject var manager: BrewManager
-    @State private var selectedSidebarItem: SidebarItem? = .installed
+    @StateObject private var sourceListAdapter = S2JSourceListAdapter()
 
     public init(manager: BrewManager) {
         self.manager = manager
@@ -12,20 +12,18 @@ public struct MainWindowView: View {
 
     public var body: some View {
         NavigationSplitView {
-            // サイドバー
-            SidebarView(selectedItem: $selectedSidebarItem, manager: manager)
+            CozyBrewSourceListSidebar(adapter: sourceListAdapter, manager: manager)
                 .navigationSplitViewColumnWidth(min: 200, ideal: 250)
         } detail: {
-            // コンテンツエリア
             ContentAreaView(
                 manager: manager,
-                selectedSidebarItem: selectedSidebarItem,
-                selectedSidebarItemBinding: $selectedSidebarItem
+                selectedSidebarItem: sourceListAdapter.selectedSidebarItem,
+                selectedSidebarItemBinding: sourceListAdapter.selectedSidebarItemBinding
             )
         }
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                if selectedSidebarItem == .warnings {
+                if sourceListAdapter.selectedSidebarItem == .warnings {
                     Button {
                         Task { await manager.refreshDoctorWarnings() }
                     } label: {
@@ -57,7 +55,7 @@ public struct MainWindowView: View {
 }
 
 /// サイドバーアイテム
-public enum SidebarItem: String, CaseIterable, Identifiable {
+public enum SidebarItem: String, CaseIterable, Identifiable, Sendable {
     case warnings = "Warnings"
     case installed = "Installed"
     case outdated = "Outdated"
@@ -78,35 +76,6 @@ public enum SidebarItem: String, CaseIterable, Identifiable {
         case .formulae: "cube.box.fill"
         case .casks: "app.badge.fill"
         }
-    }
-}
-
-/// サイドバービュー
-struct SidebarView: View {
-    @Binding var selectedItem: SidebarItem?
-    @ObservedObject var manager: BrewManager
-
-    var body: some View {
-        List(selection: $selectedItem) {
-            ForEach(SidebarItem.allCases) { item in
-                HStack {
-                    Label(item.rawValue, systemImage: item.icon)
-                    Spacer()
-                    if item == .warnings, manager.doctorWarningCount > 0 {
-                        Text("\(manager.doctorWarningCount)")
-                            .font(.caption2)
-                            .fontWeight(.semibold)
-                            .padding(.horizontal, 6)
-                            .padding(.vertical, 2)
-                            .background(Color.orange.opacity(0.25))
-                            .foregroundColor(.orange)
-                            .clipShape(Capsule())
-                    }
-                }
-                .tag(item)
-            }
-        }
-        .navigationTitle("CozyBrew")
     }
 }
 

@@ -4,7 +4,7 @@
 
 ---
 
-## 1. 概要
+## 1. 概要 `{@models_spec:s1}`
 
 * `Package` / `Formula` / `Cask` / `Tap` を表現するモデルを実装します。
 * `brew info --json=v2` の JSON 構造に合わせます。
@@ -12,9 +12,9 @@
 
 ---
 
-## 2. 基本プロトコル
+## 2. 基本プロトコル `{@models_spec:s2}`
 
-### 2.1. BrewPackage
+### 2.1. BrewPackage `{@models_spec:s2-1}`
 
 ```swift
 public protocol BrewPackage: Codable, Identifiable {
@@ -30,44 +30,44 @@ public protocol BrewPackage: Codable, Identifiable {
 
 ---
 
-## 3. 共通型
+## 3. 共通型 `{@models_spec:s3}`
 
-### 3.1. InstalledVersion
+### 3.1. InstalledVersion `{@models_spec:s3-1}`
 
 インストール済みバージョン情報です。
 
 | プロパティ | 型 | JSON キー | 説明 |
 | --- | --- | --- | --- |
-| version | String | `version` | バージョン文字列 |
-| installedOnRequest | Bool | `installed_on_request` | ユーザー要求でインストールされたか |
-| installedAsDependency | Bool | `installed_as_dependency` | 依存関係としてインストールされたか |
+| version | `String` | `version` | バージョン文字列 |
+| installedOnRequest | `Bool` | `installed_on_request` | ユーザー要求でインストールされたか |
+| installedAsDependency | `Bool` | `installed_as_dependency` | 依存関係としてインストールされたか |
 
 ---
 
-## 4. Formula (ソースからビルドするパッケージ)
+## 4. Formula (ソースからビルドするパッケージ) `{@models_spec:s4}`
 
-### 4.1. 主要プロパティ
+### 4.1. 主要プロパティ `{@models_spec:s4-1}`
 
 | プロパティ | 型 | 説明 |
 | --- | --- | --- |
-| id | String | 一意識別子 |
-| name | String | パッケージ名 |
-| fullName | String | 完全名 (Tap 付き) |
-| desc | String? | 説明文 |
-| homepage | String? | ホームページ URL |
-| version | String? | バージョン |
-| installed | [InstalledVersion]? | インストール済みバージョン |
-| dependencies | [String]? | 依存パッケージ |
-| buildDependencies | [String]? | ビルド時依存 |
-| conflictsWith | [String]? | 競合パッケージ |
-| pinned | Bool? | ピン留め有無 |
-| outdated | Bool? | アップデート可能か |
-| deprecated | Bool? | 非推奨か |
-| deprecationReason | String? | 非推奨理由 |
-| disabled | Bool? | 無効化されているか |
-| disableReason | String? | 無効化理由 |
+| id | `String` | 一意識別子 |
+| name | `String` | パッケージ名 |
+| fullName | `String` | 完全名 (Tap 付き) |
+| desc | `String?` | 説明文 |
+| homepage | `String?` | ホームページ URL |
+| version | `String?` | バージョン |
+| installed | `[InstalledVersion]?` | インストール済みバージョン |
+| dependencies | `[String]?` | 依存パッケージ |
+| buildDependencies | `[String]?` | ビルド時依存 |
+| conflictsWith | `[String]?` | 競合パッケージ |
+| pinned | `Bool?` | ピン留め有無 |
+| outdated | `Bool?` | アップデート可能か |
+| deprecated | `Bool?` | 非推奨か |
+| deprecationReason | `String?` | 非推奨理由 |
+| disabled | `Bool?` | 無効化されているか |
+| disableReason | `String?` | 無効化理由 |
 
-### 4.2. CodingKeys
+### 4.2. CodingKeys `{@models_spec:s4-2}`
 
 * `buildDependencies` → `build_dependencies`
 * `conflictsWith` → `conflicts_with`
@@ -77,85 +77,85 @@ public protocol BrewPackage: Codable, Identifiable {
 
 ---
 
-## 5. Cask (バイナリ配布パッケージ)
+## 5. Cask (バイナリ配布パッケージ) `{@models_spec:s5}`
 
-### 5.1. 主要プロパティ
+### 5.1. 主要プロパティ `{@models_spec:s5-1}`
 
 Formula と共通の基本プロパティに加え、Cask 固有のプロパティがあります。
 
 | プロパティ | 型 | 説明 |
 | --- | --- | --- |
-| tap | String? | 属する Tap |
-| token | String? | Cask トークン |
-| artst | [String]? | アプリ名等 |
-| その他 | — | `brew info --json=v2` の出力に合わせる |
+| token | `String` | Cask トークン (`Models.swift`) |
+| appcast / url | `String?` | 配布メタデータ |
+| deprecated / disabled 系 | `Bool?` / `String?` | Formula と同様の非推奨・無効化 |
+| その他 | — | `brew info --json=v2` の出力に合わせる (`tap` は Tap 一覧経由で扱う) |
 
 ---
 
-## 6. Tap (リポジトリ)
+## 6. Tap (リポジトリ) `{@models_spec:s6}`
 
-### 6.1. 主要プロパティ
+### 6.1. 主要プロパティ `{@models_spec:s6-1}`
 
 | プロパティ | 型 | 説明 |
 | --- | --- | --- |
-| name | String | Tap 名 |
-| fullName | String | 完全名 |
+| name | `String` | Tap 名 |
+| fullName | `String` | 完全名 |
 | その他 | — | `brew tap` / `brew info` の出力に合わせる |
 
 ---
 
-## 7. Package (統一型)
+## 7. Package (統一型) `{@models_spec:s7}`
 
 * Formula と Cask を同一の `Package` 型として扱う場合、`fullName` や `tap` で区別します。
 * ` brew list --json=v2` / `brew info --json=v2` の出力形式に従います。
 
 ---
 
-## 8. BrewCache (キャッシュ機構)
+## 8. BrewCache (キャッシュ機構) `{@models_spec:s8}`
 
-### 8.1. 責務
+### 8.1. 責務 `{@models_spec:s8-1}`
 
 * JSON とローカルファイルによるキャッシュ管理を実装します。
 * TTL (Time To Live) を持たせます。
 * オプションで SQLite (GRDB 等) を選択可能とします。
 
-### 8.2. メタデータ
+### 8.2. メタデータ `{@models_spec:s8-2}`
 
 * キャッシュの有効期限
 * 取得元 (`brew list` / `brew info` 等) の識別
 
 ---
 
-## 9. BrewManager (ViewModel)
+## 9. BrewManager (ViewModel) `{@models_spec:s9}`
 
-### 9.1. 公開 API (@Published)
+### 9.1. 公開 API (@Published) `{@models_spec:s9-1}`
 
 | プロパティ | 型 | 説明 |
 | --- | --- | --- |
-| installed | [Package] | インストール済みパッケージ一覧 |
-| outdated | [Package] | アップデート可能パッケージ一覧 |
-| taps | [Tap] | Tap 一覧 |
-| searchResults | [Package] | 検索結果 |
-| catalogFormulaeGeneration / catalogCasksGeneration | Int | カタログ再構築の世代 (巨大配列を `@Published` で渡さない) |
-| catalogFormulaeIsLoading / catalogCasksIsLoading | Bool | カタログ HTTP 取得中 |
-| catalogFormulaeErrorMessage / catalogCasksErrorMessage | String? | カタログ取得・デコード失敗 |
+| installed | `[Package]` | インストール済みパッケージ一覧 |
+| outdated | `[Package]` | アップデート可能パッケージ一覧 |
+| taps | `[Tap]` | Tap 一覧 |
+| searchResults | `[Package]` | 検索結果 |
+| catalogFormulaeGeneration / catalogCasksGeneration | `Int` | カタログ再構築の世代 (巨大配列を `@Published` で渡さない) |
+| catalogFormulaeIsLoading / catalogCasksIsLoading | `Bool` | カタログ HTTP 取得中 |
+| catalogFormulaeErrorMessage / catalogCasksErrorMessage | `String?` | カタログ取得・デコード失敗 |
 
-カタログ本体は `BrewManager` 内に保持し、UI は `catalogFormulaePage` / `catalogFormulaeSnapshot` 等でページ分を取得します。データ源は [brew_integration_spec.md](brew_integration_spec.md) §9 を参照。
+カタログ本体は `BrewManager` 内に保持し、UI は `catalogFormulaePage` / `catalogFormulaeSnapshot` 等でページ分を取得します。データ源は [brew_integration_spec.md](brew_integration_spec.md) §9を参照。
 
-### 9.2. 操作
+### 9.2. 操作 `{@models_spec:s9-2}`
 
 * インストール、アンインストール、アップデートの実行と進行管理
 * `brew update` の実行
 * パッケージ検索
 
-### 9.3. 失敗ハンドリング
+### 9.3. 失敗ハンドリング `{@models_spec:s9-3}`
 
 * ユーザー向けメッセージ翻訳レイヤを挟みます (dev message → friendly message)。
 * 詳細ログは UI から "Show log" で閲覧可能にします。
 
 ---
 
-## 10. JSON 取得コマンド例
+## 10. JSON 取得コマンド例 `{@models_spec:s10}`
 
 | 用途 | コマンド |
 | --- | --- |
@@ -167,7 +167,7 @@ Formula と共通の基本プロパティに加え、Cask 固有のプロパテ�
 | Formulae カタログ (HTTP) | `GET https://formulae.brew.sh/api/formula.json` |
 | Casks カタログ (HTTP) | `GET https://formulae.brew.sh/api/cask.json` |
 
-### `brew outdated --json=v2` の形
+### `brew outdated --json=v2` の形 `{@models_spec:s-brew-outdated-json-v2}`
 
 `brew list` / `brew info` とは別スキーマです。各 Formula / Cask はおおむね次のみです。
 

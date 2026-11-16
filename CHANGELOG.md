@@ -2,13 +2,24 @@
 
 ## unreleased
 
+## 1.0.12 - 2026-11-16
+
+* メインウィンドウのサイドバーを `S2JSourceList` + `S2JSourceListAdapter` に統合 (`s2j-source-list` v2.0.14以降を前提)
+* アプリケーションのバージョンを `package.json` の `version` / `buildNumber` から同期 (`MARKETING_VERSION` / `CURRENT_PROJECT_VERSION`、`scripts/sync-app-version.mjs`、`npm run version:sync` / `version:check` / `version:bump-build`)
+* リリース向け npm マイルストーン (`release:after-spm-update` 等、`scripts/release-milestones.sh`) と SPM pin 差分表示 (`npm run swift:pin-diff`)
+* `package.json` を v1.0.12 (build: 4) に更新、`project.yml` / `Info.plist` を `$(MARKETING_VERSION)` 参照に変更
+* `docs/status.md` を追加 (実装スナップショットの入口)。`docs/*` を現行実装に合わせて更新 (`InstallFlowView` 未配線、`overview` のゴール vs 実装表、完了率の再計算等)
+* SPM 依存の pin 更新 (`s2j-source-list` revision `02e3ec4` / `main`、`s2j-about-window` revision `b6a31e1` / `main`。サイドバーは v2.0.14 以降を前提)
+* 仕様ドキュメント向け見出しタグ付与 (`scripts/apply-heading-tags.py`、`npm run docs:heading-tags`)
+* `.textlintrc.json` を `@s2j/docs-linter` base preset + `preset-wp-docs-ja` に更新
+
 ## 1.0.11 - 2026-11-13
 
-* デプロイメントターゲットを **macOS v15.0** に引き上げ (`Package.swift`、`project.yml`、`Info.plist`)
+* デプロイターゲットを **macOS v15.0** に引き上げ (`Package.swift`、`project.yml`、`Info.plist`)
 * `s2j-about-window` を **`main` 追従** (v3 / Textual。`s2j-source-list` と同様、`Package.resolved` で revision 固定)
 * About で `LICENSE.txt` と `ACKNOWLEDGEMENTS.md` をバンドル同梱し、`licenseResourceName` / `acknowledgementsResourceName` でシート表示
 * OSS Notice 生成: `@s2j/acknowledgements` (`ack:doctor` / `ack:generate`)、`ack.config.json` / `onot.yaml`、出力先 `CozyBrewApp/Resources/ACKNOWLEDGEMENTS.md`
-* Python v3.13 用 `.python-version`、ローカル `venv/` と `build/oss-notice/` を `.gitignore` に追加
+* Python v3.13用 `.python-version`、ローカル `venv/` と `build/oss-notice/` を `.gitignore` に追加
 * `README.md` の要件表記を macOS v15.0+ に更新
 * `docs/SPEC.md`、`docs/overview.md`、`docs/architecture.md` を v15 / About v3 / Acknowledgements 前提に更新
 * `docs/dependency_updates.md` に Xcode (`project.yml` → `xcodegen`) と `Package.swift` の SPM 二重管理の手順を追記
@@ -16,19 +27,19 @@
 
 ## 1.0.10 - 2026-11-08
 
-* `Package.swift` の最小 macOS を v14.6 に上げ、SPM 依存 (S2JSourceList / S2JAboutWindow) との整合を修正
+* `Package.swift` の最小 macOS を v14.6に上げ、SPM 依存 (S2JSourceList / S2JAboutWindow) との整合を修正
 * `lint-docs` ワークフローを Node.js v24・`actions/setup-node@v5`・`ubuntu-24.04` に更新
 
 * SPM 依存を更新 (`s2j-about-window` → `97d4d26` / v2.0.12、`s2j-source-list` → `b700ea4` / v2.0.10)
 * About ウィンドウを `S2JAboutWindow.AboutView` に統合し、プレースホルダー `AboutWindowView` を削除 (`CozyBrewAbout.swift`)
-* アプリアイコンを `Assets.xcassets` に追加 (Dock 表示用)
+* アプリケーションアイコンを `Assets.xcassets` に追加 (Dock 表示用)
 * Formulae / Casks サイドバーで未インストールパッケージのカタログ表示を追加 (`formulae.brew.sh` API、`BrewFormulaeAPIClient`、カタログ用モデル・パース)
-* カタログ一覧の A–E 等ページ切替と検索、読み込み・エラー表示を `MainWindowView` に実装
+* カタログ一覧の `A–E` 等ページ切替と検索、読み込み・エラー表示を `MainWindowView` に実装
 * カタログ取得時のクラッシュ対策 (`Info.plist` の `CFBundleVersion` を文字列化、明示的 `User-Agent`)
 * Swift 向け lint / ビルド用 npm スクリプトを拡張 (`lint:swiftlint`、`lint:swiftformat`、`lint:periphery`、`lint:build` 等) と設定ファイル (`.swiftlint.yml`、`.periphery.yml`、`.swift-version`)
 * Xcode ビルド・解析スキームを `CozyBrewApp` に統一
-* カタログ・API パース・モデル周りのユニットテストを追加・更新
-* 仕様ドキュメント (`docs/*`) をカタログ UI・Homebrew 連携の実装に合わせて更新
+* カタログ、API パース、モデル周りのユニットテストを追加・更新
+* 仕様ドキュメント (`docs/*`) をカタログ UI、Homebrew 連携の実装に合わせて更新
 * バージョンを v1.0.10に更新 (`package.json`)
 
 ## 1.0.9 - 2026-11-06
@@ -90,7 +101,7 @@
 * `BrewInstaller` のリアルタイム出力処理を Swift v6の並行性チェックに対応
 * Xcode プロジェクトを SPM ローカル参照からネイティブ framework ターゲット構成に変更 (パッケージ二重読み込み、リンクエラーを解消)
 * framework ターゲットに `GENERATE_INFOPLIST_FILE` を追加 (CodeSign 警告を解消)
-* デプロイメントターゲットを macOS v14.6に統一 (`Info.plist` の `LSMinimumSystemVersion` を含む)
+* デプロイターゲットを macOS v14.6に統一 (`Info.plist` の `LSMinimumSystemVersion` を含む)
 * `Cask` の `name` デコードを配列、文字列の両形式に対応
 * `ModelsTests.testCaskDecoding` をデコード検証に修正
 * `README.md` に macOS、Xcode バッジを追加

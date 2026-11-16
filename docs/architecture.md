@@ -1,6 +1,6 @@
 # S2J CozyBrew — コード構造と責務
 
-## 1. モジュール分割 (推奨)
+## 1. モジュール分割 (推奨) `{@architecture:s1}`
 
 * **CozyBrewApp (App Target)**
 
@@ -12,7 +12,7 @@
 * **s2j-cozy-brew (Swift Package)**
 
   * ライブラリ製品:
-    * `CozyBrewCore` (library): BrewCore (Process ラッパー、バイナリ検出、インストーラー)、型定義
+    * `CozyBrewCore` (library): BrewCore (Process ラッパー、バイナリ検出、インストーラ)、型定義
     * `CozyBrewService` (library): BrewService (JSON パース、キャッシュ、ViewModel/ObservableObject)
     * `CozyBrewUIComponents` (library): 再利用可能な SwiftUI コンポーネント (PackageRow, PackageDetail, InstallFlow)
   * 目的:
@@ -25,13 +25,15 @@
 
 * **依存関係の更新**
 
-  * npm (`@s2j/docs-linter`) と SPM (上記 2 パッケージ) の更新手順は [dependency_updates.md](dependency_updates.md) にまとめています。
+  * npm (`@s2j/docs-linter`) と SPM (上記2パッケージ) の更新手順は [dependency_updates.md](dependency_updates.md) にまとめています。
   * SPM の推奨: `npm run swift:ncu` で確認 → `npm run swift:ncu:update` で最新化 → `swift build` で確認。
   * 現在は `Package.swift` で各リポジトリの `main` を参照し、確定 revision は `Package.resolved` に記録します。
+  * サイドバー利用時は **`s2j-source-list` v2.0.14以降** を前提とします (SwiftUI の選択警告を修正。詳細は [dependency_updates.md](dependency_updates.md))。
+  * ローカル Swift lint: `npm run lint:swift` (先頭で `npm run xcode:generate` を実行)。
 
 ---
 
-## 2. 主要コンポーネント (ディレクトリ構造)
+## 2. 主要コンポーネント (ディレクトリ構造) `{@architecture:s2}`
 
 ```
 `s2j-cozy-brew`/
@@ -77,7 +79,7 @@
 │　│└─ Contents.json
 │　└─ Contents.json
 ├┬ Sources/  # Swift Package ソースコード
-│├┬─ CozyBrewCore/  # コア・モジュール (brew バイナリ検出、プロセス実行、インストーラー)
+│├┬─ CozyBrewCore/  # コア・モジュール (brew バイナリ検出、プロセス実行、インストーラ)
 ││├─ BrewBinaryLocator.swift  # brew バイナリ検出 (Apple Silicon/Intel 対応)
 ││├─ BrewInstaller.swift  # Homebrew インストール補助
 ││├─ BrewProcess.swift  # 非同期 brew コマンド実行ラッパー
@@ -85,9 +87,13 @@
 │├┬─ CozyBrewService/  # サービス・モジュール (モデル、ViewModel、キャッシュ)
 ││├─ BrewCache.swift  # JSON キャッシュ機構 (TTL 対応)
 ││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理)
+││├─ BrewCatalog.swift / BrewFormulaeAPIClient.swift  # formulae.brew.sh カタログ
+││├─ BrewDoctorParser.swift  # `brew doctor` パース
 ││└─ Models.swift  # Formula、Cask、Tap、Package モデル定義
 │└┬─ CozyBrewUIComponents/  # UI コンポーネント・モジュール
 │　├─ MainWindowView.swift  # メイン・ウィンドウ (macOS 15.0+)
+│　├─ S2JSourceListAdapter.swift  # S2J Source List 橋渡し (サイドバー)
+│　├─ BrewOperationOverlay.swift  # Upgrade 等のオーバーレイ
 │　├─ BrewAlertView.swift  # エラー表示
 │　├─ InstallFlowView.swift  # インストール・フロー
 │　├─ InstallProgressView.swift  # インストール進捗表示
@@ -99,6 +105,7 @@
 　│└─ BrewProcessTests.swift
 　└┬─ CozyBrewServiceTests/
 　　├─ BrewCacheTests.swift
+　　├─ BrewCatalogTests.swift / BrewDoctorParserTests.swift  # カタログ・doctor
 　　└─ ModelsTests.swift
 ```
 
@@ -108,21 +115,21 @@
 
 ---
 
-## 3. コンポーネント責務の概要
+## 3. コンポーネント責務の概要 `{@architecture:s3}`
 
-### 3.1. マイグレーションと互換性 / Cakebrew からの留意点
+### 3.1. マイグレーションと互換性 / Cakebrew からの留意点 `{@architecture:s3-1}`
 
 * Cakebrew は Objective-C / AppKit 実装です。そのため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈**して SwiftUI に適した状態駆動の設計に変換します。
 * Cakebrew のコード (Objective-C) でのライセンス、リソース (アイコン、翻訳) を確認し、再利用条件を満たします。
 * Cakebrew の preferences やインストール履歴を引き継ぐ場合:
   * 初回起動時に `Cakebrew` の設定ファイル (保存場所や形式) を検出し、移行ウィザードを表示します (オプション)。
 
-### 3.2. About Window
+### 3.2. About Window `{@architecture:s3-2}`
 
 * [S2J About Window](https://github.com/stein2nd/s2j-about-window) (≥ v3.0.0) の `AboutView` を `CozyBrewAboutSheet` (`CozyBrewApp/CozyBrewAbout.swift`) 経由でシート表示します。
-* アイコン・タイトル・バージョン・著作権はライブラリヘッダー、本文は Markdown (GitHub)。**License** / **Acknowledgements** でバンドル `LICENSE.txt` と `ACKNOWLEDGEMENTS.md` をアプリ内表示。メニュー **About CozyBrew** と同一 UI です。
+* アイコン・タイトル・バージョン・著作権はライブラリヘッダー、本文は Markdown (GitHub)。**License** / **Acknowledgements** でバンドル `LICENSE.txt` と `ACKNOWLEDGEMENTS.md` をアプリケーション内表示。メニュー **About CozyBrew** と同一 UI です。
 
-### 3.3. BrewUIComponents (CozyBrewUIComponents)
+### 3.3. BrewUIComponents (CozyBrewUIComponents) `{@architecture:s3-3}`
 
 * **UI 要素**
   * `PackageRowView`: アイコン、名前、バージョン、バッジ表示 (アップデート有無)、インストール/アンインストール・ボタンを表示します。
@@ -130,13 +137,15 @@
   * `InstallProgressView`: ログストリーム、キャンセルボタンを表示します。
   * `BrewAlertView`: friendly error + raw log toggle を表示します。
   * `MainWindow`: Sidebar (S2J Source List) + Content Area (パッケージ一覧、検索、ステータスバー) を表示します。
-  * `InstallFlowView`: 確認ダイアログ、進行状況 (ログ表示)、失敗時のロールバック案内を表示します。
+  * `InstallFlowView`: 確認ダイアログ、進行状況 (ログ表示)、失敗時のロールバック案内 (**View 部品はあるが未配線** — 現状は `PackageRowView` / `PackageDetailView` から直実行)。
+  * `BrewOperationOverlay`: Upgrade 等の blocking オーバーレイ。
 
 * **サイドバー**
-  * `S2JSourceListAdapter` は既存の S2J Source List を SwiftUI から利用しやすくする薄い適合レイヤを提供します。
-    * 目的: サイドバーのセクション管理、アイコン・バッジ、フォルダー/タブのような分類 (Installed / Outdated / Taps / Casks / Formulae) を実装します。
+  * `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` が `S2JSourceList.SidebarView` を `MainWindowView` に載せます。
+    * フェーズ1: フラット6セクション (`SidebarItem` 順)。Warnings は `customRowContent` でオレンジバッジ。
+    * フェーズ2 (未了): `SourceItem.group` による階層分類 (Installed packages / Catalog 等)。
 
-### 3.4. CozyBrew App Target
+### 3.4. CozyBrew App Target `{@architecture:s3-4}`
 
 * **責務**
   * アプリケーションメニュー、環境設定、アプリケーションレベルの権限設定と Info.plist を管理します。

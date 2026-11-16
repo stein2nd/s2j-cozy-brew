@@ -8,7 +8,7 @@
 
 ---
 
-## 仕様書一覧
+## 仕様書一覧 `{@specs:s-h001}`
 
 | ファイル | 役割 |
 | --- | --- |
@@ -20,10 +20,12 @@
 | [security_spec.md](security_spec.md) | 権限・サンドボックス・スクリプト実行・アクセシビリティの定義 |
 | [design_spec.md](design_spec.md) | デザイン・ブランディングの定義 |
 | [dependency_updates.md](dependency_updates.md) | npm / SPM 依存の確認・更新手順 |
+| [status.md](status.md) | **実装状況の入口** (スナップショット・ focus 一覧) |
 
 ---
 
-## その他ドキュメント
+## その他ドキュメント `{@specs:s-h002}`
 
-* [SPEC.md](SPEC.md) - 実装状況サマリ・Backlog・品質評価・Appendix (従来の統合仕様書)
-* [SPEC_STRUCTURE.md](SPEC_STRUCTURE.md) - 仕様書細分化の考え方と S2J Cozy Brew への適用
+* [status.md](status.md) - 実装状況のスナップショット (詳細は `SPEC.md` §11 / §12が正本)
+* [SPEC.md](SPEC.md) - 実装状況サマリ、Backlog、品質評価、Appendix (従来の統合仕様書)
+* [SPEC_STRUCTURE.md](SPEC_STRUCTURE.md) - 仕様書の細分化の考え方と S2J Cozy Brew への適用

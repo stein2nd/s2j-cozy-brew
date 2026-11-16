@@ -4,15 +4,15 @@
 
 ---
 
-## 1. 初回起動フロー
+## 1. 初回起動フロー `{@ux_flows_spec:s1}`
 
-### 1.1. 起動時の検出
+### 1.1. 起動時の検出 `{@ux_flows_spec:s1-1}`
 
 1. アプリケーション起動
 2. `BrewBinaryLocator` で brew を検出
 3. 未導入 / 導入済みで分岐
 
-### 1.2. brew 未導入時
+### 1.2. brew 未導入時 `{@ux_flows_spec:s1-2}`
 
 1. ユーザーに「Homebrew が見つかりません」と表示
 2. 導入手順を説明:
@@ -25,14 +25,14 @@
 6. インストール成功後、環境を再検出し `BrewManager` を初期化
 7. brew パスを検出しサービスを起動
 
-### 1.3. brew 導入済み時
+### 1.3. brew 導入済み時 `{@ux_flows_spec:s1-3}`
 
 1. バージョン取得
 2. Apple Silicon / Intel に応じた PATH 設定を検証
 3. `brew update` の実行案内 (自動 or 手動選択)
 4. 「初心者向けの説明 (何が起きるか)」を表示
 
-### 1.4. 設計上の注意
+### 1.4. 設計上の注意 `{@ux_flows_spec:s1-4}`
 
 * 自動導入は **opt-in** (ユーザー承諾必須)。強制的な sudo は避けます。
 * スクリプトの実行は標準出力で行い、エラーをリアルタイム表示します。
@@ -41,20 +41,20 @@
 
 ---
 
-## 2. 一般的フロー (パッケージ操作)
+## 2. 一般的フロー (パッケージ操作) `{@ux_flows_spec:s2}`
 
-### 2.1. 基本フロー
+### 2.1. 基本フロー `{@ux_flows_spec:s2-1}`
 
 ```
 検索 → 一覧 → 詳細 → Install / Uninstall / Upgrade
 ```
 
-### 2.1.1. 一覧内検索 (フィルタ)
+### 2.1.1. 一覧内検索 (フィルター) `{@ux_flows_spec:s2-1-1}`
 
-* 検索バーは **現在のサイドバー一覧をクライアント側で絞り込み** ます (名前・full_name・説明の部分一致、大文字小文字無視)。
+* 検索バーは **現在のサイドバー一覧をクライアント側で絞り込み** ます (名前、full_name、説明の部分一致、大文字と小文字の無視)。
 * Enter や `brew search` は呼びません。0件の場合は **No matching packages** と表示し、別処理 (Tap 取得失敗等) のエラーは混ぜません。
 
-### 2.2. 操作の共通仕様
+### 2.2. 操作の共通仕様 `{@ux_flows_spec:s2-2}`
 
 * インストール・アンインストール・アップグレードは、非同期でプログレス表示
 * **Upgrade** (一覧・詳細とも) は最前面のモーダル風オーバーレイ (`Upgrading…`) で他操作をブロックする
@@ -62,60 +62,88 @@
 * 完了 / 失敗通知を UI に反映
 * キャンセル可能とする
 
-### 2.3. Upgrade All
+### 2.3. Upgrade All `{@ux_flows_spec:s2-3}`
 
 * 明確な確認プロンプトを表示
 * 依存関係の大きな変更に対する注意喚起
 
-### 2.4. 失敗時
+### 2.4. 失敗時 `{@ux_flows_spec:s2-4}`
 
 * CLI のエラーメッセージをフレンドリーな文に意訳して提示
 * "Show raw log" で生ログも表示可能
 
 ---
 
-## 3. インストール・フロー (InstallFlowView)
+## 3. パッケージ操作フロー `{@ux_flows_spec:s3}`
 
-### 3.1. 確認ダイアログ
+### 3.0. 現行実装 (2026-11-15時点) `{@ux_flows_spec:s3-0}`
+
+| 操作 | 実装 |
+| --- | --- |
+| brew 未導入 | `ContentView` → `BrewNotAvailableView` (§1)。**専用「初期設定」シートはなし** (全画面ガイド) |
+| install / uninstall | `PackageRowView` / `PackageDetailView` から `BrewManager` を **直実行** (事前確認ダイアログなし) |
+| upgrade (単体) | 同上。一覧では `BrewOperationOverlay` で blocking 表示 |
+| upgrade (一括) | `BrewManager.upgradeAll` のみ。**確認 UI なし** (§2.3はゴール) |
+
+`InstallFlowView` / `InstallProgressView` はソースにあるが **どこからも表示されていません** (Backlog: SPEC §11.3.4)。
+
+### 3.1. 目標 UX (`InstallFlowView` 統合後) `{@ux_flows_spec:s3-1}`
+
+#### 3.1.1. 確認ダイアログ `{@ux_flows_spec:s3-1-1}`
 
 * 操作内容 (インストール / アンインストール / アップグレード) を明示
 * 対象パッケージ名を表示
 * ユーザー承認後に実行
 
-### 3.2. 進行状況
+#### 3.1.2. 進行状況 `{@ux_flows_spec:s3-1-2}`
 
 * ログストリームをリアルタイム表示
 * キャンセルボタンを表示
 
-### 3.3. 失敗時
+#### 3.1.3. 失敗時 `{@ux_flows_spec:s3-1-3}`
 
 * ロールバック案内を表示
 * 詳細ログへの導線を提供
 
+### 3.4. brew 未導入環境の手動検証 (開発マシンに brew がある場合) `{@ux_flows_spec:s3-4}`
+
+日々の開発環境には brew が入っているため、§1.2の UI は **意図的に再現しないと試せません**。CI の `swift test` も brew 前提の統合テストは行いません (overview の非機能要件どおり)。
+
+| 方法 | 概要 | 向き |
+| --- | --- | --- |
+| **A. 別 macOS ユーザー** | システム設定で標準ユーザーを追加し、そのユーザーの **未使用ホーム** で Run (brew 未インストールに近い) | 本番に近い手動スモーク |
+| **B. ゲスト / クリーン VM** | macOS 仮想環境 (UTM / Parallels 等) で新規インストール後、Xcode で Run | 繰り返し可能だが重い |
+| **C. 起動時の検出の上書き (将来)** | 例: `-COZYBREW_FORCE_BREW_UNAVAILABLE=1` や DEBUG 専用メニューで `BrewManager.isBrewAvailable = false` | 日常開発向け (要実装) |
+| **D. ユニットテスト** | `BrewBinaryLocator.locate()` をモック注入できるようにする (現状は固定ファイル/which) | 自動化の種 (要リファクタ) |
+
+**おすすめの段階:** 機能を足す前に **C または D のどちらか一方** を Backlog で決める → 本番同等の確認は **A または B をリリース前に1回**。
+
+`~/.zshrc` がほぼない状態は **A/B の新規ユーザー** で自然に近付きます。brew インストールスクリプト側がシェル設定を書き換えるため、**導入後** の検証は通常の開発ユーザーに戻って行います。
+
 ---
 
-## 4. サイドバー・ナビゲーション
+## 4. サイドバー・ナビゲーション `{@ux_flows_spec:s4}`
 
 * セクション: **Warnings** / Installed / Outdated / Taps / Formulae / Casks (`SidebarItem` の `CaseIterable` 順)
 * **Warnings**: `brew doctor` の出力をパースして表示。起動時とタブ選択時に `refreshDoctorWarnings()`。Warning ブロック数をオレンジのバッジで表示。検索バーは非表示。ツールバー Refresh で再実行。
 * S2J Source List を用いた分類表示
 * 選択に応じてコンテンツエリアを切り替え
-* **Formulae / Casks**: formulae.brew.sh の JSON API から全件を取得 (キャッシュあり)。一覧は **先頭文字のページ** (A–E / F–J / … / 1–5 / 6–0) で分割表示し、常に 1 ページ分だけ `List` に載せる。検索入力時は全ページ横断でフィルタ。
+* **Formulae / Casks**: `formulae.brew.sh` の JSON API から全件を取得 (キャッシュあり)。一覧は **先頭文字のページ** (`A–E` / `F–J` / … / `1–5` / `6–0`) で分割表示し、常に1ページ分だけ `List` に載せる。検索入力時は全ページ横断でフィルター。
 
-### 4.1. 一覧 → 詳細 → 戻る
+### 4.1. 一覧 → 詳細 → 戻る `{@ux_flows_spec:s4-1}`
 
 * 行タップで詳細を表示しても、**サイドバーで選んでいるセクション** (Installed / Outdated 等) は維持します。
 * **[戻る]** では同一セクションの一覧に戻ります (別タブには自動遷移しません)。
 * 詳細のナビゲーションタイトルは **パッケージ名** のみです。直前が Outdated 由来か Installed 由来かは、サイドバーのハイライトで判別します。
 * 詳細の Upgrade / Status は `brew outdated` 一覧と照合した結果を優先し、操作後の再読み込みで更新します。
 
-### 4.2. Installed 一覧での Upgrade
+### 4.2. Installed 一覧での Upgrade `{@ux_flows_spec:s4-2}`
 
 * `brew list` 単体では `isOutdated` が付かないため、表示時に **`brew outdated` と名前・種別 (Formula/Cask) を照合** し、一致する行に Update Available バッジと [Upgrade] を出します。
 
 ---
 
-## 5. エラー表示 (BrewAlertView)
+## 5. エラー表示 (BrewAlertView) `{@ux_flows_spec:s5}`
 
 * friendly メッセージを主表示
 * raw log のトグル表示

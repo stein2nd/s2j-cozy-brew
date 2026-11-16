@@ -211,10 +211,10 @@ The project follows a hybrid structure with both Swift Package and Xcode App Tar
  -->
 
 * `Sources/` - Swift Package ソースコード
-  * `CozyBrewCore/` - コア機能 (バイナリ検出、プロセス実行、インストーラー)
+  * `CozyBrewCore/` - コア機能 (バイナリ検出、プロセス実行、インストーラ)
   * `CozyBrewService/` - サービス層 (モデル、ViewModel、キャッシュ)
   * `CozyBrewUIComponents/` - 再利用可能な SwiftUI コンポーネント
-* `CozyBrewApp/` - アプリケーションターゲット (アプリリソース、Info.plist、Assets)
+* `CozyBrewApp/` - アプリケーションターゲット (アプリケーションリソース、Info.plist、Assets)
 * `Tests/` - テストファイル
 * `Package.swift` - パッケージ設定
 * `project.yml` - XcodeGen 設定

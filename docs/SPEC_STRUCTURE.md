@@ -1,24 +1,24 @@
 # Swift アプリケーションにおける仕様書の細分化 — ベター・プラクティス
 
-## 1. はじめに
+## 1. はじめに `{@spec_structure:s1}`
 
 本ドキュメントでは、[lead-validation-assist](https://github.com/stein2nd/lead-validation-assist) で採用した「仕様の細分化」を、Swift アプリケーション (および S2J Cozy Brew) にどう適用するかを整理します。
 目的は **AI 伴走開発** と **後日のメンテナンス** の両方を考慮した、ほどよい粒度の仕様構成です。
 
 ---
 
-## 2. なぜ細分化するか (Python と共通の考え方)
+## 2. なぜ細分化するか (Python と共通の考え方) `{@spec_structure:s2}`
 
-* **検索性**: 変更したいトピック (例: brew 連携・モデル定義・UX フロー) が1ファイルに集約され、AI も人間も「どこを読むか」が明確になる。
-* **責務の分離**: 「なぜこのプロジェクトがあるか」「何を入力/出力とするか」「コードはどこに書くか」を別ファイルに分けると、仕様の更新が衝突しにくい。
+* **検索性**: 変更したいトピック (例: brew 連携、モデル定義、UX フロー) が1ファイルに集約され、AI も人間も「どこを読むか」が明確になる。
+* **責務の分離**: 責務 (「なぜこのプロジェクトがあるか」「何を入力/出力とするか」「コードはどこに書くか」) を別ファイルに分けると、仕様の更新が衝突しにくい。
 * **テスト・検証との対応**: 数式・ルール・データ定義が独立したドキュメントになっていると、実装やテストを「その仕様に従っているか」で検証しやすい。
 * **AI のコンテキスト効率**: 大きな SPEC を毎回渡すより、必要な spec だけを指定して渡すほうがトークン効率も良く、タスクに直結した指示を出しやすい。
 
-Swift アプリケーションでも、「何を明文化するか」はドメインに合わせて変えつつ、**同じ考え方**で細分化できます。
+Swift アプリケーションでも、「何を明文化するか」はドメインに合わせて変えつつ、**同じ考え方** で細分化できます。
 
 ---
 
-## 3. S2J Cozy Brew における仕様書のファイル構成
+## 3. S2J Cozy Brew における仕様書のファイル構成 `{@spec_structure:s3}`
 
 本プロジェクトでは、下記のファイルに仕様を細分化しています。
 
@@ -27,18 +27,19 @@ Swift アプリケーションでも、「何を明文化するか」はドメ�
 | [specs.md](specs.md) | 仕様の起点。各 spec へのリンクと短い説明。 |
 | [overview.md](overview.md) | プロジェクトの存在理由・スコープ・準拠仕様への参照。 |
 | [architecture.md](architecture.md) | コード構造と責務。モジュール分割、ディレクトリ構成、依存関係。 |
-| [brew_integration_spec.md](brew_integration_spec.md) | brew CLI との連携契約。バイナリ検出、プロセス実行、インストーラー。 |
+| [brew_integration_spec.md](brew_integration_spec.md) | brew CLI との連携契約。バイナリ検出、プロセス実行、インストーラ。 |
 | [models_spec.md](models_spec.md) | Formula / Cask / Tap / Package のモデル定義。`brew info --json=v2` 対応。 |
 | [ux_flows_spec.md](ux_flows_spec.md) | UX フロー。初回起動、パッケージ操作の流れ。 |
 | [security_spec.md](security_spec.md) | 権限・サンドボックス・スクリプト実行・アクセシビリティ・ローカライズ。 |
 | [design_spec.md](design_spec.md) | デザイン・ブランディング。ロゴ、配色、フォント。 |
 | [dependency_updates.md](dependency_updates.md) | npm / SPM 依存の確認・更新手順。 |
+| [status.md](status.md) | 実装状況のスナップショットと短期 focus の入口。 |
 
-詳細な実装状況・Backlog・品質評価・Appendix は [SPEC.md](SPEC.md) に残しています。
+詳細な実装状況、Backlog、品質評価、Appendix は [SPEC.md](SPEC.md) に残しています。日常的な進捗確認は [status.md](status.md) から入り、必要に応じて `SPEC.md` §11 / §12を参照します。
 
 ---
 
-## 4. まとめ
+## 4. まとめ `{@spec_structure:s4}`
 
 * S2J Cozy Brew では、**「存在理由」「コード構造」「brew 連携」「モデル定義」「UX フロー」「セキュリティ」「デザイン」** をそれぞれ1ファイルにまとめ、AI 伴走とメンテナンスの両方に有利な構成にしています。
 * **仕様の起点 (specs.md) を1つ用意** し、そこから各 spec にリンクする構成にすると、参照が安定します。

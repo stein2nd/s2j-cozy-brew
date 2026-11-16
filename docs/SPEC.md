@@ -2,14 +2,14 @@
 
 > **仕様の細分化**: 本ドキュメントは包括版です。AI 伴走・メンテの観点では、[specs.md](specs.md) を起点に各 spec を参照する構成を推奨します。
 
-## はじめに
+## はじめに `{@spec:s-h001}`
 
 * 本ドキュメントでは、Swift アプリケーション「S2J CozyBrew」の専用仕様を定義します。
 * 本アプリケーションの設計は、下記の共通 SPEC に準拠します。
     * [Swift/SwiftUI 共通仕様](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md)
 * 下記は、本アプリケーション固有の仕様をまとめたものです。
 
-## 1. プロジェクト概要
+## 1. プロジェクト概要 `{@spec:s1}`
 
 * **名称:** S2J CozyBrew
 * **Swift Package 名:** s2j-cozy-brew
@@ -17,7 +17,7 @@
 * **目的:** AppKit ベースの「Cakebrew」を SwiftUI / Swift を用いて再実装します。
   * コアロジックや再利用可能な部品は Swift Package 化します (s2j-cozy-brew 等)。
   * アプリケーション本体は Xcode App Target (CozyBrew.app) で管理します。
-* **対応 OS:** macOS v15.0 以上 (`Package.swift` / `project.yml` / `Info.plist` の `LSMinimumSystemVersion` で統一)
+* **対応 OS:** macOS v15.0以上 (`Package.swift` / `project.yml` / `Info.plist` の `LSMinimumSystemVersion` で統一)
 * 設計方針の核:
   * **再利用性 (Package) と実行可能アプリケーション (App Target) の分離** です。
   * UI 再利用部品や Brew 操作ロジックは Swift Package として設計・テスト可能にし、アプリケーション固有のバンドル資産、Info.plist、署名等は App Target に置きます。
@@ -27,9 +27,9 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 
 ---
 
-## 2. 要件ゴール
+## 2. 要件ゴール `{@spec:s2}`
 
-### 2.1. 機能要件
+### 2.1. 機能要件 `{@spec:s2-1}`
 
 * Homebrew (brew) と安全に連携する SwiftUI macOS アプリケーションを提供します。
   * brew のコマンド実行 (list / info / install / uninstall / update / upgrade / tap / untap 等) を GUI から行えるようにします。
@@ -41,46 +41,46 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
   * サイドバーは [S2J Source List](https://github.com/stein2nd/s2j-source-list) を用いて実装します。
   * About ウィンドウは [S2J About Window](https://github.com/stein2nd/s2j-about-window) を採用します。
 
-### 2.2. 非機能要件
+### 2.2. 非機能要件 `{@spec:s2-2}`
 
 * brew の内部実装を再作成しません (CLI をラップします)。
 * brew が管理するパッケージの完全な CI 自動テストは本プロジェクトの範囲外です (実環境でのインストールはユーザー端末で行います)。
   * Swift Package (`s2j-cozy-brew`) として管理し、SwiftPM でビルド可能とします。
-  * UI は SwiftUI (macOS v15 以上を前提とし、必要に応じて `Observation` 等の新 API を利用します)。
+  * UI は SwiftUI (macOS v15以上を前提とし、必要に応じて `Observation` 等の新 API を利用します)。
   * セキュリティ: brew 実行は、サンドボックス外のプロセス・コールを行うため、権限/経路の取り扱いを厳密にします。
   * ローカライズ対応 (英語・日本語を初期対応とします)。
   * アクセシビリティ (VoiceOver 等) への対応を実装します。
   * CI: GitHub Actions を用いて macOS ビルド・ユニットテストを実行します。
 
-## 3. 準拠仕様
+## 3. 準拠仕様 `{@spec:s3}`
 
-### 3.1. 技術スタック
-
-* [COMMON_SPEC.md](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md) に準拠します。
-
-### 3.2. 開発ルール
+### 3.1. 技術スタック `{@spec:s3-1}`
 
 * [COMMON_SPEC.md](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md) に準拠します。
 
-### 3.3. 国際化・ローカライズ
+### 3.2. 開発ルール `{@spec:s3-2}`
 
 * [COMMON_SPEC.md](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md) に準拠します。
 
-### 3.4. コーディング規約
+### 3.3. 国際化・ローカライズ `{@spec:s3-3}`
 
 * [COMMON_SPEC.md](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md) に準拠します。
 
-### 3.5. デザイン規約
+### 3.4. コーディング規約 `{@spec:s3-4}`
 
 * [COMMON_SPEC.md](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md) に準拠します。
 
-### 3.6. テスト方針
+### 3.5. デザイン規約 `{@spec:s3-5}`
 
 * [COMMON_SPEC.md](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md) に準拠します。
 
-## 4. 個別要件
+### 3.6. テスト方針 `{@spec:s3-6}`
 
-### 4.1. モジュール分割 (推奨)
+* [COMMON_SPEC.md](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md) に準拠します。
+
+## 4. 個別要件 `{@spec:s4}`
+
+### 4.1. モジュール分割 (推奨) `{@spec:s4-1}`
 
 * **CozyBrewApp (App Target)**
 
@@ -92,7 +92,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 * **s2j-cozy-brew (Swift Package)**
 
   * ライブラリ製品:
-    * `CozyBrewCore` (library): BrewCore (Process ラッパー、バイナリ検出、インストーラー)、型定義
+    * `CozyBrewCore` (library): BrewCore (Process ラッパー、バイナリ検出、インストーラ)、型定義
     * `CozyBrewService` (library): BrewService (JSON パース、キャッシュ、ViewModel/ObservableObject)
     * `CozyBrewUIComponents` (library): 再利用可能な SwiftUI コンポーネント (PackageRow, PackageDetail, InstallFlow)
   * 目的:
@@ -108,7 +108,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
   * npm と SPM の手順は [dependency_updates.md](dependency_updates.md) を参照してください。
   * SPM 推奨: `npm run swift:ncu` → `npm run swift:ncu:update` → ビルド確認。確定 revision は `Package.resolved` にコミットします。
 
-### 4.2. 主要コンポーネント (アーキテクチャー)
+### 4.2. 主要コンポーネント (アーキテクチャー) `{@spec:s4-2}`
 
 ```
 `s2j-cozy-brew`/
@@ -146,7 +146,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 │　│└─ Contents.json
 │　└─ Contents.json
 ├┬ Sources/  # Swift Package ソースコード
-│├┬─ CozyBrewCore/  # コア・モジュール (brew バイナリ検出、プロセス実行、インストーラー)
+│├┬─ CozyBrewCore/  # コア・モジュール (brew バイナリ検出、プロセス実行、インストーラ)
 ││├─ BrewBinaryLocator.swift  # brew バイナリ検出 (Apple Silicon/Intel 対応)
 ││├─ BrewInstaller.swift  # Homebrew インストール補助
 ││├─ BrewProcess.swift  # 非同期 brew コマンド実行ラッパー
@@ -157,8 +157,10 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 ││└─ Models.swift  # Formula、Cask、Tap、Package モデル定義
 │└┬─ CozyBrewUIComponents/  # UI コンポーネント・モジュール
 │　├─ MainWindowView.swift  # メイン・ウィンドウ (macOS 15.0+)
+│　├─ S2JSourceListAdapter.swift  # S2J Source List 橋渡し (サイドバー)
+│　├─ BrewOperationOverlay.swift  # Upgrade 等のオーバーレイ
 │　├─ BrewAlertView.swift  # エラー表示
-│　├─ InstallFlowView.swift  # インストール・フロー
+│　├─ InstallFlowView.swift  # インストール・フロー (部品・未配線)
 │　├─ InstallProgressView.swift  # インストール進捗表示
 │　├─ PackageDetailView.swift  # パッケージ詳細表示
 │　└─ PackageRowView.swift  # パッケージ一覧の行表示
@@ -168,6 +170,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 　│└─ BrewProcessTests.swift
 　└┬─ CozyBrewServiceTests/
 　　├─ BrewCacheTests.swift
+　　├─ BrewCatalogTests.swift / BrewCatalogAPIParsingTests.swift / BrewDoctorParserTests.swift
 　　└─ ModelsTests.swift
 ```
 
@@ -175,25 +178,25 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 * `s2j-source-list` - サイドバー実装用 (GitHub から取得)
 * `s2j-about-window` - About ウィンドウ実装用 (GitHub から取得)
 
-### 4.3. 詳細設計
+### 4.3. 詳細設計 `{@spec:s4-3}`
 
-### 4.3.1. マイグレーションと互換性 / Cakebrew からの留意点
+### 4.3.1. マイグレーションと互換性 / Cakebrew からの留意点 `{@spec:s4-3-1}`
 
 * Cakebrew は Objective-C / AppKit 実装です。そのため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈**して SwiftUI に適した状態駆動の設計に変換します。
 * Cakebrew のコード (Objective-C) でのライセンス、リソース (アイコン、翻訳) を確認し、再利用条件を満たします。
 * Cakebrew の preferences やインストール履歴を引き継ぐ場合:
   * 初回起動時に `Cakebrew` の設定ファイル (保存場所や形式) を検出し、移行ウィザードを表示します (オプション)。
 
-### 4.3.2. About Window
+### 4.3.2. About Window `{@spec:s4-3-2}`
 
-* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (v3.0.0 以降) の `AboutView` を組込みます。
+* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (v3.0.0以降) の `AboutView` を組込みます。
 * メニュー **About CozyBrew** および `ContentView` の `.sheet` から `CozyBrewAboutSheet` を表示します。
 * ヘッダー: Dock と同じアプリアイコン、`appName` / `Info.plist` のバージョン・著作権。
-* 本文: `CozyBrewAbout.markdown` (説明・GitHub リポジトリリンク)。
-* **License** / **Acknowledgements**: バンドル `CozyBrewApp/Resources/LICENSE.txt` と `ACKNOWLEDGEMENTS.md` を `licenseResourceName` / `acknowledgementsResourceName` でシート表示 (オフライン可)。Acknowledgements は onot 生成の Markdown (v3.0.0 以降は Textual により表表示に対応)。
+* 本文: `CozyBrewAbout.markdown` (説明、GitHub リポジトリリンク)。
+* **License** / **Acknowledgements**: バンドル `CozyBrewApp/Resources/LICENSE.txt` と `ACKNOWLEDGEMENTS.md` を `licenseResourceName` / `acknowledgementsResourceName` でシート表示 (オフライン可)。Acknowledgements は onot 生成の Markdown (v3.0.0以降は Textual により表表示に対応)。
 * シート下部に **Close** (`@Environment(\.dismiss)`)。
 
-### 4.3.3. BrewCore (s2j-cozy-brew / CozyBrewCore)
+### 4.3.3. BrewCore (s2j-cozy-brew / CozyBrewCore) `{@spec:s4-3-3}`
 
 * **機能**
   * brew バイナリ検出 (`BrewBinaryLocator`):
@@ -203,7 +206,7 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
     * `/usr/bin/env brew ...` を非同期に実行し stdout/stderr/exitCode を返します。標準入出力をストリームに流すため、リアルタイム・ログに対応します。
   * 権限・実行コンテキスト管理:
     * brew の実行ユーザー権限、環境変数 (HOMEBREW_PREFIX) を把握します。
-  * インストーラー (`BrewInstaller`):
+  * インストーラ (`BrewInstaller`):
     * brew 未導入時の公式インストール・スクリプトの実行補助を行います (ユーザー許諾確認、ログ表示、失敗時の対処説明を含みます)。
     * 導入スクリプト実行ロジックを実装します (ユーザー承認の UI フローが前提)。
 
@@ -242,7 +245,7 @@ struct BrewCommand {
 }
 ```
 
-### 4.3.4. BrewService (s2j-cozy-brew / CozyBrewService)
+### 4.3.4. BrewService (s2j-cozy-brew / CozyBrewService) `{@spec:s4-3-4}`
 
 * **機能**
   * `Package` / `Formula` / `Cask` / `Tap` を表現する `Codable` モデルを実装します (`brew info --json=v2` の構造に合わせます)。
@@ -259,7 +262,7 @@ struct BrewCommand {
   * ユーザー向けメッセージ翻訳レイヤを挟みます (dev message → friendly message)。
   * 詳細ログは UI から "Show log" で閲覧可能です。
 
-### 4.3.5. BrewUIComponents (s2j-cozy-brew / CozyBrewUIComponents)
+### 4.3.5. BrewUIComponents (s2j-cozy-brew / CozyBrewUIComponents) `{@spec:s4-3-5}`
 
 * **UI 要素**
   * `PackageRowView`:
@@ -273,14 +276,16 @@ struct BrewCommand {
   * `MainWindow`:
     * Sidebar (S2J Source List) + Content Area (パッケージ一覧、検索、ステータスバー) を表示します。
   * `InstallFlowView`:
-    * 確認ダイアログ、進行状況 (ログ表示)、失敗時のロールバック案内を表示します。
+    * 確認ダイアログ、進行状況 (ログ表示)、失敗時のロールバック案内 (**部品はあるが未配線** — 現状は行/詳細から直実行)。
+  * `BrewOperationOverlay`:
+    * Upgrade 等の blocking オーバーレイを表示します。
 
 * **サイドバー**
-  * `S2JSourceListAdapter` は既存の S2J Source List を SwiftUI から利用しやすくする薄い適合レイヤを提供します。
-    * 目的:
-      * サイドバーのセクション管理、アイコン・バッジ、フォルダー/タブのような分類 (Installed / Outdated / Taps / Casks / Formulae) を実装します。
+  * `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` が `S2JSourceList.SidebarView` を `MainWindowView` に載せます (`s2j-source-list` v2.0.14以降)。
+    * フェーズ1 (実装済み): フラット6セクション、Warnings オレンジバッジ (`customRowContent`)。
+    * フェーズ2 (未了): `SourceItem.group` による階層分類 (Installed / Outdated / Taps / Formulae / Casks 等)。
 
-### 4.3.6. CozyBrew App Target
+### 4.3.6. CozyBrew App Target `{@spec:s4-3-6}`
 
 * **責務**
   * アプリケーションメニュー、環境設定、アプリケーションレベルの権限設定と Info.plist を管理します。
@@ -307,7 +312,7 @@ struct CozyBrewApp: App {
 }
 ```
 
-### 4.3.7. パッケージ記述例 (Package.swift 抜粋)
+### 4.3.7. パッケージ記述例 (Package.swift 抜粋) `{@spec:s4-3-7}`
 
 ```swift
 // swift-tools-version:6.0
@@ -322,7 +327,7 @@ let package = Package(
         .library(name: "CozyBrewUIComponents", targets: ["CozyBrewUIComponents"]),
     ],
     dependencies: [
-        // S2J packages (本番アプリは XcodeGen の CozyBrewApp ターゲット)
+        // S2J packages (本番アプリケーションは XcodeGen の CozyBrewApp ターゲット)
         .package(url: "https://github.com/stein2nd/s2j-source-list.git", branch: "main"),
         .package(url: "https://github.com/stein2nd/s2j-about-window.git", branch: "main"),
     ],
@@ -343,9 +348,9 @@ let package = Package(
 )
 ```
 
-### 4.3.8. UX フロー (主要ケース)
+### 4.3.8. UX フロー (主要ケース) `{@spec:s4-3-8}`
 
-### 4.3.8.1. 初回起動
+### 4.3.8.1. 初回起動 `{@spec:s4-3-8-1}`
 
 1. アプリケーション起動 → BrewBinaryLocator で、Brew を検出します。
 2. 未導入:
@@ -363,14 +368,14 @@ let package = Package(
   * スクリプトの実行は標準出力で行います。エラーをリアルタイム表示し、失敗時のログ保存を行います。
   * インストール中は明確な進捗とロールバック手順を表示します。
 
-### 4.3.8.2. 一般的フロー (パッケージ操作)
+### 4.3.8.2. 一般的フロー (パッケージ操作) `{@spec:s4-3-8-2}`
 
 * 検索 → 一覧 → 詳細 → Install / Uninstall / Upgrade を実行します。
   * インストールを含む各操作は、非同期でプログレス表示し、完了/失敗通知を UI に反映します (キャンセル可能とします)。
 * Upgrade All は明確な確認プロンプトを表示します (依存関係の大きな変更に対する注意喚起)。
 * 失敗時は CLI のエラーメッセージをフレンドリーな文に意訳して提示しつつ、"Show raw log" も表示します。
 
-### 4.4. セキュリティ / 権限 / プライバシー
+### 4.4. セキュリティ / 権限 / プライバシー `{@spec:s4-4}`
 
 * **実行権限**:
   * brew 自体は通常ユーザー権限で動作します。sudo を要求しない設計をまず目指します (brew は通常 sudo を要求しません)。
@@ -381,7 +386,7 @@ let package = Package(
   * デフォルトでテレメトリー/クラッシュ・レポートはオフです。送る場合は opt-in にします。
   * もし匿名統計を送る場合は opt-in の設定を提供し、プライバシーポリシーを同梱します。
 
-### 4.5. アクセシビリティとローカライズ
+### 4.5. アクセシビリティとローカライズ `{@spec:s4-5}`
 
 * 初期ロケール:
   * 英語 (en) / 日本語 (ja)。`Localizable.strings`、`Localizable.stringsdict` を用意します。
@@ -390,14 +395,14 @@ let package = Package(
 
 ---
 
-## 5. デザイン・チップ (Cozy ブランド)
+## 5. デザイン・チップ (Cozy ブランド) `{@spec:s5}`
 
 * ロゴ: 角丸、シンプルなカップ/湯気モチーフ (前出の CozyBrew ロゴ案を参照します)。
 * アプリケーション・アイコン: 1024×1024px PNG / SVG を用意します。
 * 配色: ベース色 (Warm beige + Deep brown) に、小さなアクセント色 (ソフトブルーやミント) を検討します。
 * フォント: SF Rounded 系か Nunito。UI では Apple の San Francisco を優先し、ブランディング用ロゴで丸みフォントを使用します。
 
-## 6. テスト戦略
+## 6. テスト戦略 `{@spec:s6}`
 
 * **ユニットテスト** (swift test):
   * BrewCore (コマンド構築・パース)、BrewService (JSON パース)、ViewModel ロジックをテストします。
@@ -406,7 +411,7 @@ let package = Package(
 * **UI テスト**:
   * XCUITest による主要フロー (起動、検索、インストールフロー) を自動化します。ただし brew 実行は実機環境ではモックかスキップして実行します。
 
-## 7. CI / CD
+## 7. CI / CD `{@spec:s7}`
 
 * Swift Package のビルド成果物 (バイナリ / XCFramework) は Git 管理対象外です。
 * Tag ルール:
@@ -421,15 +426,15 @@ let package = Package(
   * 生成されたリリース用ビルドは、Artifacts として管理します。
   * リリース・アセット: ソース + API Reference ドキュメントを含みます。
 
-## 8. 開発スケジュール (提案)
+## 8. 開発スケジュール (提案) `{@spec:s8}`
 
-* Phase0 (1–2週間): 仕様確定、リポジトリ骨組み、Package レイアウト、BrewCore 基本実装
-* Phase1 (3–6週間): BrewService / Model の実装、キャッシュ、サンプル UI (一覧・検索)
-* Phase2 (3–5週間): 詳細ビュー、インストール・フロー、S2J Source List / S2J About 統合
-* Phase3 (2–4週間): ローカライズ、アクセシビリティ、テスト整備、CI 設定
-* Phase4 (1–2週間): CI/Release build、Notarize、リリース準備
+* フェーズ0 (1–2週間): 仕様確定、リポジトリ骨組み、Package レイアウト、BrewCore 基本実装
+* フェーズ1 (3–6週間): BrewService / Model の実装、キャッシュ、サンプル UI (一覧・検索)
+* フェーズ2 (3–5週間): 詳細ビュー、インストール・フロー、S2J Source List / S2J About 統合
+* フェーズ3 (2–4週間): ローカライズ、アクセシビリティ、テスト整備、CI 設定
+* フェーズ4 (1–2週間): CI/Release build、Notarize、リリース準備
 
-## 9. 開発上のチェックリスト (短縮)
+## 9. 開発上のチェックリスト (短縮) `{@spec:s9}`
 
 * brew バイナリ検出ロジック実装
 * BrewProcess (非同期) 実装
@@ -441,15 +446,15 @@ let package = Package(
 * CI (macOS) ワークフロー実装
 * ローカライズ (en/ja) 実装
 
-## 11. 実装状況サマリー
+## 11. 実装状況サマリー `{@spec:s11}`
 
-本章では、「現在の実装状況」を記載します。
+本章では、「現在の実装状況」を記載します。一覧だけ見る場合は [status.md](status.md) を入口にしてください (本章が詳細の正本です)。
 
 **主要な成果**:
 
-### 11.1. 完全実装済み機能 (100% 完了)
+### 11.1. 完全実装済み機能 (100% 完了) `{@spec:s11-1}`
 
-#### 11.1.1. Swift Package 基盤
+#### 11.1.1. Swift Package 基盤 `{@spec:s11-1-1}`
 * ✅ `Package.swift` - Swift Package 定義 (CozyBrewCore、CozyBrewService、CozyBrewUIComponents)
   * ✅ `swift-tools-version: 6.0` に更新済み (Swift v6.3.x 対応)
 * ✅ 依存関係の管理 (`s2j-source-list` / `s2j-about-window` とも **`main` 追従**、`Package.resolved` で revision 固定)
@@ -457,13 +462,13 @@ let package = Package(
 * ✅ ローカル Swift 品質チェック (`package.json` の `lint:swift` / `lint:build`、`CozyBrewApp` スキーム、`.swiftlint.yml` / `.periphery.yml` / `.swift-version`)
 * ✅ ビルド成功確認
 
-#### 11.1.2. CozyBrewCore モジュール
+#### 11.1.2. CozyBrewCore モジュール `{@spec:s11-1-2}`
 * ✅ `BrewBinaryLocator` - brew バイナリ検出 (Apple Silicon `/opt/homebrew/bin/brew`、Intel `/usr/local/bin/brew`、`which brew` フォールバック)
 * ✅ `BrewProcess` - 非同期 brew コマンド実行ラッパー (環境変数に対応、stdout/stderr 分離)
 * ✅ `BrewInstaller` - Homebrew インストール補助 (リアルタイム・ログ出力対応)
 * ✅ `BrewResult` - 実行結果の型定義
 
-#### 11.1.3. CozyBrewService モジュール
+#### 11.1.3. CozyBrewService モジュール `{@spec:s11-1-3}`
 * ✅ `Models` - Formula、Cask、Tap、Package モデル定義 (Codable 準拠、`brew info --json=v2` 対応)
 * ✅ `BrewManager` - ObservableObject ViewModel (@MainActor、非同期処理)
   * ✅ インストール済みパッケージ一覧取得
@@ -476,15 +481,17 @@ let package = Package(
   * ✅ `brew doctor` 警告一覧 (Warnings タブ)
 * ✅ `BrewCache` - JSON キャッシュ機構 (TTL 対応、メタデータ管理)
 
-#### 11.1.4. CozyBrewUIComponents モジュール
+#### 11.1.4. CozyBrewUIComponents モジュール `{@spec:s11-1-4}`
 * ✅ `PackageRowView` - パッケージ一覧の行表示 (アイコン、バッジ、アクションボタン)
 * ✅ `PackageDetailView` - パッケージ詳細表示 (説明、バージョン、ホームページ、アクションボタン)
 * ✅ `InstallProgressView` - インストール進捗表示 (ログストリーム、キャンセルボタン)
 * ✅ `BrewAlertView` - エラー表示 (friendly メッセージ + raw log toggle)
 * ✅ `MainWindowView` - メインウィンドウ (`NavigationSplitView`、Formulae/Casks カタログ・ページバー・検索)
-* ✅ `InstallFlowView` - インストール・フロー (確認ダイアログ、進行状況、エラー処理)
+* ✅ `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` - サイドバーを `S2JSourceList` に橋渡し (固定 UUID レジストリ、Warnings 行 `customRowContent`、`s2j-source-list` v2.0.14以降)
+* ✅ `BrewOperationOverlay` - 一覧/詳細での Upgrade 等の blocking オーバーレイ (`passwordFriendly` 等)
+* ⚠️ `InstallFlowView` - **View 部品はあるが未配線** (§11.3.4)。パッケージ install/uninstall/upgrade は `PackageRowView` / `PackageDetailView` から `BrewManager` を直実行
 
-#### 11.1.5. CozyBrewApp Target
+#### 11.1.5. CozyBrewApp Target `{@spec:s11-1-5}`
 * ✅ `CozyBrewApp.swift` - アプリケーション・エントリーポイント
   * ✅ Homebrew 未検出時のインストールフロー実装
   * ✅ 自動インストールオプション (opt-in)
@@ -502,11 +509,11 @@ let package = Package(
 * ✅ `Assets.xcassets` - アセットカタログ (`AppIcon.appiconset` 含む Dock 用アイコン)
 * ✅ `CozyBrewApp.entitlements` - アプリケーション権限設定
 
-#### 11.1.6. テストコード
+#### 11.1.6. テストコード `{@spec:s11-1-6}`
 * ✅ `CozyBrewCoreTests` - BrewBinaryLocator、BrewProcess の基本テスト
 * ✅ `CozyBrewServiceTests` - Models、BrewCache、カタログ API パース、`brew doctor` パース等
 
-#### 11.1.7. CI/CD ワークフロー
+#### 11.1.7. CI/CD ワークフロー `{@spec:s11-1-7}`
 * ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー
   * ✅ `test-macos` ジョブ: Swift Package テスト (`swift test --enable-code-coverage`)
     * ✅ `actions/checkout@v5`、`codecov/codecov-action@v7` (`files: .build/coverage/coverage.xml`)
@@ -528,24 +535,21 @@ let package = Package(
   * ✅ Package.swift からのデフォルト値自動検出
   * ✅ 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
 
-### 11.2. ほとんど実装済み機能 (85-95% 完了)
+### 11.2. ほとんど実装済み機能 (85-95% 完了) `{@spec:s11-2}`
 
-#### 11.2.1. サイドバー実装
-* ⚠️ `S2JSourceList` は `Package.swift` で依存関係として定義されているが、実際のコードでは使用されていない
-* ⚠️ `MainWindowView.swift` では独自のサイドバー実装 (`SidebarView`) を使用
-* ⚠️ 仕様では `S2JSourceList` を使用することが想定されているが、現状は標準の SwiftUI `List` を使用
+2026-11-14時点で該当なし (サイドバーの S2J Source List 統合は §11.1.4に反映済み)。
 
-### 11.3. 未実装機能
+### 11.3. 未実装機能 `{@spec:s11-3}`
 
-#### 11.3.1. ローカライズ
+#### 11.3.1. ローカライズ `{@spec:s11-3-1}`
 * ❌ 英語 (en) ローカライズ
 * ❌ 日本語 (ja) ローカライズ
 * ❌ `Localizable.strings`、`Localizable.stringsdict`
 
-#### 11.3.2. CI/CD
+#### 11.3.2. CI/CD `{@spec:s11-3-2}`
 * ✅ `.github/workflows/` ディレクトリを作成済み
 * ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー
-  * ✅ 2つのジョブ構成: `test-macos`、`build-release`
+  * ✅ ジョブ構成を2つに: `test-macos`、`build-release`
   * ✅ Swift Package テスト (`swift test --enable-code-coverage`)
   * ✅ コードカバレッジの Codecov へのアップロード (`macos` フラグ)
   * ✅ リリースビルド (`swift build -c release`)
@@ -553,51 +557,56 @@ let package = Package(
 * ✅ `.github/workflows/docs-lint.yml` - ドキュメント・リント・ワークフロー
   * ✅ `lint-docs` ジョブ: `@s2j/docs-linter` (Node.js v24、`npm ci` / `npm run lint:docs`)
 * ✅ `scripts/test-local.sh` - ローカルテスト実行スクリプト (統合版)
-  * ✅ コミット前にCI/CDと同じテストを実行して問題を早期発見
+  * ✅ コミット前に CI/CD と同じテストを実行して問題を早期発見
   * ✅ macOS/iPadOS 対応の汎用スクリプト
   * ✅ Package.swift からのデフォルト値自動検出
   * ✅ 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
   * ✅ 環境変数による柔軟なカスタマイズ
 
-#### 11.3.3. その他
+#### 11.3.3. その他 `{@spec:s11-3-3}`
 * ❌ Cakebrew からの設定移行の機能
 * ❌ アクセシビリティ (VoiceOver) 対応の詳細実装
 * ❌ UI スナップショット・テスト
 
-### 11.4. 実装完了率
+#### 11.3.4. パッケージ操作 UI (`InstallFlowView` 統合) `{@spec:s11-3-4}`
+* ⚠️ `InstallFlowView` / `InstallProgressView` は実装済みだが **ナビゲーションに未接続**
+* ❌ 確認ダイアログ → 実行 → ログ → 失敗時ロールバック案内の **統一フロー** (現状は行/詳細から直実行、`BrewOperationOverlay` は Upgrade 中心)
+* ❌ Upgrade All の確認 UI (`BrewManager.upgradeAll` は API のみ)
+
+### 11.4. 実装完了率 `{@spec:s11-4}`
 
 **実装完了率の算出方法**:
-* 各カテゴリーを 0% (未実装)、50% (部分実装)、100% (完全実装) で評価します。
+* 各カテゴリーを0% (未実装)、50% (部分実装)、100% (完全実装) で評価します。
 * 下表の **9カテゴリー** の算術平均を全体完了率とします (重み付けは均等)。
-* 再計算日の前提: About (License / Acknowledgements 含む)・カタログ・App Icon は完了、`S2JSourceList` は未統合、ローカライズは未着手。
+* 再計算日の前提: About (License / Acknowledgements 含む)、カタログ、App Icon、**S2J Source List サイドバー (フェーズ1)** は完了。`InstallFlowView` は部品のみ。階層グループ化は未了。ローカライズは未着手。
 
-**カテゴリー別完了率** (2026-11-08 時点):
+**カテゴリー別完了率** (2026-11-15時点):
 
 | カテゴリー | 完了率 | 備考 |
 | --- | --- | --- |
-| Swift Package 基盤 | 100% | `Package.swift`、SPM 依存 pin、`swift:ncu*`、ローカル `lint:swift` / `lint:build` |
+| Swift Package 基盤 | 100% | `Package.swift`、SPM 依存 pin、`swift:ncu*`、ローカル `lint:swift` (`xcode:generate` 含む) / `lint:build` |
 | CozyBrewCore | 100% | 全機能を実装済み |
 | CozyBrewService | 100% | 一覧・操作に加え Formulae/Casks カタログ、`brew doctor` パース等 |
-| CozyBrewUIComponents | 90% | 画面・カタログ UI は完了。仕様上の `S2JSourceList` 置き換えのみ未了 (独自 `SidebarView`) |
+| CozyBrewUIComponents | 92% | カタログ・サイドバー・`BrewOperationOverlay` 済み。`InstallFlowView` 未配線・フェーズ2階層は未了 |
 | CozyBrewApp Target | 100% | `AboutView` シート、App Icon、`AppDelegate`、Homebrew 未導入フロー |
-| テストコード | 75% | カタログ・doctor・モデル等のユニットテスト拡充。UI/統合・スナップショットは未実装 |
+| テストコード | 75% | カタログ、doctor、モデル等のユニットテスト拡充。UI/統合・スナップショットは未実装 |
 | ローカライズ | 0% | `Localizable.strings` 等未実装 |
 | CI/CD | 95% | GitHub Actions: `swift test` + docs lint 済。SwiftLint/Periphery はローカル npm のみ (CI 未組込み) |
-| Xcode プロジェクト | 100% | XcodeGen、`CozyBrewApp` スキーム、リソース一式 |
+| Xcode プロジェクト | 100% | XcodeGen、`CozyBrewApp` スキーム、リソース一式、`npm run xcode:generate` |
 
 **全体実装の完了率**:
 
 \[
-\frac{100 + 100 + 100 + 90 + 100 + 75 + 0 + 95 + 100}{9} = \frac{765}{9} \approx 85.0\%
+\frac{100 + 100 + 100 + 92 + 100 + 75 + 0 + 95 + 100}{9} = \frac{762}{9} \approx. 84.7\%
 \]
 
-**約85%**
+**約85%** (端数84.7%)
 
 * **100% ゾーン**: Package 基盤、Core、Service、App Target、Xcode プロジェクト
-* **主な引き下げ要因**: ローカライズ (0%)、テストの深さ (75%)、サイドバーの `S2JSourceList` 差し替え (UI 90%)
+* **主な引き下げ要因**: ローカライズ (0%)、テストの深さ (75%)
 * **CI**: リポジトリ上の自動化は docs + Swift テストまで。`lint:swift` は開発者ローカルで実行
 
-### 11.5. 品質評価
+### 11.5. 品質評価 `{@spec:s11-5}`
 
 * **コード品質**: ✅ 良好
   * Swift のモダンな機能 (async/await、@MainActor) を適切に使用
@@ -620,20 +629,24 @@ let package = Package(
 
 ---
 
-## 12. Backlog
+## 12. Backlog `{@spec:s12}`
 
 本章では、「今後の予定」を記載します。
 
 **残りの未実装・部分実装の機能**:
 
-### 12.1. 短期での改善予定 (1-3ヵ月)
+### 12.1. 短期での改善予定 (1-3ヵ月) `{@spec:s12-1}`
 
-#### 12.1.1. 外部パッケージ統合の完成
-* **S2J Source List 統合**
-  * `MainWindowView` のサイドバーを `S2JSourceList` に置き換え
-  * 仕様に沿ったサイドバー実装への移行
+#### 12.1.1. 外部パッケージ統合の完成 `{@spec:s12-1-1}`
+* ✅ **S2J Source List 統合 (フェーズ1)** — `S2JSourceListAdapter`、`CozyBrewSourceListSidebar`、`MainWindowView` から `S2JSourceList.SidebarView` を利用 (フラット6セクション、Warnings オレンジバッジ、`s2j-source-list` v2.0.14以降)
+* **S2J Source List (フェーズ2)**
+  * `SourceItem.group` による階層サイドバー (例: Warnings / Installed packages / Catalog)
+  * 選択、Accessibility、テストの拡充
+* **`InstallFlowView` の本番配線**
+  * `PackageRowView` / `PackageDetailView` から確認付きフローに接続 (Upgrade All 確認 UI 含む)
+  * brew 未導入 UX (`BrewNotAvailableView`) の手動での検証手順の整備 (→ [ux_flows_spec.md](ux_flows_spec.md) §3.4)
 
-#### 12.1.2. ローカライズ (初期対応)
+#### 12.1.2. ローカライズ (初期対応) `{@spec:s12-1-2}`
 * 英語 (en) ローカライズ
   * `Localizable.strings` の作成
   * 主要 UI 要素の翻訳
@@ -641,7 +654,7 @@ let package = Package(
   * `Localizable.strings` の作成
   * 主要 UI 要素の翻訳
 
-#### 12.1.3. CI/CD ワークフロー
+#### 12.1.3. CI/CD ワークフロー `{@spec:s12-1-3}`
 * ✅ `.github/workflows/swift-test.yml` の作成 (完了)
   * ✅ `test-macos` ジョブ: Swift Package テスト (`swift test --enable-code-coverage`)
   * ✅ `build-release` ジョブ: リリースビルド (`swift build -c release`)
@@ -652,87 +665,87 @@ let package = Package(
 * ✅ `scripts/test-local.sh` の作成 (完了)
   * ✅ macOS/iPadOS 対応の汎用ローカルテストスクリプト
   * ✅ Swift Package テスト、Xcode プロジェクト生成とテスト、iOS/iPadOS テストを統合
-  * ✅ Package.swift からのデフォルト値自動検出機能を実装
+  * ✅ Package.swift から自動でデフォルト値を検出する機能を実装
   * ✅ 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
   * ✅ 環境変数によるカスタマイズ対応
 * ✅ テスト・カバレッジ・レポートの生成 (実装済み - Codecov へのアップロード)
 
-#### 12.1.4. テストカバレッジ向上
+#### 12.1.4. テストカバレッジ向上 `{@spec:s12-1-4}`
 * BrewManager の統合テスト
 * UI コンポーネントのユニットテスト
 * エッジケースのテスト追加
 
-### 12.2. 中期での改善予定 (3-6ヵ月)
+### 12.2. 中期での改善予定 (3-6ヵ月) `{@spec:s12-2}`
 
-#### 12.2.1. アクセシビリティ対応
+#### 12.2.1. アクセシビリティ対応 `{@spec:s12-2-1}`
 * VoiceOver 対応の詳細実装
 * すべてのインタラクティブ要素に AccessibilityLabel を設定
 * キーボードショートカットの実装
 * コントラスト比の確認と改善
 
-#### 12.2.2. パフォーマンス最適化
+#### 12.2.2. パフォーマンス最適化 `{@spec:s12-2-2}`
 * 大量パッケージ一覧の表示最適化 (仮想化)
 * キャッシュ戦略の見直し
 * 非同期処理の最適化
 
-#### 12.2.3. エラーハンドリング強化
+#### 12.2.3. エラーハンドリング強化 `{@spec:s12-2-3}`
 * より詳細なエラーメッセージの実装
 * エラーログの保存機能
 * クラッシュレポートの統合 (opt-in)
 
-#### 12.2.4. UI/UX 改善
+#### 12.2.4. UI/UX 改善 `{@spec:s12-2-4}`
 * パッケージ検索のリアルタイム更新
 * インストール履歴の表示
 * 依存関係ツリーの可視化
 * ダークモード対応の確認と調整
 
-#### 12.2.5. Cakebrew からの移行機能
+#### 12.2.5. Cakebrew からの移行機能 `{@spec:s12-2-5}`
 * Cakebrew 設定ファイルの検出
 * 移行ウィザードの実装
 * インストール履歴の移行
 
-### 12.3. 長期での改善予定 (6ヵ月以上)
+### 12.3. 長期での改善予定 (6ヵ月以上) `{@spec:s12-3}`
 
-下記の機能は、将来の拡張として検討する項目です。
+下記の機能は、将来のエクステンションとして検討する項目です。
 
-#### 12.3.1. 高度な機能
+#### 12.3.1. 高度な機能 `{@spec:s12-3-1}`
 * パッケージのバックアップ/リストア機能
 * カスタム Tap の管理強化
 * パッケージの依存関係の分析ツール
 * バッチ操作 (複数パッケージの一括インストール/アンインストール)
 
-#### 12.3.2. 統合機能
+#### 12.3.2. 統合機能 `{@spec:s12-3-2}`
 * ターミナル統合 (brew コマンドの実行ログ表示)
 * 通知機能 (アップデート通知、インストール完了通知)
 * 統計情報の表示 (インストール済みパッケージ数、ディスク使用量など)
 
-#### 12.3.3. プラットフォーム拡張
+#### 12.3.3. プラットフォームエクステンション `{@spec:s12-3-3}`
 * iPadOS 対応の検討
 * iOS 対応の検討 (リモート管理など)
 
-#### 12.3.4. コミュニティ機能
+#### 12.3.4. コミュニティ機能 `{@spec:s12-3-4}`
 * パッケージレビュー機能
 * おすすめパッケージの表示
 * コミュニティフィードバックの収集
 
 ---
 
-## Appendix A: Xcode プロジェクト作成ウィザード推奨選択肢リスト
+## Appendix A: Xcode プロジェクト作成ウィザード推奨選択肢リスト `{@spec:s-appendix-a-xcode}`
 
 * [COMMON_SPEC.md](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md) に準拠します。
 
 **補足**:
 * 本プロジェクトは Swift Package として他アプリケーションに組み込まれることを前提とします。そのため、Xcode ウィザードで「App」テンプレートを選ぶ必要はありません。
-* 本リポジトリは **macOS 専用アプリ** (`CozyBrewApp`) ＋ Swift Package ライブラリです。Appendix の iPadOS 記述は汎用テンプレート向け参考です。実際の最小 OS は **macOS v15.0** です。
+* 本リポジトリは **macOS 専用アプリケーション** (`CozyBrewApp`) + Swift Package ライブラリです。Appendix の iPadOS 記述は汎用テンプレート向け参考です。実際の最小 OS は **macOS v15.0** です。
 * また、本リポジトリでは npm パッケージ [`@s2j/docs-linter`](https://github.com/stein2nd/docs-linter) を用い、ドキュメント品質 (表記揺れや用語統一) の検証を CI (`docs-lint.yml`) で実施します。
 * **注意**: 実際のプロジェクトでは、XcodeGen (`project.yml`) を使用して Xcode プロジェクトを生成しています。このセクションは、手動で Xcode プロジェクトを作成する場合の参考情報です。
 
-### 1. テンプレート選択
+### 1. テンプレート選択 `{@spec:s1-2}`
 
 * **Platform**: Multiplatform (macOS、iPadOS)
 * **Template**: Framework または Swift Package
 
-### 2. プロジェクト設定
+### 2. プロジェクト設定 `{@spec:s2-3}`
 
 | 項目 | 推奨値 | 理由 |
 | --- | --- | --- |
@@ -747,21 +760,21 @@ let package = Package(
 | Include Document Group | Off | Document-based App ではない |
 | Source Control | On (Git) | `SPEC.md` / GitHub 運用をリンクさせるため |
 
-### 3. デプロイ設定
+### 3. デプロイ設定 `{@spec:s3-7}`
 
 | 項目 | 推奨値 | 理由 |
 | --- | --- | --- |
-| macOS Deployment Target | **macOS v15.0 以上** | `s2j-about-window` v3 (Textual) および `project.yml` と一致 |
-| iOS Deployment Target | (本アプリは対象外) | macOS 専用。将来のマルチプラットフォーム化時に再定義 |
+| macOS Deployment Target | **macOS v15.0以上** | `s2j-about-window` v3 (Textual) および `project.yml` と一致 |
+| iOS Deployment Target | (本アプリケーションは対象外) | macOS 専用。将来のマルチプラットフォーム化時に再定義 |
 
-### 4. 実行確認の環境 (推奨)
+### 4. 実行確認の環境 (推奨) `{@spec:s4-6}`
 
 | プラットフォーム | 実行確認ターゲット | 理由 |
 | --- | --- | --- |
-| macOS | **macOS v15.0 以降** (推奨: 開発 Mac と同じ最新 macOS) | About / Acknowledgements・Formulae UI・brew 連携 |
-| iPadOS | (本アプリは対象外) | `scripts/test-local.sh` の iOS オプションは Package 検証用 |
+| macOS | **macOS v15.0以降** (推奨: 開発 Mac と同じ最新 macOS) | About / Acknowledgements / Formulae UI / brew 連携 |
+| iPadOS | (本アプリケーションは対象外) | `scripts/test-local.sh` の iOS オプションは Package 検証用 |
 
-### 5. CI ワークフロー補足
+### 5. CI ワークフロー補足 `{@spec:s5-2}`
 
 **実装状況**: ✅ **完全実装** - Swift テスト・ワークフローとドキュメント・リント・ワークフローが実装済み
 
@@ -781,10 +794,10 @@ let package = Package(
         * `npm ci` と `npm run lint:docs`
         * 対象: `README.md`、`CHANGELOG.md`、`docs/**/*.md`
 * **ローカルテストスクリプト**:
-  * ✅ `scripts/test-local.sh`: コミット前にCI/CDと同じテストを実行して問題を早期発見
+  * ✅ `scripts/test-local.sh`: コミット前に CI/CD と同じテストを実行して問題を早期発見
     * macOS/iPadOS 対応の汎用スクリプト
     * Swift Package テスト、Xcode プロジェクト生成とテスト、iOS/iPadOS テストを統合
-    * Package.swift からのデフォルト値自動検出機能を実装
+    * Package.swift から自動でデフォルト値の検出機能を実装
     * 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
     * 環境変数によるカスタマイズ対応 (`SCHEME_NAME`、`ENABLE_XCODE_PROJECT`、`XCODEGEN_AUTO_INSTALL` など)
     * **利用例**:
@@ -805,7 +818,7 @@ let package = Package(
 * macOS Runner では `swift test --enable-code-coverage` を実行し、テスト・カバレッジを出力します
 * 本プロジェクトは macOS 専用のため、iPadOS 互換性テストは対象外です
 
-## Appendix B: 開発上の留意点 (短文まとめ)
+## Appendix B: 開発上の留意点 (短文まとめ) `{@spec:s-appendix-b}`
 
 * `brew` コマンドの出力は `--json=v2` を活用してパース安定化を図ります。
 * Apple Silicon と Intel の brew パス差に注意し、必ず検出ロジックを入れます。
