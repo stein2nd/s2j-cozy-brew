@@ -86,7 +86,8 @@
 ││└─ BrewResult.swift  # 実行結果の型定義
 │├┬─ CozyBrewService/  # サービス・モジュール (モデル、ViewModel、キャッシュ)
 ││├─ BrewCache.swift  # JSON キャッシュ機構 (TTL 対応)
-││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理)
+││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理、`refreshApplicationState`)
+││├─ BrewCaskTerminalFallback.swift / BrewUserMessage.swift  # Cask 失敗・ターミナル委譲
 ││├─ BrewCatalog.swift / BrewFormulaeAPIClient.swift  # formulae.brew.sh カタログ
 ││├─ BrewDoctorParser.swift  # `brew doctor` パース
 ││└─ Models.swift  # Formula、Cask、Tap、Package モデル定義
@@ -98,7 +99,9 @@
 │　├─ InstallFlowView.swift  # インストール・フロー
 │　├─ InstallProgressView.swift  # インストール進捗表示
 │　├─ PackageDetailView.swift  # パッケージ詳細表示
-│　└─ PackageRowView.swift  # パッケージ一覧の行表示
+│　├─ PackageRowView.swift  # パッケージ一覧の行表示
+│　├─ PackageUpgradeFailurePanel.swift  # Upgrade 失敗 UI (行下)
+│　├─ BrewUpgradeTerminalFallbackView.swift / BrewTerminalLauncher.swift
 └┬─ Tests/  # テストコード
 　├┬─ CozyBrewCoreTests/
 　│├─ BrewBinaryLocatorTests.swift
@@ -138,7 +141,11 @@
   * `BrewAlertView`: friendly error + raw log toggle を表示します。
   * `MainWindow`: Sidebar (S2J Source List) + Content Area (パッケージ一覧、検索、ステータスバー) を表示します。
   * `InstallFlowView`: 確認ダイアログ、進行状況 (ログ表示)、失敗時のロールバック案内 (**View 部品はあるが未配線** — 現状は `PackageRowView` / `PackageDetailView` から直実行)。
-  * `BrewOperationOverlay`: Upgrade 等の blocking オーバーレイ。
+  * `BrewOperationOverlay`: Upgrade 等の blocking オーバーレイ (Cask は `passwordFriendly`)。
+  * `PackageUpgradeFailurePanel` / `BrewUpgradeTerminalFallbackView`: Cask Upgrade のターミナル委譲 (一覧は対象行の直下)。
+
+* **メインウィンドウ・ツールバー**
+  * Warnings 以外: **Refresh** → `BrewManager.refreshApplicationState()` (`brew update` + インストール済み、Outdated 再取得、`isLoading`)。
 
 * **サイドバー**
   * `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` が `S2JSourceList.SidebarView` を `MainWindowView` に載せます。

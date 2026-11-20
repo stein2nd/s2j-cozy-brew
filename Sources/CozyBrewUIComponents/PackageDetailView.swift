@@ -13,6 +13,7 @@ public struct PackageDetailView: View {
     @State private var performingActionFootnote: String?
     @State private var infoErrorMessage: String?
     @State private var actionErrorMessage: String?
+    @State private var upgradeFailureStderr: String?
 
     public init(package: Binding<Package>, manager: BrewManager) {
         _package = package
@@ -59,7 +60,13 @@ public struct PackageDetailView: View {
                 Divider()
                 actionButtons
 
-                if let actionErrorMessage {
+                if let actionErrorMessage, upgradeFailureStderr != nil {
+                    PackageUpgradeFailurePanel(
+                        message: actionErrorMessage,
+                        package: activePackage,
+                        stderr: upgradeFailureStderr
+                    )
+                } else if let actionErrorMessage {
                     Text(actionErrorMessage)
                         .font(.caption)
                         .foregroundColor(.red)
@@ -353,6 +360,7 @@ public struct PackageDetailView: View {
         performingActionTitle = title
         performingActionFootnote = footnote
         actionErrorMessage = nil
+        upgradeFailureStderr = nil
         defer {
             isPerformingAction = false
             performingActionTitle = nil
@@ -362,6 +370,11 @@ public struct PackageDetailView: View {
         do {
             try await operation()
         } catch {
+            if case let BrewManagerError.upgradeFailed(stderr) = error {
+                upgradeFailureStderr = stderr
+            } else {
+                upgradeFailureStderr = nil
+            }
             actionErrorMessage = brewActionErrorMessage(error)
         }
     }

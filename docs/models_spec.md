@@ -145,7 +145,9 @@ Formula と共通の基本プロパティに加え、Cask 固有のプロパテ�
 ### 9.2. 操作 `{@models_spec:s9-2}`
 
 * インストール、アンインストール、アップデートの実行と進行管理
-* `brew update` の実行
+* `update()` — `brew update` のみ (例外スロー)。ツールバーは呼ばない
+* `refreshApplicationState()` — ツールバー Refresh: `brew update` のあとインストール済み、Outdated、`brew services` 一覧を再取得 (`isLoading` 1回)
+* `refreshInstalledPackages` / `refreshOutdatedPackages` — 引数 `managingLoading` (デフォルト `true`)。`refreshApplicationState` 内では `false` で二重トグルを避ける
 * パッケージ検索
 
 ### 9.3. 失敗ハンドリング `{@models_spec:s9-3}`

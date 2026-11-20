@@ -154,6 +154,8 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 │├┬─ CozyBrewService/  # サービス・モジュール (モデル、ViewModel、キャッシュ)
 ││├─ BrewCache.swift  # JSON キャッシュ機構 (TTL 対応)
 ││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理)
+││├─ BrewCaskTerminalFallback.swift  # Cask ターミナル委譲コマンド・判定
+││├─ BrewUserMessage.swift  # brew 出力の UI 向け意訳
 ││└─ Models.swift  # Formula、Cask、Tap、Package モデル定義
 │└┬─ CozyBrewUIComponents/  # UI コンポーネント・モジュール
 │　├─ MainWindowView.swift  # メイン・ウィンドウ (macOS 15.0+)
@@ -163,7 +165,10 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 │　├─ InstallFlowView.swift  # インストール・フロー (部品・未配線)
 │　├─ InstallProgressView.swift  # インストール進捗表示
 │　├─ PackageDetailView.swift  # パッケージ詳細表示
-│　└─ PackageRowView.swift  # パッケージ一覧の行表示
+│　├─ PackageRowView.swift  # パッケージ一覧の行表示
+│　├─ PackageUpgradeFailurePanel.swift  # Upgrade 失敗 (行下)
+│　├─ BrewUpgradeTerminalFallbackView.swift  # Copy Command / Run in Terminal
+│　└─ BrewTerminalLauncher.swift  # Terminal Apple Events
 └┬─ Tests/  # テストコード
 　├┬─ CozyBrewCoreTests/
 　│├─ BrewBinaryLocatorTests.swift
@@ -476,7 +481,8 @@ let package = Package(
   * ✅ Tap 一覧取得
   * ✅ パッケージ検索
   * ✅ インストール/アンインストール/アップグレード操作
-  * ✅ brew update 実行
+  * ✅ `update()` (`brew update` のみ) と `refreshApplicationState()` (ツールバー Refresh: update + 一覧再取得)
+  * ✅ `BrewCaskTerminalFallback` / `BrewUserMessage` (Cask 失敗意訳・ターミナル委譲判定)
   * ✅ Formulae / Casks カタログ取得・キャッシュ・ページ用スナップショット API (`BrewFormulaeAPIClient`、`BrewCatalog` / パース)
   * ✅ `brew doctor` 警告一覧 (Warnings タブ)
 * ✅ `BrewCache` - JSON キャッシュ機構 (TTL 対応、メタデータ管理)
@@ -489,6 +495,7 @@ let package = Package(
 * ✅ `MainWindowView` - メインウィンドウ (`NavigationSplitView`、Formulae/Casks カタログ・ページバー・検索)
 * ✅ `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` - サイドバーを `S2JSourceList` に橋渡し (固定 UUID レジストリ、Warnings 行 `customRowContent`、`s2j-source-list` v2.0.14以降)
 * ✅ `BrewOperationOverlay` - 一覧/詳細での Upgrade 等の blocking オーバーレイ (`passwordFriendly` 等)
+* ✅ `PackageUpgradeFailurePanel` / `BrewUpgradeTerminalFallbackView` / `BrewTerminalLauncher` - Cask Upgrade 失敗時の行下パネルとターミナル委譲
 * ⚠️ `InstallFlowView` - **View 部品はあるが未配線** (§11.3.4)。パッケージ install/uninstall/upgrade は `PackageRowView` / `PackageDetailView` から `BrewManager` を直実行
 
 #### 11.1.5. CozyBrewApp Target `{@spec:s11-1-5}`

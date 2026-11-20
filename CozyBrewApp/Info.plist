@@ -25,6 +25,8 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<false/>
 	</dict>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>CozyBrew opens Terminal to run Homebrew commands when a Cask upgrade needs an interactive administrator session.</string>
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>

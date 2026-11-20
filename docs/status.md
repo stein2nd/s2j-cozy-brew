@@ -2,9 +2,9 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| 最終更新 | 2026-11-16 |
+| 最終更新 | 2026-11-17 |
 | アプリ版 (正本) | `package.json` → **1.0.12** (build **4**) |
-| SPM pin | `s2j-source-list` @ **2.0.14** (revision)、`s2j-about-window` @ `main` |
+| SPM pin | `s2j-source-list` revision `02e3ec4` / `main` (tag **2.0.15**)、`s2j-about-window` revision `b6a31e1` / `main` |
 
 ---
 
@@ -15,6 +15,7 @@
 ## 目的 `{@status:s-h002}`
 
 * モジュール別の完了度と、**今フォーカスすべき未了** を短時間で把握する。
+* **100% 完了条件チェックリスト** で Must / Should を `[x]` / `[ ]` として追跡する。
 * 仕様書・コードを開く前の「どこまでできているか」の入口にする。
 
 ## 非目的 `{@status:s-h003}`
@@ -32,13 +33,171 @@
 | UX の現状と目標 | [ux_flows_spec.md §3](ux_flows_spec.md#30-現行実装-2026-11-15-時点) |
 | 版番号・リリース手順 | [dependency_updates.md](dependency_updates.md) |
 
-**運用:** マイルストーン完了・完了率の再計算のたびに本ファイルの **最終更新** と下表を更新し、詳細は `SPEC.md` §11を同期する。
+**運用:** マイルストーン完了や完了率の再計算のたびに本ファイルの **最終更新** と下表を更新し、詳細は [SPEC.md §11](SPEC.md) と同期する。
+
+**完了条件列:** 100% 到達用チェックリスト。`[x]` = 満たし済み、`[ ]` = 未。各§のアンカーが正本。実装％は当該§の `[x]` 数 ÷ 全項目数 ([§ゲート外](#status-gates) を除く)。
+
+## 機能一覧 `{@status:s-features}`
+
+| 機能名 | 実装済み/未実装 | 実装％ | 完了条件 (100%) |
+| --- | --- | --- | --- |
+| 仕様 (`docs/`) | 確定 | 100 | [§仕様・ドキュメント](#status-spec-docs) (6/6) |
+| Swift Package 基盤 (Must) | 実装済み | 100 | [§SPM 基盤](#status-spm-base) (7/7) |
+| CozyBrewCore (Must) | 実装済み | 100 | [§Core](#status-core) (5/5) |
+| CozyBrewService (Must) | 実装済み | 100 | [§Service](#status-service) (7/7) |
+| CozyBrewApp ターゲット (Must) | 実装済み | 100 | [§App ターゲット](#status-app) (6/6) |
+| 日常 brew GUI (Must) | 実装済み | 100 | [§brew GUI](#status-brew-gui) (8/8) |
+| CozyBrewUIComponents | 部分 | 63 | [§UI コンポーネント](#status-ui) (5/8) |
+| CI ・ローカル品質 | 部分 | 71 | [§CI・品質](#status-ci) (5/7) |
+| ローカライズ・アクセシビリティ | 未 | 0 | [§ローカライズ・アクセシビリティ](#status-l10n-a11y) (0/4) |
+| テストエクステンション (UI / 統合) | 部分 | 25 | [§テスト拡張](#status-quality-ui) (1/4) |
+| プロダクトゴール (Should) | 部分 | 43 | [§プロダクト Should](#status-should-product) (3/7) |
+
+**Must 範囲 (上表の先頭6行):** **100%** — macOS アプリとして Homebrew を GUI で日常操作できる水準。
+
+**全体 (Should ・テストエクステンション等を含む):** チェックリスト **69項目中48項目** ≒ **約70%** (下記と [SPEC.md §11.4](SPEC.md) の **約85%** カテゴリー平均は別集計)。
+
+## 100% 完了条件チェックリスト `{@status:s100}`
+
+[s2j-about-window `docs/status.md`](https://github.com/stein2nd/s2j-about-window/blob/main/docs/status.md) 同型。検証は `npm run test:local:macOS` / GitHub Actions を正本とする。
+
+### 仕様・ドキュメント `{@status:s-status-spec-docs}`
+
+* [x] [specs.md](specs.md) 索引
+* [x] [status.md](status.md) 実装状況の入口と本チェックリスト
+* [x] 細分化 spec と [SPEC.md](SPEC.md) が v1.0.12実装と同期 ([overview §2.1.1](overview.md))
+* [x] GitHub Actions `docs-lint.yml` (`npm run lint:docs`)
+* [x] 見出しタグと `npm run docs:heading-tags`
+* [x] [dependency_updates.md](dependency_updates.md) (npm / SPM、リリース手順)
+
+### Swift Package 基盤 (Must) `{@status:s-status-spm-base}`
+
+正本: [architecture.md](architecture.md)、[Package.swift](../Package.swift)
+
+* [x] `Package.swift` — macOS **15.0**、`swift-tools-version` 6.0
+* [x] `Package.resolved` と Xcode 側 pin をコミット同期
+* [x] `npm run swift:ncu` / `swift:install` ([`scripts/swift-deps.sh`](../scripts/swift-deps.sh))
+* [x] `npm run version:sync` / `version:check` / `version:bump-build`
+* [x] `npm run lint:swift` (xcodegen → SwiftLint / SwiftFormat / Periphery)
+* [x] `project.yml` + `npm run xcode:generate`
+* [x] 外部 SPM: `s2j-source-list` / `s2j-about-window` (`main` 追従)
+
+### CozyBrewCore (Must) `{@status:s-status-core}`
+
+正本: [brew_integration_spec.md](brew_integration_spec.md)
+
+* [x] `BrewBinaryLocator` (Apple Silicon / Intel / `which`)
+* [x] `BrewProcess` (非対話 env、`--yes`)
+* [x] `BrewInstaller` (Homebrew 導入スクリプト補助)
+* [x] `BrewResult`
+* [x] `BrewBinaryLocatorTests` / `BrewProcessTests`
+
+### CozyBrewService (Must) `{@status:s-status-service}`
+
+正本: [models_spec.md](models_spec.md)、[SPEC.md §11.1.3](SPEC.md)
+
+* [x] `Formula` / `Cask` / `Tap` / 一覧モデル
+* [x] `BrewManager` (install / uninstall / upgrade / `update` / `refreshApplicationState` / list / outdated)
+* [x] `BrewCaskTerminalFallback` / `BrewCaskTerminalFallbackTests`
+* [x] `BrewCache` (TTL)
+* [x] Formulae/Casks カタログ API (`BrewCatalog` / `BrewFormulaeAPIClient`)
+* [x] `BrewDoctorParser` / Warnings タブ連携
+* [x] `brew services` 操作 ([brew_integration_spec.md](brew_integration_spec.md))
+* [x] Service ユニットテスト (Models / Cache / Catalog / doctor 等)
+
+### CozyBrewApp ターゲット (Must) `{@status:s-status-app}`
+
+* [x] `BrewNotAvailableView` + opt-in 自動インストール ([ux_flows_spec.md](ux_flows_spec.md) §1)
+* [x] About / License / Acknowledgements ([design_spec.md](design_spec.md)、S2J About v3+)
+* [x] `AppDelegate` / ウィンドウ前面表示
+* [x] `AppIcon.appiconset`
+* [x] `MARKETING_VERSION` / `buildNumber` → `Info.plist`
+* [x] Ack 生成 (`ack:doctor` / `ack:generate`、Release `.app` 前提)
+
+### 日常 brew GUI (Must) `{@status:s-status-brew-gui}`
+
+正本: [ux_flows_spec.md](ux_flows_spec.md)、[overview §2.1.1](overview.md)
+
+* [x] サイドバー6セクション (S2J Source List **フェーズ1**)
+* [x] Installed / Outdated / Taps / Formulae / Casks 一覧
+* [x] クライアント検索 (一覧フィルター)
+* [x] 詳細表示、Installed / Outdated 照合
+* [x] install / uninstall / upgrade (行・詳細)
+* [x] Cask Upgrade 失敗時のターミナル委譲 (行下 `PackageUpgradeFailurePanel`)
+* [x] ツールバー Refresh (`refreshApplicationState`、ローディング表示)
+* [x] `BrewOperationOverlay` (Upgrade blocking)
+* [x] Formulae/Casks カタログページ分割
+* [x] `brew doctor` Warnings + バッジ
+
+### CozyBrewUIComponents `{@status:s-status-ui}`
+
+* [x] `MainWindowView` (`NavigationSplitView`、カタログ・検索)
+* [x] `S2JSourceListAdapter` / `CozyBrewSourceListSidebar`
+* [x] `PackageRowView` / `PackageDetailView`
+* [x] `BrewAlertView` / `InstallProgressView` (部品)
+* [x] `BrewOperationOverlay`
+* [x] `PackageUpgradeFailurePanel` / `BrewUpgradeTerminalFallbackView` / `BrewTerminalLauncher`
+* [ ] **`InstallFlowView` 本番配線** (確認 → ログ → 失敗案内) — [ux_flows_spec §3](ux_flows_spec.md)
+* [ ] S2J Source List **フェーズ2** (`SourceItem.group` 階層)
+* [ ] **Upgrade All** 確認 UI (`BrewManager.upgradeAll`)
+
+### CI、ローカル品質 `{@status:s-status-ci}`
+
+* [x] `.github/workflows/swift-test.yml` (`swift test`、release ビルド artifact)
+* [x] `.github/workflows/docs-lint.yml`
+* [x] `npm run test:local` / `test:local:macOS`
+* [x] `npm run release:*` マイルストーン ([dependency_updates.md](dependency_updates.md))
+* [x] `npm run swift:pin-diff`
+* [ ] CI で `npm run lint:swift`
+* [ ] CI で `npm run version:check`
+
+### ローカライズ・アクセシビリティ `{@status:s-status-l10n-a11y}`
+
+正本: [security_spec.md](security_spec.md)、[SPEC.md §11.3.1](SPEC.md)
+
+* [ ] `Localizable.strings` (en)
+* [ ] `Localizable.strings` (ja)
+* [ ] 主要 UI のローカライズ適用
+* [ ] VoiceOver / アクセシビリティの体系的対応
+
+### テストエクステンション (UI / 統合) `{@status:s-status-quality-ui}`
+
+* [x] Core / Service ユニットテスト (現状の主テスト)
+* [ ] UI テスト (macOS)
+* [ ] brew 連携の統合テスト (CI 範囲の明文化含む)
+* [ ] UI スナップショット
+
+### プロダクトゴール (Should) `{@status:s-status-should-product}`
+
+正本: [overview.md §2.1](overview.md) (ゴール列)
+
+* [x] brew 未導入ユーザー向け導入 UX
+* [x] 一覧・検索・ログ表示 (操作中)
+* [x] GPL 系リソース (LICENSE / ACK) のバンドル表示
+* [ ] tap / **untap** の GUI 操作
+* [ ] インストール**履歴**の保持・表示
+* [ ] パッケージ詳細での README (Markdown) 表示 — [architecture.md](architecture.md) 記載と要整合
+* [ ] Cakebrew 設定移行
+
+## ゲート外・任意 `{@status:s-status-gates}`
+
+**100% 分母外** (未完了でも `Must` 100% は維持)。
+
+| # | 内容 | 備考 |
+| --- | --- | --- |
+| G1 | GitHub Release への `.app` / notarize 自動添付 | 配布方針は未確定 ([dependency_updates.md](dependency_updates.md)) |
+| G2 | Mac App Store 提出 | Sandbox 見直しが別途必要 |
+| G3 | `brew search --json` を GUI 検索に使用 | 現状はクライアントフィルターで十分 |
+| G4 | brew 未導入 UI の DEBUG 強制分岐 | [ux_flows_spec §3.4](ux_flows_spec.md) |
+| G5 | `InstallFlowView` 相当の「初期設定」専用シート | 現状は `BrewNotAvailableView` が担う |
+
+**補足:** [§全体スナップショット](#status-s-h005) の **約85%** は [SPEC.md §11.4](SPEC.md) の9カテゴリー算術平均。本チェックリストの **約70%** は上記 `[x]` の機械的な比率。
 
 ---
 
-## 全体 `{@status:s-h005}`
+## 全体スナップショット (カテゴリー別) `{@status:s-h005}`
 
-**実装完了率 (算術平均): 約85%** (端数 **84.7%**、9カテゴリー、`SPEC.md` §11.4と同じ)
+[SPEC.md §11.4](SPEC.md) と同期 (2026-11-17時点)。完了条件の機械集計は [§100% チェックリスト](#status-s100) を参照。
 
 | カテゴリー | 完了率 | ひと言 |
 | --- | --- | --- |
@@ -52,7 +211,7 @@
 | CI/CD | 95% | `swift test` + docs lint。`lint:swift` はローカルのみ |
 | Xcode プロジェクト | 100% | XcodeGen、署名用土台 |
 
-**主な引き下げ要因:** ローカライズ (0%)、テストの深さ (75%)、UI の InstallFlow 未統合。
+**全体 (カテゴリー平均): 約85%** (端数 **84.7%**)
 
 ---
 
@@ -60,7 +219,7 @@
 
 | 領域 | 状態 | メモ |
 | --- | --- | --- |
-| サイドバー (S2J Source List) | ✅ フェーズ1 | v2.0.14前提。フェーズ2階層は未了 |
+| サイドバー (S2J Source List) | ✅ フェーズ1 | v2.0.14+ 前提。フェーズ2階層は未了 |
 | カタログ Formulae/Casks | ✅ | ページ分割・キャッシュ |
 | brew 一覧 / 検索 / 詳細 | ✅ | クライアント検索 |
 | install / uninstall / upgrade | ✅ | 行・詳細から直実行 |
@@ -77,7 +236,7 @@
 
 ## 進行中の focus (短期) `{@status:s-h007}`
 
-`SPEC.md` §12.1と同期。優先は上から検討。
+[SPEC.md §12.1](SPEC.md) と同期。優先は上から検討。
 
 | # | initiative | 状態 |
 | --- | --- | --- |
@@ -91,12 +250,12 @@
 
 ## 直近までに完了したもの (参考) `{@status:s-h008}`
 
-詳細は `CHANGELOG.md` / `SPEC.md` §11.1を参照。
+詳細は [CHANGELOG.md](../CHANGELOG.md) / [SPEC.md §11.1](SPEC.md) を参照。
 
-* S2J Source List サイドバー統合 (フェーズ1)、`s2j-source-list` v2.0.14
+* **v1.0.12** — S2J Source List サイドバー統合、版同期スクリプト、SPM pin 更新
 * About / License / Acknowledgements (バンドル連携)
 * Formulae/Casks カタログ API、`brew doctor` Warnings タブ
-* `package.json` 正本の Version / Build 同期 (`version:sync`、`release:*` マイルストーン)
+* `package.json` 正本の Version / Build 同期 (`release:*` マイルストーン)
 * GitHub Actions: Swift テスト、docs lint
 
 ---

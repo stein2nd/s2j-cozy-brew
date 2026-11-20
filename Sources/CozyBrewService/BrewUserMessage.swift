@@ -45,8 +45,14 @@ public enum BrewUserMessage {
                 message += " Some Casks update apps in /Applications and trigger macOS authentication."
                 message += " If macOS blocked app changes, check App Management (see overlay note)."
             }
-            message += " If a password dialog appeared, approve it and try again—or run "
-                + "`brew upgrade --cask <name>` in Terminal."
+            message += " If a password dialog appeared, approve it and try again."
+            if packageType == .cask,
+               BrewCaskTerminalFallback.suggestsTerminalFallback(stderr: detail, packageType: .cask)
+            {
+                message += " Use Copy Command or Run in Terminal below (do not prefix with sudo brew)."
+            } else {
+                message += " Or run `brew upgrade --cask <name>` in Terminal."
+            }
             if !detail.isEmpty {
                 message += "\n\n\(detail)"
             }

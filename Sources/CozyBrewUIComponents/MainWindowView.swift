@@ -32,13 +32,12 @@ public struct MainWindowView: View {
                     .disabled(manager.doctorIsLoading || !manager.isBrewAvailable)
                 } else {
                     Button {
-                        Task {
-                            try? await manager.update()
-                        }
+                        Task { await manager.refreshApplicationState() }
                     } label: {
-                        Label("Update", systemImage: "arrow.clockwise")
+                        Label("Refresh", systemImage: "arrow.clockwise")
                     }
                     .disabled(manager.isLoading || !manager.isBrewAvailable)
+                    .help("Run brew update, then reload installed and outdated packages")
                 }
             }
         }
@@ -186,6 +185,8 @@ struct PackageListView: View {
     @State private var upgradeOverlayTitle = "Upgrading…"
     @State private var upgradeOverlayFootnote: String?
     @State private var upgradeErrorMessage: String?
+    @State private var upgradeFailurePackage: Package?
+    @State private var upgradeFailureStderr: String?
     @State private var catalogPageRange: CatalogPageRange = .aThroughE
 
     private var isSearchActive: Bool {
@@ -277,15 +278,6 @@ struct PackageListView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            if let upgradeErrorMessage {
-                Text(upgradeErrorMessage)
-                    .font(.caption)
-                    .foregroundColor(.red)
-                    .padding(8)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(Color.red.opacity(0.1))
-            }
-
             if isCatalogSidebar, !isSearchActive {
                 CatalogPageRangeBar(selection: $catalogPageRange)
                 Divider()
@@ -352,6 +344,16 @@ struct PackageListView: View {
                 catalogPageRange = .aThroughE
             }
         }
+        .onChange(of: manager.isLoading) { wasLoading, isLoading in
+            guard wasLoading, !isLoading, upgradeErrorMessage != nil else { return }
+            if let failed = upgradeFailurePackage,
+               !manager.outdatedPackages.contains(where: { $0.listRowID == failed.listRowID })
+            {
+                upgradeErrorMessage = nil
+                upgradeFailurePackage = nil
+                upgradeFailureStderr = nil
+            }
+        }
     }
 
     private var catalogListRefreshToken: Int {
@@ -366,29 +368,51 @@ struct PackageListView: View {
     }
 
     private func catalogPackageRow(_ package: Package) -> some View {
-        PackageRowView(
-            package: package,
-            brewServiceStatus: manager.managedService(for: package)?.status,
-            onInstall: {
-                Task {
-                    try? await manager.install(package)
-                    await manager.refreshInstalledPackages()
+        VStack(alignment: .leading, spacing: 0) {
+            PackageRowView(
+                package: package,
+                brewServiceStatus: manager.managedService(for: package)?.status,
+                onInstall: {
+                    Task {
+                        try? await manager.install(package)
+                        await manager.refreshInstalledPackages()
+                    }
+                },
+                onUninstall: {
+                    Task {
+                        try? await manager.uninstall(package)
+                        await manager.refreshInstalledPackages()
+                    }
+                },
+                onUpgrade: {
+                    Task { await performUpgrade(package) }
                 }
-            },
-            onUninstall: {
-                Task {
-                    try? await manager.uninstall(package)
-                    await manager.refreshInstalledPackages()
-                }
-            },
-            onUpgrade: {
-                Task { await performUpgrade(package) }
+            )
+            .contentShape(Rectangle())
+            .onTapGesture {
+                onPackageSelect(package)
             }
-        )
-        .contentShape(Rectangle())
-        .onTapGesture {
-            onPackageSelect(package)
+
+            if showsUpgradeFailure(for: package) {
+                PackageUpgradeFailurePanel(
+                    message: upgradeErrorMessage ?? "",
+                    package: package,
+                    stderr: upgradeFailureStderr
+                )
+                .padding(.horizontal, 8)
+                .padding(.bottom, 8)
+            }
         }
+    }
+
+    private func showsUpgradeFailure(for package: Package) -> Bool {
+        guard upgradeErrorMessage != nil,
+              let failed = upgradeFailurePackage,
+              failed.listRowID == package.listRowID
+        else {
+            return false
+        }
+        return true
     }
 
     private var emptyCatalogMessage: String {
@@ -401,6 +425,8 @@ struct PackageListView: View {
     private func performUpgrade(_ package: Package) async {
         isUpgrading = true
         upgradeErrorMessage = nil
+        upgradeFailurePackage = nil
+        upgradeFailureStderr = nil
         upgradeOverlayTitle = package.type == .cask ? "Upgrading Cask…" : "Upgrading…"
         upgradeOverlayFootnote = package.type == .cask ? BrewUserMessage.caskUpgradePasswordHint : nil
         defer {
@@ -415,9 +441,12 @@ struct PackageListView: View {
             await manager.refreshOutdatedPackages()
             await manager.refreshManagedServices()
         } catch {
+            upgradeFailurePackage = package
             if case let BrewManagerError.upgradeFailed(stderr) = error {
+                upgradeFailureStderr = stderr
                 upgradeErrorMessage = BrewUserMessage.upgradeFailure(from: stderr, packageType: package.type)
             } else {
+                upgradeFailureStderr = ""
                 upgradeErrorMessage = error.localizedDescription
             }
         }

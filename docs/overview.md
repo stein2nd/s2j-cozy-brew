@@ -33,8 +33,8 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 | 領域 | プロダクトゴール | 現行実装 (2026-11-15ごろ) |
 | --- | --- | --- |
 | brew 一覧・検索・詳細 | list / info 相当の GUI | ✅ Installed / Outdated / Taps / Formulae / Casks、クライアント検索 |
-| install / uninstall / upgrade | GUI から安全に操作 | ✅ 行・詳細から実行 (`BrewOperationOverlay` は Upgrade 中心) |
-| `brew update` / doctor | 更新・警告表示 | ✅ Update Homebrew、Warnings タブ |
+| install / uninstall / upgrade | GUI から安全に操作 | ✅ 行・詳細から実行。Cask の `sudo`/TTY 失敗時は行下 `PackageUpgradeFailurePanel` |
+| `brew update` / doctor | 更新・警告表示 | ✅ ツールバー Refresh (`brew update` + 一覧再取得)、Warnings タブ。Cask はターミナル委譲後も Refresh で Outdated 反映 |
 | brew 未導入時の導入 | ガイド + opt-in 自動インストール | ✅ `BrewNotAvailableView` (`ContentView` 分岐) |
 | 確認付き Install フロー | `InstallFlowView` による統一 UI | ⚠️ 部品のみ・未配線 (Backlog) |
 | tap / untap の操作 | GUI から tap 管理 | ⚠️ Tap **一覧**のみ (untap 等の操作 UI なし) |

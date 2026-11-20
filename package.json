@@ -1,6 +1,6 @@
 {
   "name": "s2j-cozy-brew",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "buildNumber": 4,
   "description": "Using SwiftUI, reimplement the AppKit-based \"Cakebrew\".",
   "type": "module",
@@ -57,7 +57,7 @@
     "ack:generate": "s2j-acknowledgements generate --config ack.config.json"
   },
   "devDependencies": {
-    "@s2j/acknowledgements": "^0.1.12",
+    "@s2j/acknowledgements": "^0.1.15",
     "@s2j/docs-linter": "^1.0.32"
   },
   "allowScripts": {

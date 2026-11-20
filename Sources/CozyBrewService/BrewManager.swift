@@ -127,14 +127,21 @@ public final class BrewManager: ObservableObject {
     // MARK: - Public Methods
 
     /// インストール済みパッケージ一覧を取得
-    public func refreshInstalledPackages() async {
+    public func refreshInstalledPackages(managingLoading: Bool = true) async {
         guard isBrewAvailable else {
             errorMessage = "Homebrew is not available"
             return
         }
 
-        isLoading = true
+        if managingLoading {
+            isLoading = true
+        }
         errorMessage = nil
+        defer {
+            if managingLoading {
+                isLoading = false
+            }
+        }
 
         do {
             // キャッシュから読み込みを試みる
@@ -148,19 +155,24 @@ public final class BrewManager: ObservableObject {
         } catch {
             errorMessage = "Failed to load installed packages: \(error.localizedDescription)"
         }
-
-        isLoading = false
     }
 
     /// アップデート可能なパッケージ一覧を取得
-    public func refreshOutdatedPackages() async {
+    public func refreshOutdatedPackages(managingLoading: Bool = true) async {
         guard isBrewAvailable else {
             errorMessage = "Homebrew is not available"
             return
         }
 
-        isLoading = true
+        if managingLoading {
+            isLoading = true
+        }
         errorMessage = nil
+        defer {
+            if managingLoading {
+                isLoading = false
+            }
+        }
 
         do {
             // キャッシュから読み込みを試みる
@@ -185,8 +197,6 @@ public final class BrewManager: ObservableObject {
         } catch {
             errorMessage = "Failed to load outdated packages: \(error.localizedDescription)"
         }
-
-        isLoading = false
     }
 
     /// `brew services list --json` で管理サービス一覧を取得
@@ -603,6 +613,34 @@ public final class BrewManager: ObservableObject {
         if !result.isSuccess {
             throw BrewManagerError.updateFailed(stderr: result.stderr)
         }
+    }
+
+    /// ツールバー更新: `brew update` のあと一覧を再取得 (Outdated をターミナル更新した後の反映など)
+    public func refreshApplicationState() async {
+        guard isBrewAvailable else {
+            errorMessage = "Homebrew is not available"
+            return
+        }
+
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+
+        do {
+            let result = try await brewProcess.run(["update"])
+            if !result.isSuccess {
+                let stderr = result.stderr.trimmingCharacters(in: .whitespacesAndNewlines)
+                if !stderr.isEmpty {
+                    errorMessage = "brew update failed: \(stderr)"
+                }
+            }
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+
+        await refreshInstalledPackages(managingLoading: false)
+        await refreshOutdatedPackages(managingLoading: false)
+        await refreshManagedServices()
     }
 
     // MARK: - Private Methods

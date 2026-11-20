@@ -2,6 +2,21 @@
 
 ## unreleased
 
+## 1.0.13 - 2026-11-20
+
+* Upgrade 失敗 UI を一覧先頭から **対象行の直下** に移動 (`PackageUpgradeFailurePanel` + `BrewUpgradeTerminalFallbackView`、詳細も同パネル)
+* ツールバー **Refresh** を `refreshApplicationState()` に変更 (`brew update` → インストール済み、Outdated、services 再取得、`isLoading` でスピナー)。ターミナルで Cask を上げた後の Outdated 反映向け
+* `refreshInstalledPackages` / `refreshOutdatedPackages` に `managingLoading` を追加 (一括 Refresh 時の二重トグル防止)
+* Refresh 後に失敗行が Outdated から消えた場合、行下の失敗パネルを自動クリア
+* 仕様同期: `brew_integration_spec` §5.3–5.4、`ux_flows_spec` §3.0/§4、`SPEC.md`、`architecture.md`、`overview.md`、`models_spec.md`、`security_spec.md`、`status.md`
+
+* Cask Upgrade が `sudo` / TTY 不足等で GUI 内完了できないとき、一覧・詳細に **Continue in Terminal** を表示 (`MainWindowView` / `PackageDetailView`)
+* **Copy Command** / **Run in Terminal** (`BrewUpgradeTerminalFallbackView`、`BrewTerminalLauncher`)。`BrewBinaryLocator` と同じ絶対パスで `brew upgrade --yes --cask` (先頭に `sudo brew` は付けない)
+* 失敗ログのヒューリスティクスとコマンド組み立て (`BrewCaskTerminalFallback`)、失敗意訳の更新 (`BrewUserMessage`)
+* Terminal 制御用 `NSAppleEventsUsageDescription` を `Info.plist` / `project.yml` に追加
+* 仕様・状態: `brew_integration_spec` §5.3、`security_spec` §7、`ux_flows_spec` §2.4、`status.md`
+* `BrewCaskTerminalFallbackTests` を追加
+
 ## 1.0.12 - 2026-11-16
 
 * メインウィンドウのサイドバーを `S2JSourceList` + `S2JSourceListAdapter` に統合 (`s2j-source-list` v2.0.14以降を前提)
@@ -9,7 +24,7 @@
 * リリース向け npm マイルストーン (`release:after-spm-update` 等、`scripts/release-milestones.sh`) と SPM pin 差分表示 (`npm run swift:pin-diff`)
 * `package.json` を v1.0.12 (build: 4) に更新、`project.yml` / `Info.plist` を `$(MARKETING_VERSION)` 参照に変更
 * `docs/status.md` を追加 (実装スナップショットの入口)。`docs/*` を現行実装に合わせて更新 (`InstallFlowView` 未配線、`overview` のゴール vs 実装表、完了率の再計算等)
-* SPM 依存の pin 更新 (`s2j-source-list` revision `02e3ec4` / `main`、`s2j-about-window` revision `b6a31e1` / `main`。サイドバーは v2.0.14 以降を前提)
+* SPM 依存の pin 更新 (`s2j-source-list` revision `02e3ec4` / `main`、`s2j-about-window` revision `b6a31e1` / `main`。サイドバーは v2.0.14以降を前提)
 * 仕様ドキュメント向け見出しタグ付与 (`scripts/apply-heading-tags.py`、`npm run docs:heading-tags`)
 * `.textlintrc.json` を `@s2j/docs-linter` base preset + `preset-wp-docs-ja` に更新
 

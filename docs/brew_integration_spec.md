@@ -153,8 +153,22 @@ brew 未導入ユーザーに対して、公式インストール・スクリプ
 
 * `/Applications` への配置などで Homebrew が `sudo` を使う Cask では、Upgrade 中に **macOS 標準の管理者パスワードダイアログ** が出ることがあります (CozyBrew 側では `NONINTERACTIVE` / `--yes` でも抑止できません)。
 * UI は Cask Upgrade 中に「パスワードを求められることがある」旨を **右上の進行カード** で案内します (全画面の暗幕オーバーレイは使わず、管理者ダイアログが前面に来やすくする)。
-* ダイアログをキャンセルした / CLI が失敗した場合は、意訳メッセージと生ログを表示し、必要なら Terminal で `brew upgrade --cask <name>` を案内します。
-* **「アプリケーションの変更が阻止されました」** (App Management): Cask が他アプリケーションを更新する際、macOS が CozyBrew を拒否することがあります。**システム設定 → プライバシーとセキュリティ → アプリケーションの管理** で CozyBrew をオンにし、再度 Upgrade します (CozyBrew から admin パスワードだけでは足りない場合があります)。
+* ダイアログをキャンセルした / CLI が失敗した (`sudo` / TTY 不足 / App Management など) 場合は、意訳メッセージと生ログを表示します。
+* 失敗ログが Cask の**ターミナル委譲**条件に該当するとき、**失敗した行の直下** (一覧) または操作欄の下 (詳細) に `PackageUpgradeFailurePanel` を出します。長い意訳・ログは DisclosureGroup「Show details」、ターミナル UI は `BrewUpgradeTerminalFallbackView` が担います:
+  * **Copy Command** — `BrewBinaryLocator` と同じ絶対パスの `brew upgrade --yes --cask <token>` をクリップボードに (先頭に `sudo brew` は付けない。Homebrew が必要箇所で `sudo` を呼ぶ)。
+  * **Run in Terminal** — 上記をコピーした後、Apple Events 経由で Terminal を起動し `do script` で実行 (`BrewTerminalLauncher`)。初回は Automation (CozyBrew → Terminal) と `Info.plist` の `NSAppleEventsUsageDescription` が必要。
+  * **App Management…** — 既存の `x-apple.systempreferences:` リンク (`BrewUserMessage.appManagementSettingsURL`)。
+* 判定は `BrewCaskTerminalFallback.suggestsTerminalFallback(stderr:packageType:)` (Cask かつ `sudo` / `terminal is required` 等)。
+* **「アプリケーションの変更が阻止されました」** (App Management): Cask が他アプリケーションを更新する際、macOS が CozyBrew を拒否することがあります。**システム設定 → プライバシーとセキュリティ → アプリケーションの管理** で CozyBrew をオンにし、再度 Upgrade するか、ターミナル委譲を使います。
+* ターミナルで Upgrade したあと GUI の Outdated を合わせるには、ツールバー **Refresh** → `BrewManager.refreshApplicationState()` (§5.4)。
+
+### 5.4. ツールバー Refresh (一覧の再同期)`{@brew_integration_spec:s5-4}`
+
+* **Warnings 以外**のサイドバーで、右上 `arrow.clockwise` (ラベル **Refresh**) を押すと `refreshApplicationState()` を実行します。
+* 手順: `["update"]` (`brew update`) → `refreshInstalledPackages(managingLoading: false)` → `refreshOutdatedPackages(managingLoading: false)` → `refreshManagedServices()`。外側で `isLoading` を1回だけ立て、一覧に `ProgressView` を出します。
+* `update()` 単体は **brew の式更新のみ** (一覧は再取得しない)。ツールバーからは呼びません。
+* ターミナル委譲で Cask を上げた後、Outdated から消えない場合の**想定操作**はこの Refresh です。
+* **Warnings** タブでは同アイコンが `refreshDoctorWarnings()` のみ (`brew doctor` 再実行)。
 
 ---
 

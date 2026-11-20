@@ -69,20 +69,22 @@
 
 ### 2.4. 失敗時 `{@ux_flows_spec:s2-4}`
 
-* CLI のエラーメッセージをフレンドリーな文に意訳して提示
-* "Show raw log" で生ログも表示可能
+* CLI のエラーメッセージをフレンドリーな文に意訳して提示 (`BrewUserMessage`)
+* Cask Upgrade で `sudo` / TTY 不足等に該当する場合、**失敗した行の直下**に `PackageUpgradeFailurePanel` (Continue in Terminal / Copy / Run in Terminal / App Management)。長文は DisclosureGroup「Show details」
+* "Show raw log" で生ログも表示可能 (`BrewAlertView` 等・詳細画面は意訳テキストにログ末尾を含む場合あり)
 
 ---
 
 ## 3. パッケージ操作フロー `{@ux_flows_spec:s3}`
 
-### 3.0. 現行実装 (2026-11-15時点) `{@ux_flows_spec:s3-0}`
+### 3.0. 現行実装 (2026-11-20時点) `{@ux_flows_spec:s3-0}`
 
 | 操作 | 実装 |
 | --- | --- |
 | brew 未導入 | `ContentView` → `BrewNotAvailableView` (§1)。**専用「初期設定」シートはなし** (全画面ガイド) |
 | install / uninstall | `PackageRowView` / `PackageDetailView` から `BrewManager` を **直実行** (事前確認ダイアログなし) |
-| upgrade (単体) | 同上。一覧では `BrewOperationOverlay` で blocking 表示 |
+| upgrade (単体) | 同上。一覧では `BrewOperationOverlay` (Cask は `passwordFriendly`)。失敗時は対象行下 `PackageUpgradeFailurePanel` |
+| ターミナルで Cask を上げた後 | ツールバー **Refresh** → `refreshApplicationState()` で Outdated 再同期 |
 | upgrade (一括) | `BrewManager.upgradeAll` のみ。**確認 UI なし** (§2.3はゴール) |
 
 `InstallFlowView` / `InstallProgressView` はソースにあるが **どこからも表示されていません** (Backlog: SPEC §11.3.4)。
@@ -126,6 +128,7 @@
 
 * セクション: **Warnings** / Installed / Outdated / Taps / Formulae / Casks (`SidebarItem` の `CaseIterable` 順)
 * **Warnings**: `brew doctor` の出力をパースして表示。起動時とタブ選択時に `refreshDoctorWarnings()`。Warning ブロック数をオレンジのバッジで表示。検索バーは非表示。ツールバー Refresh で再実行。
+* **それ以外のセクション**: ツールバー Refresh は `BrewManager.refreshApplicationState()` (`brew update` → インストール済み、Outdated 再取得、`isLoading` で一覧にスピナー)。ターミナルで行った Cask Upgrade 後の Outdated 反映に使う。
 * S2J Source List を用いた分類表示
 * 選択に応じてコンテンツエリアを切り替え
 * **Formulae / Casks**: `formulae.brew.sh` の JSON API から全件を取得 (キャッシュあり)。一覧は **先頭文字のページ** (`A–E` / `F–J` / … / `1–5` / `6–0`) で分割表示し、常に1ページ分だけ `List` に載せる。検索入力時は全ページ横断でフィルター。

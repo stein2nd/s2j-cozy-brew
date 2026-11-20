@@ -76,4 +76,6 @@
 * Cask の Upgrade / Install で **他のアプリケーション** (`/Applications` 内など) を書き換えると、macOS は **プライバシーとセキュリティ** の通知で変更を阻止することがあります。
 * これは TCC の **App Management** によるもので、CozyBrew 単体の entitlement では自動付与できず、**ユーザーがシステム設定で CozyBrew を許可** する必要があります。
 * 手順 (日本語 UI): **システム設定 → プライバシーとセキュリティ → アプリケーションの管理** で CozyBrew をオン。
-* 許可後に同じ Cask を再度 Upgrade する。拒否を続ける場合は Terminal で `brew upgrade --cask <name>` を案内する。
+* 許可後に同じ Cask を再度 Upgrade する。拒否を続ける場合は行下 `PackageUpgradeFailurePanel` の **Run in Terminal** / **Copy Command**、または手動で Terminal 実行。ターミナル成功後はツールバー **Refresh** で Outdated を再同期する。
+* **Automation (Apple Events)**: Cask Upgrade のターミナル委譲は Terminal 制御のみを使い、`do shell script ... with administrator privileges` で `brew` 全体を root 実行しない (Homebrew の権限モデルに合わせる)。
+* `NSAppleEventsUsageDescription` で Terminal 起動の用途を説明する。
