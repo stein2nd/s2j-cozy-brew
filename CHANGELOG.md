@@ -2,6 +2,14 @@
 
 ## unreleased
 
+## 1.0.14 - 2026-11-21
+
+* `package.json` を v1.0.14 (build: 4) に更新
+* SPM pin 更新 (`s2j-source-list` revision `0002d648` / `main`、`s2j-about-window` revision `f885a3bf` / `main`)
+* ローカル Xcode 向け `CozyBrew.xcodeproj` / `CozyBrewApp` スキームメタデータの同期 (`LastUpgradeVersion` 等)
+* npm devDependencies 更新 (`@s2j/acknowledgements` ^0.1.17、`@s2j/docs-linter` ^1.0.34)
+* `ACKNOWLEDGEMENTS.md` を再生成 (2026-11-21)
+
 ## 1.0.13 - 2026-11-20
 
 * Upgrade 失敗 UI を一覧先頭から **対象行の直下** に移動 (`PackageUpgradeFailurePanel` + `BrewUpgradeTerminalFallbackView`、詳細も同パネル)
