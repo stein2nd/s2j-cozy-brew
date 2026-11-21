@@ -533,6 +533,9 @@ let package = Package(
   * ✅ `lint-docs` ジョブ: Markdown ドキュメントの表記揺れ検出 (`@s2j/docs-linter`)
     * ✅ `actions/checkout@v5`、Node.js v24 (`actions/setup-node@v5`)、Runner `ubuntu-24.04`
     * ✅ `npm ci` と `npm run lint:docs` (`README.md`、`CHANGELOG.md`、`docs/**/*.md`)
+* ✅ `.github/workflows/swift-quality.yml` - Swift 品質・版同期チェック
+  * ✅ `version-check` ジョブ (`ubuntu-24.04`): `npm run version:check`
+  * ✅ `lint-swift` ジョブ (`macos-latest`): Homebrew で xcodegen / SwiftLint / SwiftFormat / Periphery → `npm run lint:swift`
 * ✅ `scripts/test-local.sh` - ローカル・テスト実行スクリプト (統合版)
   * ✅ macOS/iPadOS 対応の汎用スクリプト
   * ✅ Swift Package テストの実行
@@ -598,20 +601,20 @@ let package = Package(
 | CozyBrewApp Target | 100% | `AboutView` シート、App Icon、`AppDelegate`、Homebrew 未導入フロー |
 | テストコード | 75% | カタログ、doctor、モデル等のユニットテスト拡充。UI/統合・スナップショットは未実装 |
 | ローカライズ | 0% | `Localizable.strings` 等未実装 |
-| CI/CD | 95% | GitHub Actions: `swift test` + docs lint 済。SwiftLint/Periphery はローカル npm のみ (CI 未組込み) |
+| CI/CD | 100% | `swift-test` + `docs-lint` + `swift-quality` (`lint:swift` / `version:check`) |
 | Xcode プロジェクト | 100% | XcodeGen、`CozyBrewApp` スキーム、リソース一式、`npm run xcode:generate` |
 
 **全体実装の完了率**:
 
 \[
-\frac{100 + 100 + 100 + 92 + 100 + 75 + 0 + 95 + 100}{9} = \frac{762}{9} \approx. 84.7\%
+\frac{100 + 100 + 100 + 92 + 100 + 75 + 0 + 100 + 100}{9} = \frac{767}{9} \approx. 85.2\%
 \]
 
 **約85%** (端数84.7%)
 
 * **100% ゾーン**: Package 基盤、Core、Service、App Target、Xcode プロジェクト
 * **主な引き下げ要因**: ローカライズ (0%)、テストの深さ (75%)
-* **CI**: リポジトリ上の自動化は docs + Swift テストまで。`lint:swift` は開発者ローカルで実行
+* **CI**: `swift-test` / `docs-lint` / `swift-quality` (`version:check` + `lint:swift`)
 
 ### 11.5. 品質評価 `{@spec:s11-5}`
 
@@ -676,6 +679,7 @@ let package = Package(
   * ✅ 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
   * ✅ 環境変数によるカスタマイズ対応
 * ✅ テスト・カバレッジ・レポートの生成 (実装済み - Codecov へのアップロード)
+* ✅ `.github/workflows/swift-quality.yml` (`version:check` + `lint:swift`)
 
 #### 12.1.4. テストカバレッジ向上 `{@spec:s12-1-4}`
 * BrewManager の統合テスト

@@ -2,9 +2,9 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| 最終更新 | 2026-11-17 |
-| アプリ版 (正本) | `package.json` → **1.0.12** (build **4**) |
-| SPM pin | `s2j-source-list` revision `02e3ec4` / `main` (tag **2.0.15**)、`s2j-about-window` revision `b6a31e1` / `main` |
+| 最終更新 | 2026-11-21 |
+| アプリ版 (正本) | `package.json` → **1.0.14** (build **4**) |
+| SPM pin | `s2j-source-list` revision `0002d648` / `main`、`s2j-about-window` revision `f885a3bf` / `main` |
 
 ---
 
@@ -48,18 +48,18 @@
 | CozyBrewApp ターゲット (Must) | 実装済み | 100 | [§App ターゲット](#status-app) (6/6) |
 | 日常 brew GUI (Must) | 実装済み | 100 | [§brew GUI](#status-brew-gui) (8/8) |
 | CozyBrewUIComponents | 部分 | 63 | [§UI コンポーネント](#status-ui) (5/8) |
-| CI ・ローカル品質 | 部分 | 71 | [§CI・品質](#status-ci) (5/7) |
+| CI ・ローカル品質 | 実装済み | 100 | [§CI・品質](#status-s-status-ci) (8/8) |
 | ローカライズ・アクセシビリティ | 未 | 0 | [§ローカライズ・アクセシビリティ](#status-l10n-a11y) (0/4) |
 | テストエクステンション (UI / 統合) | 部分 | 25 | [§テスト拡張](#status-quality-ui) (1/4) |
 | プロダクトゴール (Should) | 部分 | 43 | [§プロダクト Should](#status-should-product) (3/7) |
 
 **Must 範囲 (上表の先頭6行):** **100%** — macOS アプリとして Homebrew を GUI で日常操作できる水準。
 
-**全体 (Should ・テストエクステンション等を含む):** チェックリスト **69項目中48項目** ≒ **約70%** (下記と [SPEC.md §11.4](SPEC.md) の **約85%** カテゴリー平均は別集計)。
+**全体 (Should ・テストエクステンション等を含む):** チェックリスト **69項目中50項目** ≒ **約72%** (下記と [SPEC.md §11.4](SPEC.md) のカテゴリー平均は別集計)。
 
 ## 100% 完了条件チェックリスト `{@status:s100}`
 
-[s2j-about-window `docs/status.md`](https://github.com/stein2nd/s2j-about-window/blob/main/docs/status.md) 同型。検証は `npm run test:local:macOS` / GitHub Actions を正本とする。
+[s2j-about-window `docs/status.md`](https://github.com/stein2nd/s2j-about-window/blob/main/docs/status.md) 同型。検証は `npm run test:local:macOS` / GitHub Actions (`swift-test.yml`、`docs-lint.yml`、`swift-quality.yml`) を正本とする。
 
 ### 仕様・ドキュメント `{@status:s-status-spec-docs}`
 
@@ -145,11 +145,12 @@
 
 * [x] `.github/workflows/swift-test.yml` (`swift test`、release ビルド artifact)
 * [x] `.github/workflows/docs-lint.yml`
+* [x] `.github/workflows/swift-quality.yml` (`npm run version:check` on Ubuntu、`npm run lint:swift` on macOS)
 * [x] `npm run test:local` / `test:local:macOS`
 * [x] `npm run release:*` マイルストーン ([dependency_updates.md](dependency_updates.md))
 * [x] `npm run swift:pin-diff`
-* [ ] CI で `npm run lint:swift`
-* [ ] CI で `npm run version:check`
+* [x] CI で `npm run lint:swift`
+* [x] CI で `npm run version:check`
 
 ### ローカライズ・アクセシビリティ `{@status:s-status-l10n-a11y}`
 
@@ -197,7 +198,7 @@
 
 ## 全体スナップショット (カテゴリー別) `{@status:s-h005}`
 
-[SPEC.md §11.4](SPEC.md) と同期 (2026-11-17時点)。完了条件の機械集計は [§100% チェックリスト](#status-s100) を参照。
+[SPEC.md §11.4](SPEC.md) と同期 (2026-11-21時点)。完了条件の機械集計は [§100% チェックリスト](#status-s100) を参照。
 
 | カテゴリー | 完了率 | ひと言 |
 | --- | --- | --- |
@@ -208,10 +209,10 @@
 | CozyBrewApp Target | 100% | About、brew 未導入ガイド、App Icon |
 | テストコード | 75% | Core/Service UT。UI、統合なし |
 | ローカライズ | 0% | 未着手 |
-| CI/CD | 95% | `swift test` + docs lint。`lint:swift` はローカルのみ |
+| CI/CD | 100% | `swift-test` + `docs-lint` + `swift-quality` (`lint:swift` / `version:check`) |
 | Xcode プロジェクト | 100% | XcodeGen、署名用土台 |
 
-**全体 (カテゴリー平均): 約85%** (端数 **84.7%**)
+**全体 (カテゴリー平均): 約85%** (端数 **85.2%**)
 
 ---
 
@@ -244,7 +245,7 @@
 | 2 | **`InstallFlowView` 本番配線** + Upgrade All 確認 | 未着手 |
 | 3 | brew 未導入 UI の **手動/ DEBUG 検証** 手順の実装 (§3.4) | 文書のみ → 要 DEBUG 等 |
 | 4 | ローカライズ (en / ja) 初期 | 未着手 |
-| 5 | CI への `lint:swift` / `version:check` 組込み | 未着手 |
+| 5 | CI への `lint:swift` / `version:check` 組込み | 完了 (`swift-quality.yml`) |
 
 ---
 
@@ -256,7 +257,8 @@
 * About / License / Acknowledgements (バンドル連携)
 * Formulae/Casks カタログ API、`brew doctor` Warnings タブ
 * `package.json` 正本の Version / Build 同期 (`release:*` マイルストーン)
-* GitHub Actions: Swift テスト、docs lint
+* GitHub Actions: Swift テスト、docs lint、`swift-quality` (`lint:swift` / `version:check`)
+* **v1.0.14** — SPM pin 更新、Cask ターミナル委譲、Refresh (`v1.0.13`)、版同期
 
 ---
 

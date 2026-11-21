@@ -2,6 +2,12 @@
 
 ## unreleased
 
+## 1.0.15 - 2026-11-21
+
+* GitHub Actions `swift-quality.yml` (`version:check` on Ubuntu、`lint:swift` on macOS)
+* `docs/status.md` の **CI、ローカル品質** を100% に更新、`docs/SPEC.md` の CI/CD 記述を同期
+* `package.json` を v1.0.15 (build: 4) に更新
+
 ## 1.0.14 - 2026-11-21
 
 * `package.json` を v1.0.14 (build: 4) に更新
