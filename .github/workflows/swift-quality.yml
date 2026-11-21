@@ -35,6 +35,12 @@ jobs:
         with:
           xcode-version: latest-stable
 
+      - name: Configure IndexStore for Periphery
+        run: |
+          INDEXSTORE_LIB="$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib"
+          test -f "${INDEXSTORE_LIB}/libIndexStore.dylib"
+          echo "DYLD_LIBRARY_PATH=${INDEXSTORE_LIB}" >> "$GITHUB_ENV"
+
       - name: Setup Node.js
         uses: actions/setup-node@v5
         with:
@@ -44,9 +50,17 @@ jobs:
         run: npm ci
 
       - name: Install Swift quality tools
+        env:
+          PERIPHERY_VERSION: "3.8.0"
         run: |
           brew update
-          brew install xcodegen swiftlint swiftformat periphery
+          brew install xcodegen swiftlint swiftformat
+          curl -fsSL \
+            "https://github.com/peripheryapp/periphery/releases/download/${PERIPHERY_VERSION}/periphery-${PERIPHERY_VERSION}.zip" \
+            -o /tmp/periphery.zip
+          unzip -o -q /tmp/periphery.zip -d /tmp/periphery-unpack
+          PERIPHERY_BIN="$(find /tmp/periphery-unpack -type f -name periphery -perm +111 | head -1)"
+          install -m 755 "$PERIPHERY_BIN" "$(brew --prefix)/bin/periphery"
           periphery version
 
       - name: lint:swift

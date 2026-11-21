@@ -2,9 +2,13 @@
 
 ## unreleased
 
+## 1.0.17 - 2026-11-21
+
+* CI `lint-swift`: Periphery を GitHub Release `3.8.0` + `DYLD_LIBRARY_PATH` (Xcode `libIndexStore.dylib`) で導入。Homebrew formula は upstream アーカイブにより deprecated 注釈が出るため
+
 ## 1.0.16 - 2026-11-21
 
-* CI `lint-swift`: Periphery を `brew install periphery`(core formula、bottled) で導入。cask / GitHub Release 直置きは `libIndexStore.dylib` 未解決で `periphery version` が abort するため
+* CI `lint-swift`: Periphery を `brew install periphery` (core formula、bottled) で導入。cask / GitHub Release 直置きは `libIndexStore.dylib` 未解決で `periphery version` が abort するため
 
 ## 1.0.15 - 2026-11-21
 
