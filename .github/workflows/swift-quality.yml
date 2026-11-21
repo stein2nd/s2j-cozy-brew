@@ -44,7 +44,18 @@ jobs:
         run: npm ci
 
       - name: Install Swift quality tools
-        run: brew install xcodegen swiftlint swiftformat peripheryapp/periphery/periphery
+        env:
+          PERIPHERY_VERSION: "3.8.0"
+        run: |
+          brew update
+          brew install xcodegen swiftlint swiftformat
+          curl -fsSL \
+            "https://github.com/peripheryapp/periphery/releases/download/${PERIPHERY_VERSION}/periphery-${PERIPHERY_VERSION}.zip" \
+            -o /tmp/periphery.zip
+          unzip -o -q /tmp/periphery.zip -d /tmp/periphery-unpack
+          PERIPHERY_BIN="$(find /tmp/periphery-unpack -type f -name periphery -perm +111 | head -1)"
+          install -m 755 "$PERIPHERY_BIN" /usr/local/bin/periphery
+          periphery version
 
       - name: lint:swift
         run: npm run lint:swift

@@ -2,6 +2,8 @@
 
 ## unreleased
 
+* CI `lint-swift`: Periphery を Homebrew cask ではなく GitHub Release `3.8.0` バイナリで導入（`depends_on macos: :catalina` エラー回避）
+
 ## 1.0.15 - 2026-11-21
 
 * GitHub Actions `swift-quality.yml` (`version:check` on Ubuntu、`lint:swift` on macOS)
