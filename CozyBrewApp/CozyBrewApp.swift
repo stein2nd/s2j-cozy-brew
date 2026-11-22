@@ -66,17 +66,18 @@ struct BrewNotAvailableView: View {
                 .font(.system(size: 64))
                 .foregroundColor(.orange)
 
-            Text("Homebrew Not Found")
+            Text(CozyBrewL10n.brewNotFoundTitle)
                 .font(.title)
                 .fontWeight(.bold)
+                .accessibilityAddTraits(.isHeader)
 
-            Text("Homebrew is required to use CozyBrew. Please install Homebrew to continue.")
+            Text(CozyBrewL10n.brewNotFoundMessage)
                 .multilineTextAlignment(.center)
                 .foregroundColor(.secondary)
                 .padding(.horizontal)
 
             VStack(alignment: .leading, spacing: 12) {
-                Text("Installation Instructions:")
+                Text(CozyBrewL10n.brewInstallInstructionsTitle)
                     .font(.headline)
 
                 Text("1. Open Terminal")
@@ -101,13 +102,14 @@ struct BrewNotAvailableView: View {
                 )
                 .frame(maxWidth: 500, maxHeight: 300)
             } else {
-                Button("Install Homebrew Automatically") {
+                Button(CozyBrewL10n.brewInstallAutoButton) {
                     Task {
                         await installHomebrew()
                     }
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
+                .accessibilityLabel(CozyBrewL10n.brewInstallAutoButton)
             }
 
             if showInstallError, let error = installError {

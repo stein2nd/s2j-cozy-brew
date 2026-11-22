@@ -82,7 +82,20 @@
          </BuildableReference>
       </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "F86DA3C4DFFE5DE8D6CC4EC9"
+               BuildableName = "CozyBrewUITests.xctest"
+               BlueprintName = "CozyBrewUITests"
+               ReferencedContainer = "container:CozyBrew.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"

@@ -1,0 +1,118 @@
+/* Sidebar */
+"sidebar.warnings" = "Warnings";
+"sidebar.installed" = "Installed";
+"sidebar.outdated" = "Outdated";
+"sidebar.history" = "History";
+"sidebar.taps" = "Taps";
+"sidebar.formulae" = "Formulae";
+"sidebar.casks" = "Casks";
+"sidebar.group.installed_packages" = "Installed packages";
+"sidebar.group.catalog" = "Catalog";
+"app.navigation_title" = "CozyBrew";
+
+/* Toolbar */
+"toolbar.refresh" = "Refresh";
+"toolbar.refresh.help" = "Run brew update, then reload installed and outdated packages";
+"toolbar.upgrade_all" = "Upgrade All";
+"toolbar.upgrade_all.help" = "Upgrade all outdated packages";
+"toolbar.back" = "Back";
+"search.placeholder" = "Search packages…";
+
+/* Actions */
+"action.install" = "Install";
+"action.uninstall" = "Uninstall";
+"action.upgrade" = "Upgrade";
+"action.cancel" = "Cancel";
+"action.ok" = "OK";
+
+/* Package */
+"package.badge.update_available" = "Update Available";
+"package.badge.deprecated" = "Deprecated";
+"package.type.formula" = "Formula";
+"package.type.cask" = "Cask";
+
+/* Detail */
+"detail.loading" = "Loading package info…";
+"detail.section.description" = "Description";
+"detail.section.installed_version" = "Installed Version";
+"detail.section.homepage" = "Homepage";
+"detail.section.installation" = "Installation";
+"detail.section.from" = "From";
+"detail.section.license" = "License";
+"detail.section.dependencies" = "Dependencies";
+"detail.section.build_dependencies" = "Build Dependencies";
+"detail.section.readme" = "README / Notes";
+"detail.section.status" = "Status";
+"detail.status.not_installed" = "Not Installed";
+"detail.status.installed_update" = "Installed (update available)";
+"detail.status.installed" = "Installed";
+
+/* Install */
+"install.confirm.title" = "Install %@?";
+"install.type_label" = "Type:";
+"install.version_label" = "Version:";
+"install.failed.title" = "Installation Failed";
+"install.progress.title" = "Installing %@…";
+
+/* Upgrade all */
+"upgrade_all.dialog.title" = "Upgrade all outdated packages?";
+"upgrade_all.dialog.confirm" = "Upgrade All";
+"upgrade_all.dialog.message" = "This will run brew upgrade --yes for %d outdated package(s). Large upgrades may change dependencies or require administrator approval for Casks.";
+"upgrade_all.failed.title" = "Upgrade All Failed";
+"upgrade_all.overlay.title" = "Upgrading all packages…";
+
+/* Doctor */
+"doctor.could_not_run" = "Could not run brew doctor";
+"doctor.no_warnings" = "No warnings";
+
+/* Upgrade failure */
+"upgrade.failed.title" = "Upgrade failed";
+"upgrade.show_details" = "Show details";
+"terminal.continue" = "Continue in Terminal";
+"terminal.run" = "Run in Terminal";
+
+/* Brew missing */
+"brew_missing.title" = "Homebrew Not Found";
+"brew_missing.message" = "Homebrew is required to use CozyBrew. Please install Homebrew to continue.";
+"brew_missing.instructions_title" = "Installation Instructions:";
+"brew_missing.install_auto" = "Install Homebrew Automatically";
+
+/* Taps */
+"tap.add" = "Add Tap";
+"tap.add.title" = "Add a third-party tap";
+"tap.add.placeholder" = "user/repo";
+"tap.add.confirm" = "Add";
+"tap.untap" = "Remove Tap";
+"tap.untap.title" = "Remove this tap?";
+"tap.untap.message" = "Run brew untap %@.";
+"tap.untap.confirm" = "Remove";
+"tap.action_failed" = "Tap action failed";
+"tap.working" = "Updating taps…";
+
+/* History */
+"history.empty" = "No operations recorded yet.";
+"history.no_matches" = "No matching history entries.";
+"history.kind.install" = "Install";
+"history.kind.uninstall" = "Uninstall";
+"history.kind.upgrade" = "Upgrade";
+"history.kind.upgrade_all" = "Upgrade All";
+"history.kind.tap" = "Tap";
+"history.kind.untap" = "Untap";
+"history.kind.migration" = "Migration";
+
+/* Cakebrew migration */
+"cakebrew_migration.title" = "Import Cakebrew settings?";
+"cakebrew_migration.message" = "Cakebrew preferences were found on this Mac. You can import any history into CozyBrew or skip.";
+"cakebrew_migration.message_version" = "Cakebrew %@ preferences were found. You can import any history into CozyBrew or skip.";
+"cakebrew_migration.history_count" = "%d history lines detected in Cakebrew preferences.";
+"cakebrew_migration.import" = "Import";
+"cakebrew_migration.skip" = "Not Now";
+
+/* Accessibility */
+"a11y.package_row" = "%@, %@, %@";
+"a11y.search_field" = "Search packages";
+"a11y.refresh" = "Refresh package lists";
+"a11y.upgrade_all" = "Upgrade all outdated packages";
+"a11y.back" = "Back to package list";
+"a11y.installed" = "installed";
+"a11y.not_installed" = "not installed";

@@ -2,9 +2,9 @@
 
 | 項目 | 内容 |
 | --- | --- |
-| 最終更新 | 2026-11-21 |
-| アプリ版 (正本) | `package.json` → **1.0.14** (build **4**) |
-| SPM pin | `s2j-source-list` revision `0002d648` / `main`、`s2j-about-window` revision `f885a3bf` / `main` |
+| 最終更新 | 2026-11-22 |
+| アプリ版 (正本) | `package.json` → **1.0.19** (build **4**) |
+| SPM pin | `s2j-source-list` revision `1f7375e` / `main`、`s2j-about-window` revision `290fbff` / `main` |
 
 ---
 
@@ -41,21 +41,21 @@
 
 | 機能名 | 実装済み/未実装 | 実装％ | 完了条件 (100%) |
 | --- | --- | --- | --- |
-| 仕様 (`docs/`) | 確定 | 100 | [§仕様・ドキュメント](#status-spec-docs) (6/6) |
+| 仕様 (`docs/`) | 確定 | 100 | [§仕様・ドキュメント](#status-spec-docs) (7/7) |
 | Swift Package 基盤 (Must) | 実装済み | 100 | [§SPM 基盤](#status-spm-base) (7/7) |
 | CozyBrewCore (Must) | 実装済み | 100 | [§Core](#status-core) (5/5) |
 | CozyBrewService (Must) | 実装済み | 100 | [§Service](#status-service) (7/7) |
 | CozyBrewApp ターゲット (Must) | 実装済み | 100 | [§App ターゲット](#status-app) (6/6) |
 | 日常 brew GUI (Must) | 実装済み | 100 | [§brew GUI](#status-brew-gui) (8/8) |
-| CozyBrewUIComponents | 部分 | 63 | [§UI コンポーネント](#status-ui) (5/8) |
-| CI ・ローカル品質 | 実装済み | 100 | [§CI・品質](#status-s-status-ci) (8/8) |
-| ローカライズ・アクセシビリティ | 未 | 0 | [§ローカライズ・アクセシビリティ](#status-l10n-a11y) (0/4) |
-| テストエクステンション (UI / 統合) | 部分 | 25 | [§テスト拡張](#status-quality-ui) (1/4) |
-| プロダクトゴール (Should) | 部分 | 43 | [§プロダクト Should](#status-should-product) (3/7) |
+| CozyBrewUIComponents | 実装済み | 100 | [§UI コンポーネント](#status-ui) (9/9) |
+| CI ・ローカル品質 | 実装済み | 100 | [§CI・品質](#status-s-status-ci) (9/9) |
+| ローカライズ・アクセシビリティ | 実装済み | 100 | [§ローカライズ・アクセシビリティ](#status-l10n-a11y) (4/4) |
+| テストエクステンション (UI / 統合) | 実装済み | 100 | [§テスト拡張](#status-quality-ui) (4/4) |
+| プロダクトゴール (Should) | 実装済み | 100 | [§プロダクト Should](#status-should-product) (7/7) |
 
 **Must 範囲 (上表の先頭6行):** **100%** — macOS アプリとして Homebrew を GUI で日常操作できる水準。
 
-**全体 (Should ・テストエクステンション等を含む):** チェックリスト **69項目中50項目** ≒ **約72%** (下記と [SPEC.md §11.4](SPEC.md) のカテゴリー平均は別集計)。
+**全体 (Should ・テストエクステンション等を含む):** チェックリスト **76項目中76項目** = **100%** (下記と [SPEC.md §11.4](SPEC.md) のカテゴリー平均は別集計)。
 
 ## 100% 完了条件チェックリスト `{@status:s100}`
 
@@ -65,10 +65,11 @@
 
 * [x] [specs.md](specs.md) 索引
 * [x] [status.md](status.md) 実装状況の入口と本チェックリスト
-* [x] 細分化 spec と [SPEC.md](SPEC.md) が v1.0.12実装と同期 ([overview §2.1.1](overview.md))
+* [x] 細分化 spec と [SPEC.md](SPEC.md) が現行実装と同期 ([overview §2.1.1](overview.md))
 * [x] GitHub Actions `docs-lint.yml` (`npm run lint:docs`)
 * [x] 見出しタグと `npm run docs:heading-tags`
 * [x] [dependency_updates.md](dependency_updates.md) (npm / SPM、リリース手順)
+* [x] [testing_spec.md](testing_spec.md) (テスト層 ・ CI 範囲)
 
 ### Swift Package 基盤 (Must) `{@status:s-status-spm-base}`
 
@@ -137,15 +138,16 @@
 * [x] `BrewAlertView` / `InstallProgressView` (部品)
 * [x] `BrewOperationOverlay`
 * [x] `PackageUpgradeFailurePanel` / `BrewUpgradeTerminalFallbackView` / `BrewTerminalLauncher`
-* [ ] **`InstallFlowView` 本番配線** (確認 → ログ → 失敗案内) — [ux_flows_spec §3](ux_flows_spec.md)
-* [ ] S2J Source List **フェーズ2** (`SourceItem.group` 階層)
-* [ ] **Upgrade All** 確認 UI (`BrewManager.upgradeAll`)
+* [x] **`InstallFlowView` 本番配線** (一覧・詳細の **Install** → 確認シート → 進行/失敗) — [ux_flows_spec §3](ux_flows_spec.md)
+* [x] S2J Source List **フェーズ2** (`SourceItem.group`: Installed packages / Catalog)
+* [x] **Upgrade All** 確認 UI (Outdated 時ツールバー + `confirmationDialog` → `BrewManager.upgradeAll`)
 
 ### CI、ローカル品質 `{@status:s-status-ci}`
 
 * [x] `.github/workflows/swift-test.yml` (`swift test`、release ビルド artifact)
 * [x] `.github/workflows/docs-lint.yml`
 * [x] `.github/workflows/swift-quality.yml` (`npm run version:check` on Ubuntu、`npm run lint:swift` on macOS)
+* [x] `lint-swift`: Homebrew で xcodegen / SwiftLint / SwiftFormat、Periphery **3.8.0** は [GitHub Release](https://github.com/peripheryapp/periphery/releases) + `DYLD_LIBRARY_PATH` (Xcode `libIndexStore.dylib`)。Homebrew formula は upstream アーカイブで deprecated のため CI では使わない
 * [x] `npm run test:local` / `test:local:macOS`
 * [x] `npm run release:*` マイルストーン ([dependency_updates.md](dependency_updates.md))
 * [x] `npm run swift:pin-diff`
@@ -156,17 +158,17 @@
 
 正本: [security_spec.md](security_spec.md)、[SPEC.md §11.3.1](SPEC.md)
 
-* [ ] `Localizable.strings` (en)
-* [ ] `Localizable.strings` (ja)
-* [ ] 主要 UI のローカライズ適用
-* [ ] VoiceOver / アクセシビリティの体系的対応
+* [x] `Localizable.strings` (en) — `Sources/CozyBrewUIComponents/Resources/en.lproj/Localizable.strings`
+* [x] `Localizable.strings` (ja) — `Sources/CozyBrewUIComponents/Resources/ja.lproj/Localizable.strings`
+* [x] 主要 UI のローカライズ適用 (`CozyBrewL10n`、サイドバー/一覧/詳細/Install/Upgrade All/brew 未導入)
+* [x] VoiceOver / アクセシビリティ — ツールバー、検索、一覧行、操作ボタン、オーバーレイ、Install フローに `accessibilityLabel` 等
 
 ### テストエクステンション (UI / 統合) `{@status:s-status-quality-ui}`
 
 * [x] Core / Service ユニットテスト (現状の主テスト)
-* [ ] UI テスト (macOS)
-* [ ] brew 連携の統合テスト (CI 範囲の明文化含む)
-* [ ] UI スナップショット
+* [x] UI テスト (macOS) — `Tests/CozyBrewUITests/` (起動・ウィンドウスモーク、ローカル `xcodebuild test`)
+* [x] brew 連携の統合テスト — `BrewServiceIntegrationTests` + [testing_spec.md](testing_spec.md) で CI 範囲を明文化
+* [x] UI スナップショット — `UISnapshotRenderTests` (ビットマップ/レイアウトメトリクス、CI の `swift test`)
 
 ### プロダクトゴール (Should) `{@status:s-status-should-product}`
 
@@ -175,10 +177,10 @@
 * [x] brew 未導入ユーザー向け導入 UX
 * [x] 一覧・検索・ログ表示 (操作中)
 * [x] GPL 系リソース (LICENSE / ACK) のバンドル表示
-* [ ] tap / **untap** の GUI 操作
-* [ ] インストール**履歴**の保持・表示
-* [ ] パッケージ詳細での README (Markdown) 表示 — [architecture.md](architecture.md) 記載と要整合
-* [ ] Cakebrew 設定移行
+* [x] tap / **untap** の GUI 操作 — Taps ツールバー + コンテキストメニュー (`BrewManager.addTap` / `removeTap`)
+* [x] インストール **履歴** の保持・表示 — `BrewOperationHistoryStore` + サイドバー **History**
+* [x] パッケージ詳細での README (Markdown) 表示 — `brew info` caveats + GitHub README フォールバック
+* [x] Cakebrew 設定移行 — `CakebrewMigration` 検出シート + 履歴取り込み
 
 ## ゲート外・任意 `{@status:s-status-gates}`
 
@@ -192,27 +194,27 @@
 | G4 | brew 未導入 UI の DEBUG 強制分岐 | [ux_flows_spec §3.4](ux_flows_spec.md) |
 | G5 | `InstallFlowView` 相当の「初期設定」専用シート | 現状は `BrewNotAvailableView` が担う |
 
-**補足:** [§全体スナップショット](#status-s-h005) の **約85%** は [SPEC.md §11.4](SPEC.md) の9カテゴリー算術平均。本チェックリストの **約70%** は上記 `[x]` の機械的な比率。
+**補足:** [§全体スナップショット](#status-s-h005) のカテゴリー平均と本チェックリストの機械集計は別集計 (Should / ゲート外を含む項数目線)。
 
 ---
 
 ## 全体スナップショット (カテゴリー別) `{@status:s-h005}`
 
-[SPEC.md §11.4](SPEC.md) と同期 (2026-11-21時点)。完了条件の機械集計は [§100% チェックリスト](#status-s100) を参照。
+[SPEC.md §11.4](SPEC.md) と同期 (2026-11-22時点)。完了条件の機械集計は [§100% チェックリスト](#status-s100) を参照。
 
 | カテゴリー | 完了率 | ひと言 |
 | --- | --- | --- |
 | Swift Package 基盤 | 100% | SPM、`lint:swift`、`version:sync` |
 | CozyBrewCore | 100% | 検出・プロセス・インストーラ |
 | CozyBrewService | 100% | Manager、カタログ、doctor |
-| CozyBrewUIComponents | 92% | S2J サイドバー フェーズ1、オーバーレイ。InstallFlow **未配線** |
+| CozyBrewUIComponents | 100% | サイドバー フェーズ2階層、`InstallFlowView`、`Upgrade All` 確認 |
 | CozyBrewApp Target | 100% | About、brew 未導入ガイド、App Icon |
-| テストコード | 75% | Core/Service UT。UI、統合なし |
-| ローカライズ | 0% | 未着手 |
-| CI/CD | 100% | `swift-test` + `docs-lint` + `swift-quality` (`lint:swift` / `version:check`) |
+| テストコード | 100% | SPM UT + 統合 + UI レンダリング。XCUITest はローカル |
+| ローカライズ | 100% | `CozyBrewL10n` + en/ja `Localizable.strings` |
+| CI/CD | 100% | `swift-test` + `docs-lint` + `swift-quality` (`version:check` / `lint:swift`、Periphery は Release + IndexStore) |
 | Xcode プロジェクト | 100% | XcodeGen、署名用土台 |
 
-**全体 (カテゴリー平均): 約85%** (端数 **85.2%**)
+**全体 (カテゴリー平均): 100%** ([SPEC.md §11.4](SPEC.md) と同期)
 
 ---
 
@@ -220,16 +222,18 @@
 
 | 領域 | 状態 | メモ |
 | --- | --- | --- |
-| サイドバー (S2J Source List) | ✅ フェーズ1 | v2.0.14+ 前提。フェーズ2階層は未了 |
+| サイドバー (S2J Source List) | ✅ フェーズ2 | `SourceItem.group` (Installed packages / Catalog)。v2.0.14+ 前提 |
 | カタログ Formulae/Casks | ✅ | ページ分割・キャッシュ |
 | brew 一覧 / 検索 / 詳細 | ✅ | クライアント検索 |
 | install / uninstall / upgrade | ✅ | 行・詳細から直実行 |
 | `BrewOperationOverlay` | ✅ | Upgrade 中心の blocking UI |
-| `InstallFlowView` 統合 | ⚠️ | 部品のみ・未配線 |
-| Upgrade All 確認 UI | ❌ | API のみ |
+| `InstallFlowView` 統合 | ✅ | 一覧・詳細の Install からシート表示 |
+| Upgrade All 確認 UI | ✅ | Outdated ツールバー + 確認ダイアログ |
 | brew 未導入 UX | ✅ | `BrewNotAvailableView` |
-| tap / untap GUI | ⚠️ | Tap 一覧のみ |
-| インストール履歴 | ❌ | — |
+| tap / untap GUI | ✅ | Add Tap シート + untap 確認 |
+| インストール履歴 | ✅ | `Application Support` 永続化 + History タブ |
+| 詳細 README | ✅ | caveats / GitHub README |
+| Cakebrew 移行 | ✅ | 初回検出シート (オプション) |
 | About / License / Acknowledgements | ✅ | S2J About Window v3+ |
 | バージョン同期 (`version` / `buildNumber`) | ✅ | `npm run version:sync` |
 
@@ -241,10 +245,10 @@
 
 | # | initiative | 状態 |
 | --- | --- | --- |
-| 1 | S2J Source List **フェーズ2** (階層 `SourceItem.group`) | 未着手 |
-| 2 | **`InstallFlowView` 本番配線** + Upgrade All 確認 | 未着手 |
+| 1 | S2J Source List **フェーズ2** (階層 `SourceItem.group`) | 完了 |
+| 2 | **`InstallFlowView` 本番配線** + Upgrade All 確認 | 完了 (Install 経路・一括 Upgrade) |
 | 3 | brew 未導入 UI の **手動/ DEBUG 検証** 手順の実装 (§3.4) | 文書のみ → 要 DEBUG 等 |
-| 4 | ローカライズ (en / ja) 初期 | 未着手 |
+| 4 | ローカライズ (en / ja) 初期 | 完了 (`CozyBrewL10n`) |
 | 5 | CI への `lint:swift` / `version:check` 組込み | 完了 (`swift-quality.yml`) |
 
 ---
@@ -257,8 +261,10 @@
 * About / License / Acknowledgements (バンドル連携)
 * Formulae/Casks カタログ API、`brew doctor` Warnings タブ
 * `package.json` 正本の Version / Build 同期 (`release:*` マイルストーン)
-* GitHub Actions: Swift テスト、docs lint、`swift-quality` (`lint:swift` / `version:check`)
-* **v1.0.14** — SPM pin 更新、Cask ターミナル委譲、Refresh (`v1.0.13`)、版同期
+* GitHub Actions: Swift テスト、docs lint、`swift-quality` (`version:check` / `lint:swift`)
+* **v1.0.13– v1.0.14** — Cask ターミナル委譲・行下失敗パネル、ツールバー `refreshApplicationState`、SPM pin 更新
+* **v1.0.15– v1.0.17** — `swift-quality.yml` 本番運用、CI 上の Periphery 導入 (Release `3.8.0` + IndexStore、`brew install periphery` は非推奨注釈・`libIndexStore` 問題のため不採用)
+* **unreleased** — `BrewManager+TapAndMigration` 分割、`lint:swift` 整合 (Should 機能は v1.0.19)
 
 ---
 

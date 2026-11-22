@@ -5,6 +5,11 @@ import SwiftUI
 public struct MainWindowView: View {
     @ObservedObject var manager: BrewManager
     @StateObject private var sourceListAdapter = S2JSourceListAdapter()
+    @State private var showsUpgradeAllConfirmation = false
+    @State private var isUpgradingAll = false
+    @State private var upgradeAllErrorMessage: String?
+    @State private var showsCakebrewMigration = false
+    @State private var cakebrewLegacy: CakebrewLegacyPreferences?
 
     public init(manager: BrewManager) {
         self.manager = manager
@@ -22,25 +27,64 @@ public struct MainWindowView: View {
             )
         }
         .toolbar {
+            if sourceListAdapter.selectedSidebarItem == .outdated,
+               !manager.outdatedPackages.isEmpty
+            {
+                ToolbarItem(placement: .automatic) {
+                    Button {
+                        showsUpgradeAllConfirmation = true
+                    } label: {
+                        Label(CozyBrewL10n.upgradeAll, systemImage: "arrow.down.circle.fill")
+                    }
+                    .disabled(isUpgradingAll || !manager.isBrewAvailable)
+                    .help(CozyBrewL10n.upgradeAllHelp)
+                    .accessibilityLabel(CozyBrewL10n.a11yUpgradeAll)
+                }
+            }
+
             ToolbarItem(placement: .primaryAction) {
                 if sourceListAdapter.selectedSidebarItem == .warnings {
                     Button {
                         Task { await manager.refreshDoctorWarnings() }
                     } label: {
-                        Label("Refresh", systemImage: "arrow.clockwise")
+                        Label(CozyBrewL10n.refresh, systemImage: "arrow.clockwise")
                     }
                     .disabled(manager.doctorIsLoading || !manager.isBrewAvailable)
+                    .accessibilityLabel(CozyBrewL10n.a11yRefresh)
                 } else {
                     Button {
                         Task { await manager.refreshApplicationState() }
                     } label: {
-                        Label("Refresh", systemImage: "arrow.clockwise")
+                        Label(CozyBrewL10n.refresh, systemImage: "arrow.clockwise")
                     }
                     .disabled(manager.isLoading || !manager.isBrewAvailable)
-                    .help("Run brew update, then reload installed and outdated packages")
+                    .help(CozyBrewL10n.refreshHelp)
+                    .accessibilityLabel(CozyBrewL10n.a11yRefresh)
                 }
             }
         }
+        .confirmationDialog(
+            CozyBrewL10n.upgradeAllDialogTitle,
+            isPresented: $showsUpgradeAllConfirmation,
+            titleVisibility: .visible
+        ) {
+            Button(CozyBrewL10n.upgradeAllDialogConfirm) {
+                Task { await performUpgradeAll() }
+            }
+            Button(CozyBrewL10n.actionCancel, role: .cancel) {}
+        } message: {
+            Text(CozyBrewL10n.upgradeAllDialogMessage(manager.outdatedPackages.count))
+        }
+        .overlay {
+            if isUpgradingAll {
+                BrewOperationOverlay(
+                    title: CozyBrewL10n.upgradingAllOverlay,
+                    footnote: nil,
+                    style: .blocking
+                )
+            }
+        }
+        .disabled(isUpgradingAll)
         .task {
             if manager.isBrewAvailable {
                 await manager.refreshManagedServices()
@@ -50,6 +94,50 @@ public struct MainWindowView: View {
                 await manager.refreshDoctorWarnings()
             }
         }
+        .onAppear {
+            if cakebrewLegacy == nil,
+               let legacy = CakebrewMigration.detectLegacyPreferences(),
+               !CakebrewMigration.hasCompletedMigration()
+            {
+                cakebrewLegacy = legacy
+                showsCakebrewMigration = true
+            }
+        }
+        .sheet(isPresented: $showsCakebrewMigration) {
+            if let legacy = cakebrewLegacy {
+                CakebrewMigrationSheet(legacy: legacy, manager: manager) {
+                    showsCakebrewMigration = false
+                }
+            }
+        }
+        .alert(
+            CozyBrewL10n.upgradeAllFailedTitle,
+            isPresented: Binding(
+                get: { upgradeAllErrorMessage != nil },
+                set: { presented in
+                    if !presented {
+                        upgradeAllErrorMessage = nil
+                    }
+                }
+            ),
+            actions: {
+                Button(CozyBrewL10n.actionOK, role: .cancel) {}
+            },
+            message: {
+                Text(upgradeAllErrorMessage ?? "")
+            }
+        )
+    }
+
+    private func performUpgradeAll() async {
+        isUpgradingAll = true
+        upgradeAllErrorMessage = nil
+        defer { isUpgradingAll = false }
+        do {
+            try await manager.upgradeAll()
+        } catch {
+            upgradeAllErrorMessage = error.localizedDescription
+        }
     }
 }
 
@@ -58,6 +146,7 @@ public enum SidebarItem: String, CaseIterable, Identifiable, Sendable {
     case warnings = "Warnings"
     case installed = "Installed"
     case outdated = "Outdated"
+    case history = "History"
     case taps = "Taps"
     case formulae = "Formulae"
     case casks = "Casks"
@@ -71,9 +160,22 @@ public enum SidebarItem: String, CaseIterable, Identifiable, Sendable {
         case .warnings: "exclamationmark.triangle.fill"
         case .installed: "checkmark.circle.fill"
         case .outdated: "arrow.down.circle.fill"
+        case .history: "clock.arrow.circlepath"
         case .taps: "square.stack.3d.up.fill"
         case .formulae: "cube.box.fill"
         case .casks: "app.badge.fill"
+        }
+    }
+
+    public var localizedTitle: String {
+        switch self {
+        case .warnings: CozyBrewL10n.sidebarWarnings
+        case .installed: CozyBrewL10n.sidebarInstalled
+        case .outdated: CozyBrewL10n.sidebarOutdated
+        case .history: CozyBrewL10n.sidebarHistory
+        case .taps: CozyBrewL10n.sidebarTaps
+        case .formulae: CozyBrewL10n.sidebarFormulae
+        case .casks: CozyBrewL10n.sidebarCasks
         }
     }
 }
@@ -94,8 +196,9 @@ struct ContentAreaView: View {
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.secondary)
-                        TextField("Search packages...", text: $searchText)
+                        TextField(CozyBrewL10n.searchPlaceholder, text: $searchText)
                             .textFieldStyle(.plain)
+                            .accessibilityLabel(CozyBrewL10n.a11ySearchField)
 
                         if !searchText.isEmpty {
                             Button {
@@ -126,6 +229,8 @@ struct ContentAreaView: View {
                     DoctorWarningsView(manager: manager)
                 } else if selectedSidebarItem == .taps {
                     TapListView(manager: manager, searchText: searchText)
+                } else if selectedSidebarItem == .history {
+                    OperationHistoryView(manager: manager, searchText: searchText)
                 } else {
                     PackageListView(
                         manager: manager,
@@ -144,8 +249,9 @@ struct ContentAreaView: View {
                         Button {
                             selectedPackage = nil
                         } label: {
-                            Label("Back", systemImage: "chevron.backward")
+                            Label(CozyBrewL10n.back, systemImage: "chevron.backward")
                         }
+                        .accessibilityLabel(CozyBrewL10n.a11yBack)
                         .keyboardShortcut(.escape, modifiers: [])
                     }
                 }
@@ -170,7 +276,7 @@ struct ContentAreaView: View {
         if let selectedPackage {
             return selectedPackage.name
         }
-        return selectedSidebarItem?.rawValue ?? "Packages"
+        return selectedSidebarItem?.localizedTitle ?? CozyBrewL10n.navigationTitle
     }
 }
 
@@ -188,6 +294,7 @@ struct PackageListView: View {
     @State private var upgradeFailurePackage: Package?
     @State private var upgradeFailureStderr: String?
     @State private var catalogPageRange: CatalogPageRange = .aThroughE
+    @State private var installFlowPackage: Package?
 
     private var isSearchActive: Bool {
         !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -354,6 +461,18 @@ struct PackageListView: View {
                 upgradeFailureStderr = nil
             }
         }
+        .sheet(item: $installFlowPackage) { package in
+            InstallFlowView(
+                package: package,
+                onConfirm: {
+                    try await manager.install(package)
+                    await manager.refreshInstalledPackages()
+                },
+                onCancel: {
+                    installFlowPackage = nil
+                }
+            )
+        }
     }
 
     private var catalogListRefreshToken: Int {
@@ -373,10 +492,7 @@ struct PackageListView: View {
                 package: package,
                 brewServiceStatus: manager.managedService(for: package)?.status,
                 onInstall: {
-                    Task {
-                        try? await manager.install(package)
-                        await manager.refreshInstalledPackages()
-                    }
+                    installFlowPackage = package
                 },
                 onUninstall: {
                     Task {
@@ -502,7 +618,7 @@ struct DoctorWarningsView: View {
                     Image(systemName: "exclamationmark.triangle")
                         .font(.system(size: 48))
                         .foregroundColor(.secondary)
-                    Text("Could not run brew doctor")
+                    Text(CozyBrewL10n.doctorCouldNotRun)
                         .font(.headline)
                     Text(error)
                         .font(.subheadline)
@@ -516,7 +632,7 @@ struct DoctorWarningsView: View {
                     Image(systemName: "checkmark.circle")
                         .font(.system(size: 48))
                         .foregroundColor(.green)
-                    Text("No warnings")
+                    Text(CozyBrewL10n.doctorNoWarnings)
                         .font(.headline)
                     if let preamble = manager.doctorPreamble {
                         Text(preamble)
@@ -565,6 +681,12 @@ struct DoctorWarningsView: View {
 struct TapListView: View {
     @ObservedObject var manager: BrewManager
     let searchText: String
+
+    @State private var showsAddTap = false
+    @State private var newTapName = ""
+    @State private var tapToRemove: Tap?
+    @State private var tapActionError: String?
+    @State private var isTapActionRunning = false
 
     private var isSearchActive: Bool {
         !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -621,9 +743,99 @@ struct TapListView: View {
                         }
                     }
                     .padding(.vertical, 4)
+                    .contextMenu {
+                        if tap.official != true {
+                            Button(CozyBrewL10n.tapUntap, role: .destructive) {
+                                tapToRemove = tap
+                            }
+                        }
+                    }
                 }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    newTapName = ""
+                    showsAddTap = true
+                } label: {
+                    Label(CozyBrewL10n.tapAdd, systemImage: "plus")
+                }
+                .disabled(!manager.isBrewAvailable || isTapActionRunning)
+                .accessibilityLabel(CozyBrewL10n.tapAdd)
+            }
+        }
+        .sheet(isPresented: $showsAddTap) {
+            VStack(alignment: .leading, spacing: 16) {
+                Text(CozyBrewL10n.tapAddTitle)
+                    .font(.headline)
+                TextField(CozyBrewL10n.tapAddPlaceholder, text: $newTapName)
+                HStack {
+                    Button(CozyBrewL10n.actionCancel) {
+                        showsAddTap = false
+                    }
+                    Spacer()
+                    Button(CozyBrewL10n.tapAddConfirm) {
+                        Task { await submitAddTap() }
+                    }
+                    .keyboardShortcut(.defaultAction)
+                    .disabled(newTapName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                }
+            }
+            .padding(20)
+            .frame(minWidth: 360)
+        }
+        .confirmationDialog(
+            CozyBrewL10n.tapUntapTitle,
+            item: $tapToRemove,
+            titleVisibility: .visible
+        ) { tap in
+            Button(CozyBrewL10n.tapUntapConfirm, role: .destructive) {
+                Task { await submitUntap(tap) }
+            }
+            Button(CozyBrewL10n.actionCancel, role: .cancel) {}
+        } message: { tap in
+            Text(CozyBrewL10n.tapUntapMessage(tap.name))
+        }
+        .alert(CozyBrewL10n.tapActionFailed, isPresented: Binding(
+            get: { tapActionError != nil },
+            set: {
+                if !$0 {
+                    tapActionError = nil
+                }
+            }
+        )) {
+            Button(CozyBrewL10n.actionOK, role: .cancel) {}
+        } message: {
+            Text(tapActionError ?? "")
+        }
+        .overlay {
+            if isTapActionRunning {
+                BrewOperationOverlay(title: CozyBrewL10n.tapWorking, footnote: nil, style: .blocking)
+            }
+        }
+        .disabled(isTapActionRunning)
+    }
+
+    private func submitAddTap() async {
+        isTapActionRunning = true
+        defer { isTapActionRunning = false }
+        do {
+            try await manager.addTap(named: newTapName)
+            showsAddTap = false
+        } catch {
+            tapActionError = error.localizedDescription
+        }
+    }
+
+    private func submitUntap(_ tap: Tap) async {
+        isTapActionRunning = true
+        defer { isTapActionRunning = false }
+        do {
+            try await manager.removeTap(tap)
+        } catch {
+            tapActionError = error.localizedDescription
+        }
     }
 }

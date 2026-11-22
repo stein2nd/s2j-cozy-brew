@@ -3,6 +3,7 @@ import PackageDescription
 
 let package = Package(
     name: "s2j-cozy-brew",
+    defaultLocalization: "en",
     platforms: [.macOS("15.0")],
     products: [
         .library(name: "CozyBrewCore", targets: ["CozyBrewCore"]),
@@ -29,7 +30,8 @@ let package = Package(
                 "CozyBrewService",
                 .product(name: "S2JSourceList", package: "s2j-source-list"),
                 .product(name: "S2JAboutWindow", package: "s2j-about-window"),
-            ]
+            ],
+            resources: [.process("Resources")]
         ),
         .testTarget(
             name: "CozyBrewCoreTests",
@@ -38,6 +40,10 @@ let package = Package(
         .testTarget(
             name: "CozyBrewServiceTests",
             dependencies: ["CozyBrewService", "CozyBrewCore"]
+        ),
+        .testTarget(
+            name: "CozyBrewUIComponentsTests",
+            dependencies: ["CozyBrewUIComponents", "CozyBrewService", "CozyBrewCore"]
         ),
     ]
 )

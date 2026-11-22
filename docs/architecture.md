@@ -29,7 +29,8 @@
   * SPM の推奨: `npm run swift:ncu` で確認 → `npm run swift:ncu:update` で最新化 → `swift build` で確認。
   * 現在は `Package.swift` で各リポジトリの `main` を参照し、確定 revision は `Package.resolved` に記録します。
   * サイドバー利用時は **`s2j-source-list` v2.0.14以降** を前提とします (SwiftUI の選択警告を修正。詳細は [dependency_updates.md](dependency_updates.md))。
-  * ローカル Swift lint: `npm run lint:swift` (先頭で `npm run xcode:generate` を実行)。
+  * ローカル Swift lint: `npm run lint:swift` (先頭で `npm run xcode:generate` を実行。Periphery は PATH 依存。CI の導入手順は [dependency_updates.md §Periphery](dependency_updates.md#periphery-ローカル-vs-ci) / `swift-quality.yml`)。
+  * ローカライズ: `CozyBrewL10n` + `Resources/{en,ja}.lproj/Localizable.strings` (CozyBrewUIComponents、`Package.swift` `resources:`)。
 
 ---
 
@@ -87,29 +88,32 @@
 │├┬─ CozyBrewService/  # サービス・モジュール (モデル、ViewModel、キャッシュ)
 ││├─ BrewCache.swift  # JSON キャッシュ機構 (TTL 対応)
 ││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理、`refreshApplicationState`)
+││├─ BrewManager+TapAndMigration.swift  # tap/untap、Cakebrew 移行、操作履歴記録
 ││├─ BrewCaskTerminalFallback.swift / BrewUserMessage.swift  # Cask 失敗・ターミナル委譲
 ││├─ BrewCatalog.swift / BrewFormulaeAPIClient.swift  # formulae.brew.sh カタログ
 ││├─ BrewDoctorParser.swift  # `brew doctor` パース
+││├─ BrewOperationHistory.swift  # 操作履歴 JSON 永続化
+││├─ CakebrewMigration.swift  # Cakebrew plist 検出・履歴取り込み
+││├─ BrewGitHubReadmeFetcher.swift  # 詳細 README フォールバック
 ││└─ Models.swift  # Formula、Cask、Tap、Package モデル定義
 │└┬─ CozyBrewUIComponents/  # UI コンポーネント・モジュール
 │　├─ MainWindowView.swift  # メイン・ウィンドウ (macOS 15.0+)
 │　├─ S2JSourceListAdapter.swift  # S2J Source List 橋渡し (サイドバー)
 │　├─ BrewOperationOverlay.swift  # Upgrade 等のオーバーレイ
 │　├─ BrewAlertView.swift  # エラー表示
-│　├─ InstallFlowView.swift  # インストール・フロー
+│　├─ CozyBrewL10n.swift  # ローカライズ
+│　├─ Resources/  # en/ja Localizable.strings
+│　├─ InstallFlowView.swift  # Install 確認シート
+│　├─ ProductShouldViews.swift  # History 一覧・Cakebrew 移行シート
 │　├─ InstallProgressView.swift  # インストール進捗表示
-│　├─ PackageDetailView.swift  # パッケージ詳細表示
+│　├─ PackageDetailView.swift  # パッケージ詳細 (README / caveats)
 │　├─ PackageRowView.swift  # パッケージ一覧の行表示
 │　├─ PackageUpgradeFailurePanel.swift  # Upgrade 失敗 UI (行下)
 │　├─ BrewUpgradeTerminalFallbackView.swift / BrewTerminalLauncher.swift
-└┬─ Tests/  # テストコード
-　├┬─ CozyBrewCoreTests/
-　│├─ BrewBinaryLocatorTests.swift
-　│└─ BrewProcessTests.swift
-　└┬─ CozyBrewServiceTests/
-　　├─ BrewCacheTests.swift
-　　├─ BrewCatalogTests.swift / BrewDoctorParserTests.swift  # カタログ・doctor
-　　└─ ModelsTests.swift
+└┬─ Tests/
+　├─ CozyBrewCoreTests/ / CozyBrewServiceTests/ (`BrewServiceIntegrationTests`)
+　├─ CozyBrewUIComponentsTests/ (`UISnapshotRenderTests`)
+　└─ CozyBrewUITests/  # Xcode UI テスト ([testing_spec.md](testing_spec.md))
 ```
 
 **依存パッケージ** (Package.swift で定義)
@@ -125,7 +129,7 @@
 * Cakebrew は Objective-C / AppKit 実装です。そのため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈**して SwiftUI に適した状態駆動の設計に変換します。
 * Cakebrew のコード (Objective-C) でのライセンス、リソース (アイコン、翻訳) を確認し、再利用条件を満たします。
 * Cakebrew の preferences やインストール履歴を引き継ぐ場合:
-  * 初回起動時に `Cakebrew` の設定ファイル (保存場所や形式) を検出し、移行ウィザードを表示します (オプション)。
+  * 初回起動時に `~/Library/Preferences/com.brunophilipe.Cakebrew.plist` を検出し、`CakebrewMigrationSheet` でオプション取り込み ([ux_flows_spec §3.0](ux_flows_spec.md))。
 
 ### 3.2. About Window `{@architecture:s3-2}`
 
@@ -140,7 +144,7 @@
   * `InstallProgressView`: ログストリーム、キャンセルボタンを表示します。
   * `BrewAlertView`: friendly error + raw log toggle を表示します。
   * `MainWindow`: Sidebar (S2J Source List) + Content Area (パッケージ一覧、検索、ステータスバー) を表示します。
-  * `InstallFlowView`: 確認ダイアログ、進行状況 (ログ表示)、失敗時のロールバック案内 (**View 部品はあるが未配線** — 現状は `PackageRowView` / `PackageDetailView` から直実行)。
+  * `InstallFlowView`: Install 操作の確認シート (一覧・詳細から表示)。uninstall / 単体 upgrade は直実行。
   * `BrewOperationOverlay`: Upgrade 等の blocking オーバーレイ (Cask は `passwordFriendly`)。
   * `PackageUpgradeFailurePanel` / `BrewUpgradeTerminalFallbackView`: Cask Upgrade のターミナル委譲 (一覧は対象行の直下)。
 
@@ -150,7 +154,7 @@
 * **サイドバー**
   * `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` が `S2JSourceList.SidebarView` を `MainWindowView` に載せます。
     * フェーズ1: フラット6セクション (`SidebarItem` 順)。Warnings は `customRowContent` でオレンジバッジ。
-    * フェーズ2 (未了): `SourceItem.group` による階層分類 (Installed packages / Catalog 等)。
+    * フェーズ2: `SourceItem.group` による階層 (Installed packages / Catalog)。
 
 ### 3.4. CozyBrew App Target `{@architecture:s3-4}`
 

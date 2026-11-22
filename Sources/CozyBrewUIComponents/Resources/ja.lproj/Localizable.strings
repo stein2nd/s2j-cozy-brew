@@ -1,0 +1,118 @@
+/* Sidebar */
+"sidebar.warnings" = "警告";
+"sidebar.installed" = "インストール済み";
+"sidebar.outdated" = "更新可能";
+"sidebar.history" = "履歴";
+"sidebar.taps" = "Tap";
+"sidebar.formulae" = "Formula";
+"sidebar.casks" = "Cask";
+"sidebar.group.installed_packages" = "インストール済み";
+"sidebar.group.catalog" = "カタログ";
+"app.navigation_title" = "CozyBrew";
+
+/* Toolbar */
+"toolbar.refresh" = "更新";
+"toolbar.refresh.help" = "brew update を実行し、インストール済みと更新可能一覧を再読み込みします";
+"toolbar.upgrade_all" = "すべて更新";
+"toolbar.upgrade_all.help" = "更新可能なパッケージをすべてアップグレードします";
+"toolbar.back" = "戻る";
+"search.placeholder" = "パッケージを検索…";
+
+/* Actions */
+"action.install" = "インストール";
+"action.uninstall" = "アンインストール";
+"action.upgrade" = "アップグレード";
+"action.cancel" = "キャンセル";
+"action.ok" = "OK";
+
+/* Package */
+"package.badge.update_available" = "更新あり";
+"package.badge.deprecated" = "非推奨";
+"package.type.formula" = "Formula";
+"package.type.cask" = "Cask";
+
+/* Detail */
+"detail.loading" = "パッケージ情報を読み込み中…";
+"detail.section.description" = "説明";
+"detail.section.installed_version" = "インストール済みバージョン";
+"detail.section.homepage" = "ホームページ";
+"detail.section.installation" = "インストール";
+"detail.section.from" = "取得元";
+"detail.section.license" = "ライセンス";
+"detail.section.dependencies" = "依存関係";
+"detail.section.build_dependencies" = "ビルド依存関係";
+"detail.section.readme" = "README / 注意事項";
+"detail.section.status" = "状態";
+"detail.status.not_installed" = "未インストール";
+"detail.status.installed_update" = "インストール済み (更新あり)";
+"detail.status.installed" = "インストール済み";
+
+/* Install */
+"install.confirm.title" = "%@ をインストールしますか？";
+"install.type_label" = "種類:";
+"install.version_label" = "バージョン:";
+"install.failed.title" = "インストールに失敗しました";
+"install.progress.title" = "%@ をインストール中…";
+
+/* Upgrade all */
+"upgrade_all.dialog.title" = "更新可能なパッケージをすべてアップグレードしますか？";
+"upgrade_all.dialog.confirm" = "すべて更新";
+"upgrade_all.dialog.message" = "更新可能な %d 件に対して brew upgrade --yes を実行します。大きな更新では依存関係が変わったり、Cask で管理者承認が必要になることがあります。";
+"upgrade_all.failed.title" = "一括アップグレードに失敗しました";
+"upgrade_all.overlay.title" = "すべてのパッケージをアップグレード中…";
+
+/* Doctor */
+"doctor.could_not_run" = "brew doctor を実行できませんでした";
+"doctor.no_warnings" = "警告はありません";
+
+/* Upgrade failure */
+"upgrade.failed.title" = "アップグレードに失敗しました";
+"upgrade.show_details" = "詳細を表示";
+"terminal.continue" = "ターミナルで続行";
+"terminal.run" = "ターミナルで実行";
+
+/* Brew missing */
+"brew_missing.title" = "Homebrew が見つかりません";
+"brew_missing.message" = "CozyBrew を使うには Homebrew が必要です。Homebrew をインストールしてください。";
+"brew_missing.instructions_title" = "インストール手順:";
+"brew_missing.install_auto" = "Homebrew を自動インストール";
+
+/* Taps */
+"tap.add" = "Tap を追加";
+"tap.add.title" = "サードパーティ Tap を追加";
+"tap.add.placeholder" = "user/repo";
+"tap.add.confirm" = "追加";
+"tap.untap" = "Tap を削除";
+"tap.untap.title" = "この Tap を削除しますか？";
+"tap.untap.message" = "brew untap %@ を実行します。";
+"tap.untap.confirm" = "削除";
+"tap.action_failed" = "Tap 操作に失敗しました";
+"tap.working" = "Tap を更新中…";
+
+/* History */
+"history.empty" = "記録された操作はまだありません。";
+"history.no_matches" = "一致する履歴がありません。";
+"history.kind.install" = "インストール";
+"history.kind.uninstall" = "アンインストール";
+"history.kind.upgrade" = "アップグレード";
+"history.kind.upgrade_all" = "一括アップグレード";
+"history.kind.tap" = "Tap";
+"history.kind.untap" = "untap";
+"history.kind.migration" = "移行";
+
+/* Cakebrew migration */
+"cakebrew_migration.title" = "Cakebrew 設定を取り込みますか？";
+"cakebrew_migration.message" = "この Mac に Cakebrew の設定が見つかりました。履歴を CozyBrew へ取り込むか、スキップできます。";
+"cakebrew_migration.message_version" = "Cakebrew %@ の設定が見つかりました。履歴を CozyBrew へ取り込むか、スキップできます。";
+"cakebrew_migration.history_count" = "Cakebrew 設定に履歴らしき行が %d 件あります。";
+"cakebrew_migration.import" = "取り込む";
+"cakebrew_migration.skip" = "あとで";
+
+/* Accessibility */
+"a11y.package_row" = "%@、%@、%@";
+"a11y.search_field" = "パッケージを検索";
+"a11y.refresh" = "一覧を更新";
+"a11y.upgrade_all" = "更新可能なパッケージをすべてアップグレード";
+"a11y.back" = "パッケージ一覧に戻る";
+"a11y.installed" = "インストール済み";
+"a11y.not_installed" = "未インストール";

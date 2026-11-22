@@ -77,17 +77,22 @@
 
 ## 3. パッケージ操作フロー `{@ux_flows_spec:s3}`
 
-### 3.0. 現行実装 (2026-11-20時点) `{@ux_flows_spec:s3-0}`
+### 3.0. 現行実装 (2026-11-22時点) `{@ux_flows_spec:s3-0}`
 
 | 操作 | 実装 |
 | --- | --- |
 | brew 未導入 | `ContentView` → `BrewNotAvailableView` (§1)。**専用「初期設定」シートはなし** (全画面ガイド) |
-| install / uninstall | `PackageRowView` / `PackageDetailView` から `BrewManager` を **直実行** (事前確認ダイアログなし) |
+| install | 一覧・詳細から **`InstallFlowView` シート** (確認 → 進行/失敗)。成功後は一覧を更新 |
+| uninstall | `PackageRowView` / `PackageDetailView` から `BrewManager` を **直実行** (事前確認なし) |
 | upgrade (単体) | 同上。一覧では `BrewOperationOverlay` (Cask は `passwordFriendly`)。失敗時は対象行下 `PackageUpgradeFailurePanel` |
 | ターミナルで Cask を上げた後 | ツールバー **Refresh** → `refreshApplicationState()` で Outdated 再同期 |
-| upgrade (一括) | `BrewManager.upgradeAll` のみ。**確認 UI なし** (§2.3はゴール) |
+| upgrade (一括) | **Outdated** 選択時ツールバー **Upgrade All** → `confirmationDialog` → `BrewManager.upgradeAll` + blocking オーバーレイ |
+| tap / untap | **Taps** セクション: ツールバー **Add Tap** シート → `brew tap`、行コンテキストメニュー → untap 確認 → `brew untap` |
+| 操作履歴 | サイドバー **History** (`BrewOperationHistoryStore`、install/upgrade/tap 等を記録) |
+| パッケージ詳細 README | `brew info` caveats + GitHub README フォールバック (`PackageDetailView`) |
+| Cakebrew 移行 | 起動時 `com.brunophilipe.Cakebrew.plist` 検出時オプションシート (`CakebrewMigration`) |
 
-`InstallFlowView` / `InstallProgressView` はソースにあるが **どこからも表示されていません** (Backlog: SPEC §11.3.4)。
+Uninstall / 単体 Upgrade は従来どおり直実行 (オーバーレイは Upgrade 時)。Install のみ `InstallFlowView` に統合済み。
 
 ### 3.1. 目標 UX (`InstallFlowView` 統合後) `{@ux_flows_spec:s3-1}`
 
@@ -126,7 +131,8 @@
 
 ## 4. サイドバー・ナビゲーション `{@ux_flows_spec:s4}`
 
-* セクション: **Warnings** / Installed / Outdated / Taps / Formulae / Casks (`SidebarItem` の `CaseIterable` 順)
+* サイドバー: **Warnings** (トップレベル)、**Installed packages** グループ (Installed / Outdated)、**Taps**、**Catalog** グループ (Formulae / Casks)。`SourceItem.group` 階層 (`S2JSourceListAdapter`)
+* **Outdated** 選択時: ツールバー **Upgrade All** (確認ダイアログ → `brew upgrade --yes`)
 * **Warnings**: `brew doctor` の出力をパースして表示。起動時とタブ選択時に `refreshDoctorWarnings()`。Warning ブロック数をオレンジのバッジで表示。検索バーは非表示。ツールバー Refresh で再実行。
 * **それ以外のセクション**: ツールバー Refresh は `BrewManager.refreshApplicationState()` (`brew update` → インストール済み、Outdated 再取得、`isLoading` で一覧にスピナー)。ターミナルで行った Cask Upgrade 後の Outdated 反映に使う。
 * S2J Source List を用いた分類表示

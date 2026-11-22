@@ -17,7 +17,7 @@ public struct BrewUpgradeTerminalFallbackView: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Continue in Terminal")
+            Text(CozyBrewL10n.continueInTerminal)
                 .font(.subheadline)
                 .fontWeight(.semibold)
 
@@ -57,7 +57,8 @@ public struct BrewUpgradeTerminalFallbackView: View {
                         terminalError = error.localizedDescription
                     }
                 } label: {
-                    Label("Run in Terminal", systemImage: "terminal")
+                    Label(CozyBrewL10n.runInTerminal, systemImage: "terminal")
+                        .accessibilityLabel(CozyBrewL10n.runInTerminal)
                 }
                 .buttonStyle(.borderedProminent)
 

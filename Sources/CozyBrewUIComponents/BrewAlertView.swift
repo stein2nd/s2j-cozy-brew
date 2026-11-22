@@ -57,7 +57,8 @@ public struct BrewAlertView: View {
 
             HStack {
                 Spacer()
-                Button("OK", action: onDismiss)
+                Button(CozyBrewL10n.actionOK, action: onDismiss)
+                    .accessibilityLabel(CozyBrewL10n.actionOK)
                     .buttonStyle(.borderedProminent)
             }
         }

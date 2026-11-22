@@ -31,7 +31,8 @@ public struct InstallProgressView: View {
                 Spacer()
 
                 if isCancellable, let onCancel {
-                    Button("Cancel", action: onCancel)
+                    Button(CozyBrewL10n.actionCancel, action: onCancel)
+                        .accessibilityLabel(CozyBrewL10n.actionCancel)
                         .buttonStyle(.bordered)
                 }
             }

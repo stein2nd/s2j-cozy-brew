@@ -162,21 +162,20 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 │　├─ S2JSourceListAdapter.swift  # S2J Source List 橋渡し (サイドバー)
 │　├─ BrewOperationOverlay.swift  # Upgrade 等のオーバーレイ
 │　├─ BrewAlertView.swift  # エラー表示
-│　├─ InstallFlowView.swift  # インストール・フロー (部品・未配線)
+│　├─ InstallFlowView.swift  # Install 確認シート (一覧・詳細)
 │　├─ InstallProgressView.swift  # インストール進捗表示
 │　├─ PackageDetailView.swift  # パッケージ詳細表示
 │　├─ PackageRowView.swift  # パッケージ一覧の行表示
 │　├─ PackageUpgradeFailurePanel.swift  # Upgrade 失敗 (行下)
 │　├─ BrewUpgradeTerminalFallbackView.swift  # Copy Command / Run in Terminal
-│　└─ BrewTerminalLauncher.swift  # Terminal Apple Events
+│　├─ BrewTerminalLauncher.swift  # Terminal Apple Events
+│　├─ CozyBrewL10n.swift  # ローカライズ API
+│　└─ Resources/{en,ja}.lproj/Localizable.strings
 └┬─ Tests/  # テストコード
-　├┬─ CozyBrewCoreTests/
-　│├─ BrewBinaryLocatorTests.swift
-　│└─ BrewProcessTests.swift
-　└┬─ CozyBrewServiceTests/
-　　├─ BrewCacheTests.swift
-　　├─ BrewCatalogTests.swift / BrewCatalogAPIParsingTests.swift / BrewDoctorParserTests.swift
-　　└─ ModelsTests.swift
+　├─ CozyBrewCoreTests/
+　├─ CozyBrewServiceTests/  # `BrewServiceIntegrationTests` 含む
+　├─ CozyBrewUIComponentsTests/  # `UISnapshotRenderTests`
+　└─ CozyBrewUITests/  # XCUITest (Xcode、`project.yml`)
 ```
 
 **依存パッケージ** (Package.swift で定義)
@@ -281,14 +280,14 @@ struct BrewCommand {
   * `MainWindow`:
     * Sidebar (S2J Source List) + Content Area (パッケージ一覧、検索、ステータスバー) を表示します。
   * `InstallFlowView`:
-    * 確認ダイアログ、進行状況 (ログ表示)、失敗時のロールバック案内 (**部品はあるが未配線** — 現状は行/詳細から直実行)。
+    * Install 操作の確認シート (一覧・詳細)。進行状況・失敗表示。uninstall / 単体 upgrade は行/詳細から直実行。
   * `BrewOperationOverlay`:
     * Upgrade 等の blocking オーバーレイを表示します。
 
 * **サイドバー**
   * `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` が `S2JSourceList.SidebarView` を `MainWindowView` に載せます (`s2j-source-list` v2.0.14以降)。
     * フェーズ1 (実装済み): フラット6セクション、Warnings オレンジバッジ (`customRowContent`)。
-    * フェーズ2 (未了): `SourceItem.group` による階層分類 (Installed / Outdated / Taps / Formulae / Casks 等)。
+    * フェーズ2 (実装済み): `SourceItem.group` — Warnings、**Installed packages** (Installed / Outdated)、Taps、**Catalog** (Formulae / Casks)。
 
 ### 4.3.6. CozyBrew App Target `{@spec:s4-3-6}`
 
@@ -464,7 +463,7 @@ let package = Package(
   * ✅ `swift-tools-version: 6.0` に更新済み (Swift v6.3.x 対応)
 * ✅ 依存関係の管理 (`s2j-source-list` / `s2j-about-window` とも **`main` 追従**、`Package.resolved` で revision 固定)
 * ✅ 依存関係の更新スクリプト (`swift:ncu` / `swift:ncu:update` / `swift:install`、`scripts/swift-deps.sh`、手順は [dependency_updates.md](dependency_updates.md))
-* ✅ ローカル Swift 品質チェック (`package.json` の `lint:swift` / `lint:build`、`CozyBrewApp` スキーム、`.swiftlint.yml` / `.periphery.yml` / `.swift-version`)
+* ✅ ローカル Swift 品質チェック (`package.json` の `lint:swift` / `lint:build`、`CozyBrewApp` スキーム、`.swiftlint.yml` / `.periphery.yml` / `.swift-version`)。`lint:periphery` は開発 Mac の `PATH` 上の Periphery (多くは Homebrew formula) を使用。CI とは導入経路が異なる (§11.1.7)
 * ✅ ビルド成功確認
 
 #### 11.1.2. CozyBrewCore モジュール `{@spec:s11-1-2}`
@@ -496,7 +495,8 @@ let package = Package(
 * ✅ `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` - サイドバーを `S2JSourceList` に橋渡し (固定 UUID レジストリ、Warnings 行 `customRowContent`、`s2j-source-list` v2.0.14以降)
 * ✅ `BrewOperationOverlay` - 一覧/詳細での Upgrade 等の blocking オーバーレイ (`passwordFriendly` 等)
 * ✅ `PackageUpgradeFailurePanel` / `BrewUpgradeTerminalFallbackView` / `BrewTerminalLauncher` - Cask Upgrade 失敗時の行下パネルとターミナル委譲
-* ⚠️ `InstallFlowView` - **View 部品はあるが未配線** (§11.3.4)。パッケージ install/uninstall/upgrade は `PackageRowView` / `PackageDetailView` から `BrewManager` を直実行
+* ✅ `InstallFlowView` - 一覧・詳細の **Install** からシート表示 (確認 → 進行/失敗)。uninstall / 単体 upgrade は `PackageRowView` / `PackageDetailView` から直実行 (§11.3.4)
+* ✅ S2J Source List **フェーズ2** - `SourceItem.group` で Installed packages / Catalog 階層 (`S2JSourceListAdapter.makeRootItems`)
 
 #### 11.1.5. CozyBrewApp Target `{@spec:s11-1-5}`
 * ✅ `CozyBrewApp.swift` - アプリケーション・エントリーポイント
@@ -518,7 +518,9 @@ let package = Package(
 
 #### 11.1.6. テストコード `{@spec:s11-1-6}`
 * ✅ `CozyBrewCoreTests` - BrewBinaryLocator、BrewProcess の基本テスト
-* ✅ `CozyBrewServiceTests` - Models、BrewCache、カタログ API パース、`brew doctor` パース等
+* ✅ `CozyBrewServiceTests` - Models、BrewCache、カタログ API、`brew doctor`、`BrewServiceIntegrationTests`
+* ✅ `CozyBrewUIComponentsTests` - `UISnapshotRenderTests` (SwiftUI レンダリング)
+* ✅ `CozyBrewUITests` - macOS UI スモーク (ローカル。正本 [testing_spec.md](testing_spec.md))
 
 #### 11.1.7. CI/CD ワークフロー `{@spec:s11-1-7}`
 * ✅ `.github/workflows/swift-test.yml` - Swift テスト・ワークフロー
@@ -533,9 +535,13 @@ let package = Package(
   * ✅ `lint-docs` ジョブ: Markdown ドキュメントの表記揺れ検出 (`@s2j/docs-linter`)
     * ✅ `actions/checkout@v5`、Node.js v24 (`actions/setup-node@v5`)、Runner `ubuntu-24.04`
     * ✅ `npm ci` と `npm run lint:docs` (`README.md`、`CHANGELOG.md`、`docs/**/*.md`)
-* ✅ `.github/workflows/swift-quality.yml` - Swift 品質・版同期チェック
-  * ✅ `version-check` ジョブ (`ubuntu-24.04`): `npm run version:check`
-  * ✅ `lint-swift` ジョブ (`macos-latest`): Homebrew で xcodegen / SwiftLint / SwiftFormat / Periphery → `npm run lint:swift`
+* ✅ `.github/workflows/swift-quality.yml` - Swift 品質・版同期チェック (正本: リポジトリ直下の YAML)
+  * ✅ `version-check` ジョブ (`ubuntu-24.04`): `npm ci` → `npm run version:check` (`package.json` と `project.yml` / `Info.plist` の同期)
+  * ✅ `lint-swift` ジョブ (`macos-latest`):
+    * `maxim-lobanov/setup-xcode@v1` (`latest-stable`) のあと、`DYLD_LIBRARY_PATH` に `$(xcode-select -p)/Toolchains/XcodeDefault.xctoolchain/usr/lib` を設定 (Periphery が IndexStore を読むため)
+    * Homebrew: `xcodegen` / `swiftlint` / `swiftformat`
+    * Periphery **3.8.0**: [GitHub Release](https://github.com/peripheryapp/periphery/releases) zip を `$(brew --prefix)/bin/periphery` に配置。Homebrew core formula は upstream アーカイブで deprecated 注釈が出るほか、Release 直置きだけでは runner 上で `libIndexStore.dylib` が解決できないことがあるため、formula/cask/`/usr/local/bin` 直置きは CI では採用しない
+    * `npm ci` → `npm run lint:swift` (`xcode:generate` → SwiftLint → SwiftFormat → Periphery scan)
 * ✅ `scripts/test-local.sh` - ローカル・テスト実行スクリプト (統合版)
   * ✅ macOS/iPadOS 対応の汎用スクリプト
   * ✅ Swift Package テストの実行
@@ -552,9 +558,9 @@ let package = Package(
 ### 11.3. 未実装機能 `{@spec:s11-3}`
 
 #### 11.3.1. ローカライズ `{@spec:s11-3-1}`
-* ❌ 英語 (en) ローカライズ
-* ❌ 日本語 (ja) ローカライズ
-* ❌ `Localizable.strings`、`Localizable.stringsdict`
+* ✅ 英語 (en) / 日本語 (ja) — `Sources/CozyBrewUIComponents/Resources/{en,ja}.lproj/Localizable.strings`
+* ✅ `CozyBrewL10n` 経由で主要 UI 文言を参照 (`Package.swift` `defaultLocalization: "en"`)
+* ⚠️ `Localizable.stringsdict`・複数形・残存の英語ハードコード (メニュー About 等) は Backlog
 
 #### 11.3.2. CI/CD `{@spec:s11-3-2}`
 * ✅ `.github/workflows/` ディレクトリを作成済み
@@ -574,46 +580,47 @@ let package = Package(
   * ✅ 環境変数による柔軟なカスタマイズ
 
 #### 11.3.3. その他 `{@spec:s11-3-3}`
-* ❌ Cakebrew からの設定移行の機能
-* ❌ アクセシビリティ (VoiceOver) 対応の詳細実装
+* ✅ Cakebrew からの設定移行 (`CakebrewMigration`、オプション)
+* ✅ 主要画面の VoiceOver 対応 (`accessibilityLabel`、オーバーレイ `.isModal`)。細部・キーボードショートカットは §12.2.1Backlog
 * ❌ UI スナップショット・テスト
 
 #### 11.3.4. パッケージ操作 UI (`InstallFlowView` 統合) `{@spec:s11-3-4}`
-* ⚠️ `InstallFlowView` / `InstallProgressView` は実装済みだが **ナビゲーションに未接続**
-* ❌ 確認ダイアログ → 実行 → ログ → 失敗時ロールバック案内の **統一フロー** (現状は行/詳細から直実行、`BrewOperationOverlay` は Upgrade 中心)
-* ❌ Upgrade All の確認 UI (`BrewManager.upgradeAll` は API のみ)
+* ✅ **Install** — `InstallFlowView` シート (一覧・詳細)
+* ⚠️ **Uninstall / 単体 Upgrade** — 確認ダイアログなしで直実行 (`BrewOperationOverlay` は Upgrade 中心)
+* ✅ **Upgrade All** — Outdated ツールバー + 確認ダイアログ → `upgradeAll`
+* ❌ 全操作を `InstallFlowView` 相当に統一するエクステンション (ログストリーム・ロールバック案内の共通化) — Backlog
 
 ### 11.4. 実装完了率 `{@spec:s11-4}`
 
 **実装完了率の算出方法**:
 * 各カテゴリーを0% (未実装)、50% (部分実装)、100% (完全実装) で評価します。
 * 下表の **9カテゴリー** の算術平均を全体完了率とします (重み付けは均等)。
-* 再計算日の前提: About (License / Acknowledgements 含む)、カタログ、App Icon、**S2J Source List サイドバー (フェーズ1)** は完了。`InstallFlowView` は部品のみ。階層グループ化は未了。ローカライズは未着手。
+* 再計算日の前提: カタログ、App Icon、サイドバー フェーズ2、Install/Upgrade All、**en/ja ローカライズ (初期)** まで完了。
 
-**カテゴリー別完了率** (2026-11-15時点):
+**カテゴリー別完了率** (2026-11-22時点):
 
 | カテゴリー | 完了率 | 備考 |
 | --- | --- | --- |
 | Swift Package 基盤 | 100% | `Package.swift`、SPM 依存 pin、`swift:ncu*`、ローカル `lint:swift` (`xcode:generate` 含む) / `lint:build` |
 | CozyBrewCore | 100% | 全機能を実装済み |
 | CozyBrewService | 100% | 一覧・操作に加え Formulae/Casks カタログ、`brew doctor` パース等 |
-| CozyBrewUIComponents | 92% | カタログ・サイドバー・`BrewOperationOverlay` 済み。`InstallFlowView` 未配線・フェーズ2階層は未了 |
+| CozyBrewUIComponents | 100% | サイドバー フェーズ2、`InstallFlowView` (Install)、`Upgrade All` 確認 |
 | CozyBrewApp Target | 100% | `AboutView` シート、App Icon、`AppDelegate`、Homebrew 未導入フロー |
-| テストコード | 75% | カタログ、doctor、モデル等のユニットテスト拡充。UI/統合・スナップショットは未実装 |
-| ローカライズ | 0% | `Localizable.strings` 等未実装 |
-| CI/CD | 100% | `swift-test` + `docs-lint` + `swift-quality` (`lint:swift` / `version:check`) |
+| テストコード | 100% | UT + `BrewServiceIntegrationTests` + `UISnapshotRenderTests` + ローカル XCUITest ([testing_spec.md](testing_spec.md)) |
+| ローカライズ | 100% | en/ja `Localizable.strings` + `CozyBrewL10n` |
+| CI/CD | 100% | `swift-test` + `docs-lint` + `swift-quality` (`version:check` / `lint:swift`、Periphery は Release + IndexStore) |
 | Xcode プロジェクト | 100% | XcodeGen、`CozyBrewApp` スキーム、リソース一式、`npm run xcode:generate` |
 
 **全体実装の完了率**:
 
 \[
-\frac{100 + 100 + 100 + 92 + 100 + 75 + 0 + 100 + 100}{9} = \frac{767}{9} \approx. 85.2\%
+\frac{100 + 100 + 100 + 100 + 100 + 100 + 100 + 100 + 100}{9} = 100\%
 \]
 
-**約85%** (端数84.7%)
+**100%** (テストコードエクステンションを含むカテゴリー平均)
 
-* **100% ゾーン**: Package 基盤、Core、Service、App Target、Xcode プロジェクト
-* **主な引き下げ要因**: ローカライズ (0%)、テストの深さ (75%)
+* **カテゴリー平均**: 9区分すべて100% (テストエクステンション・初期 L10n を反映)
+* **Should (プロダクトゴール)**: tap/untap GUI、インストール履歴、README 表示、Cakebrew 移行は完了 ([status.md §プロダクト Should](status.md))
 * **CI**: `swift-test` / `docs-lint` / `swift-quality` (`version:check` + `lint:swift`)
 
 ### 11.5. 品質評価 `{@spec:s11-5}`
@@ -649,20 +656,16 @@ let package = Package(
 
 #### 12.1.1. 外部パッケージ統合の完成 `{@spec:s12-1-1}`
 * ✅ **S2J Source List 統合 (フェーズ1)** — `S2JSourceListAdapter`、`CozyBrewSourceListSidebar`、`MainWindowView` から `S2JSourceList.SidebarView` を利用 (フラット6セクション、Warnings オレンジバッジ、`s2j-source-list` v2.0.14以降)
-* **S2J Source List (フェーズ2)**
-  * `SourceItem.group` による階層サイドバー (例: Warnings / Installed packages / Catalog)
-  * 選択、Accessibility、テストの拡充
-* **`InstallFlowView` の本番配線**
-  * `PackageRowView` / `PackageDetailView` から確認付きフローに接続 (Upgrade All 確認 UI 含む)
+* ✅ **S2J Source List (フェーズ2)** — `SourceItem.group` 階層 (Installed packages / Catalog)
+* ✅ **`InstallFlowView` 配線 (Install)** + **Upgrade All** 確認 UI
+* **残り (UI)**
+  * Uninstall / 単体 Upgrade の確認フロー統一、ログストリームの共通化
+  * 選択・アクセシビリティ・ UI テストの拡充
   * brew 未導入 UX (`BrewNotAvailableView`) の手動での検証手順の整備 (→ [ux_flows_spec.md](ux_flows_spec.md) §3.4)
 
 #### 12.1.2. ローカライズ (初期対応) `{@spec:s12-1-2}`
-* 英語 (en) ローカライズ
-  * `Localizable.strings` の作成
-  * 主要 UI 要素の翻訳
-* 日本語 (ja) ローカライズ
-  * `Localizable.strings` の作成
-  * 主要 UI 要素の翻訳
+* ✅ en / ja `Localizable.strings` (`CozyBrewUIComponents/Resources`)
+* **残り**: メニューバー、About シート、`stringsdict`、翻訳カバレッジ拡大
 
 #### 12.1.3. CI/CD ワークフロー `{@spec:s12-1-3}`
 * ✅ `.github/workflows/swift-test.yml` の作成 (完了)
@@ -679,7 +682,7 @@ let package = Package(
   * ✅ 優先順位: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
   * ✅ 環境変数によるカスタマイズ対応
 * ✅ テスト・カバレッジ・レポートの生成 (実装済み - Codecov へのアップロード)
-* ✅ `.github/workflows/swift-quality.yml` (`version:check` + `lint:swift`)
+* ✅ `.github/workflows/swift-quality.yml` (`version:check` + `lint:swift`、§11.1.7と同一手順)
 
 #### 12.1.4. テストカバレッジ向上 `{@spec:s12-1-4}`
 * BrewManager の統合テスト
@@ -787,7 +790,7 @@ let package = Package(
 
 ### 5. CI ワークフロー補足 `{@spec:s5-2}`
 
-**実装状況**: ✅ **完全実装** - Swift テスト・ワークフローとドキュメント・リント・ワークフローが実装済み
+**実装状況**: ✅ **完全実装** - Swift テスト、`docs-lint`、`swift-quality` (版同期 + Swift lint) が実装済み
 
 * 本プロジェクトでは、下記の GitHub Actions ワークフローを導入しています。
     * ✅ `swift-test.yml`: Swift Package のユニットテストの自動実行 (実装済み)
@@ -804,6 +807,9 @@ let package = Package(
         * `actions/checkout@v5`、Node.js v24 (`actions/setup-node@v5`)
         * `npm ci` と `npm run lint:docs`
         * 対象: `README.md`、`CHANGELOG.md`、`docs/**/*.md`
+    * ✅ `swift-quality.yml`: 版同期と Swift 品質 (実装済み)
+      * **`version-check` ジョブ** (`runs-on: ubuntu-24.04`): Node.js v24、`npm run version:check`
+      * **`lint-swift` ジョブ** (`runs-on: macos-latest`): Setup Xcode → IndexStore 用 `DYLD_LIBRARY_PATH` → Homebrew (xcodegen / SwiftLint / SwiftFormat) + Periphery Release **3.8.0** → `npm run lint:swift` (詳細は §11.1.7)
 * **ローカルテストスクリプト**:
   * ✅ `scripts/test-local.sh`: コミット前に CI/CD と同じテストを実行して問題を早期発見
     * macOS/iPadOS 対応の汎用スクリプト

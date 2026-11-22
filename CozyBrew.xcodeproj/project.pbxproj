@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		00067B8EFD2E7EC56A6F5727 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8CEBEC8831590BACBBB5FD01 /* Localizable.strings */; };
+		0768B3FA48BD8045EF81B3F7 /* CozyBrewL10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C212C6372D542366BA3C77 /* CozyBrewL10n.swift */; };
 		0DC8545851908CFA4485A472 /* CozyBrewUIComponents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F12AC5B83F5715CC64C614AC /* CozyBrewUIComponents.framework */; };
+		127B61288049C43E608E8335 /* CakebrewMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4F2A4AF3900CD7B493BCAB9 /* CakebrewMigration.swift */; };
 		146E10C9824FC03C5F1EB76B /* BrewCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 85957C3335D169DBDB4DE5FE /* BrewCatalog.swift */; };
 		22C062E1E84A9F8FDB766185 /* BrewUserMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63E30CEA571480E4DC24304 /* BrewUserMessage.swift */; };
 		2624AD91D76F999A69A06AC6 /* BrewDoctorParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC98B221E9086D3F5D4B1494 /* BrewDoctorParser.swift */; };
@@ -21,12 +24,15 @@
 		500CA2D56226BBB3012C7FE6 /* S2JSourceListAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 125C233FEE42AD01B1E21C46 /* S2JSourceListAdapter.swift */; };
 		53AAAB1E059B2246B22A8714 /* BrewAlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AE9EFDCF31E68EC0AB7458 /* BrewAlertView.swift */; };
 		61D2EB78B542B60788F21F74 /* BrewOperationOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDFA9A26A67866925D9E5868 /* BrewOperationOverlay.swift */; };
+		6382D9C3B6F01036C761323D /* BrewGitHubReadmeFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D0B0F4071E30E4364957C1 /* BrewGitHubReadmeFetcher.swift */; };
 		66E89B67A1EB792BB94DBF35 /* CozyBrewCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87EE5EA02351E1389DFD58E2 /* CozyBrewCore.framework */; };
 		6988D916C2814A7EC26AE6ED /* PackageUpgradeFailurePanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 633657FBD1F65CDC37010F3F /* PackageUpgradeFailurePanel.swift */; };
+		719B35F972747D66B48C956B /* BrewOperationHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3675046321FBC44E747ACC6D /* BrewOperationHistory.swift */; };
 		7323A832B8640DA984665CF1 /* BrewBinaryLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B8C82657480190780CA53D /* BrewBinaryLocator.swift */; };
 		74CA031FE57C60A659D7BA6C /* ACKNOWLEDGEMENTS.md in Resources */ = {isa = PBXBuildFile; fileRef = 984BA85874046E25C7918D30 /* ACKNOWLEDGEMENTS.md */; };
 		7B702461C2BC8E3F47F3D9EB /* BrewInstaller.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA53492455B856EA6A7ED1EC /* BrewInstaller.swift */; };
 		80576C5C0DA2776872EDED9E /* BrewCatalogAPIParsing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CBDC8F86DE28B6F36AAC568 /* BrewCatalogAPIParsing.swift */; };
+		820A1BFEF0D30BEE150574E6 /* BrewManager+TapAndMigration.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1019779C3B64B54F6D44E2 /* BrewManager+TapAndMigration.swift */; };
 		83BE01DDCE59C2A45483AA7A /* PackageText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A8170596A877500F371DC7 /* PackageText.swift */; };
 		86D052F18DB7B68DDA8F334B /* CozyBrewService.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CB81C946043A7ED95F16B09F /* CozyBrewService.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		896CED604765B2B7FF5F3F16 /* CozyBrewUIComponents.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F12AC5B83F5715CC64C614AC /* CozyBrewUIComponents.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -43,15 +49,24 @@
 		D9A7CFB72FD68F8A06E64C5E /* BrewProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80054623346CDFC3538C008A /* BrewProcess.swift */; };
 		DB9C7E5303709D383736D060 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 1A79E22B762466A09BF91DAB /* LICENSE.txt */; };
 		E2802E6B462F548A84381EC0 /* BrewCaskTerminalFallback.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3B5D1CBC739E986D6EB8371 /* BrewCaskTerminalFallback.swift */; };
+		E28FD1BC8F7691239AF9888E /* CozyBrewUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454B7322BC404417A40E3381 /* CozyBrewUITests.swift */; };
 		E4EE01EBCB8A11E9406D1CE5 /* CozyBrewService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB81C946043A7ED95F16B09F /* CozyBrewService.framework */; };
 		E9231D1606E4A43173494881 /* CozyBrewApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFD68341AD384D61C4E766AF /* CozyBrewApp.swift */; };
 		EBB101D2557D5BDFFCDF347F /* PackageRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5789A3C976FAEF48AC0F444B /* PackageRowView.swift */; };
+		EDAA0C4836BBC0AC2952AE3E /* ProductShouldViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62B21716B2FC46CFF3E71CAE /* ProductShouldViews.swift */; };
 		F92C8DA695273A81EC9338CF /* S2JSourceList in Frameworks */ = {isa = PBXBuildFile; productRef = 9193E2011071DB5043A1F500 /* S2JSourceList */; };
 		FB95818E3506349BC44F3E26 /* BrewResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB39080E3D33D8C46C171DFA /* BrewResult.swift */; };
 		FB95AE8DCD1029F8E0833E3C /* BrewCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B83D08D5322F5D257BB41CCD /* BrewCache.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		08C7848AE93D71C2BBE703F5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = DAA0C7F9CDE1DF5DAD9B2A23 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DAC84B78D469C0D87285DD12;
+			remoteInfo = CozyBrewApp;
+		};
 		13DF1BBA3B3FBDCDF35833EE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = DAA0C7F9CDE1DF5DAD9B2A23 /* Project object */;
@@ -109,12 +124,17 @@
 		01B8C82657480190780CA53D /* BrewBinaryLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewBinaryLocator.swift; sourceTree = "<group>"; };
 		125C233FEE42AD01B1E21C46 /* S2JSourceListAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = S2JSourceListAdapter.swift; sourceTree = "<group>"; };
 		1A79E22B762466A09BF91DAB /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
+		3675046321FBC44E747ACC6D /* BrewOperationHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewOperationHistory.swift; sourceTree = "<group>"; };
+		454B7322BC404417A40E3381 /* CozyBrewUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CozyBrewUITests.swift; sourceTree = "<group>"; };
 		5789A3C976FAEF48AC0F444B /* PackageRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageRowView.swift; sourceTree = "<group>"; };
 		5CBDC8F86DE28B6F36AAC568 /* BrewCatalogAPIParsing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewCatalogAPIParsing.swift; sourceTree = "<group>"; };
 		607498AA178AF40B76AF1AC4 /* CozyBrewApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CozyBrewApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6078BC8DA5BDF5D19E901F94 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		618BA27ABE48AF7C4E93C965 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		62B21716B2FC46CFF3E71CAE /* ProductShouldViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductShouldViews.swift; sourceTree = "<group>"; };
 		633657FBD1F65CDC37010F3F /* PackageUpgradeFailurePanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageUpgradeFailurePanel.swift; sourceTree = "<group>"; };
 		6565204FBBB36530349FCFE9 /* InstallProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstallProgressView.swift; sourceTree = "<group>"; };
+		67D0B0F4071E30E4364957C1 /* BrewGitHubReadmeFetcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewGitHubReadmeFetcher.swift; sourceTree = "<group>"; };
 		68BCC933FCEBF99AF58FAEFA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		6B24B929402682CE21AA576B /* BrewTerminalLauncher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewTerminalLauncher.swift; sourceTree = "<group>"; };
 		7DE65FDB5D0BDAF3B506B67B /* CozyBrewAbout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CozyBrewAbout.swift; sourceTree = "<group>"; };
@@ -128,18 +148,23 @@
 		9FA1E6C10226117F80638010 /* PackageDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageDetailView.swift; sourceTree = "<group>"; };
 		A3C10193842C777E757CB27C /* BrewUpgradeTerminalFallbackView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewUpgradeTerminalFallbackView.swift; sourceTree = "<group>"; };
 		A463384C9B5203400FDCB3A4 /* JSONLenient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONLenient.swift; sourceTree = "<group>"; };
+		A46E1AC21CE66F5D02A22692 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		A63E30CEA571480E4DC24304 /* BrewUserMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewUserMessage.swift; sourceTree = "<group>"; };
 		AA53492455B856EA6A7ED1EC /* BrewInstaller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewInstaller.swift; sourceTree = "<group>"; };
+		AD1019779C3B64B54F6D44E2 /* BrewManager+TapAndMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BrewManager+TapAndMigration.swift"; sourceTree = "<group>"; };
 		AD12F123838B11ACC532A5A5 /* BrewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewManager.swift; sourceTree = "<group>"; };
 		B05D9C722BF7C7F29C7DF804 /* BrewFormulaeAPIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewFormulaeAPIClient.swift; sourceTree = "<group>"; };
 		B3B5D1CBC739E986D6EB8371 /* BrewCaskTerminalFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewCaskTerminalFallback.swift; sourceTree = "<group>"; };
 		B83D08D5322F5D257BB41CCD /* BrewCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewCache.swift; sourceTree = "<group>"; };
 		BC98B221E9086D3F5D4B1494 /* BrewDoctorParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewDoctorParser.swift; sourceTree = "<group>"; };
+		C6434984A6065550AC22DAC7 /* CozyBrewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CozyBrewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CB39080E3D33D8C46C171DFA /* BrewResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrewResult.swift; sourceTree = "<group>"; };
 		CB81C946043A7ED95F16B09F /* CozyBrewService.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CozyBrewService.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D4F2A4AF3900CD7B493BCAB9 /* CakebrewMigration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CakebrewMigration.swift; sourceTree = "<group>"; };
 		DA499AA56DC6F2E9AC82137B /* CozyBrewApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CozyBrewApp.entitlements; sourceTree = "<group>"; };
 		DAAD9AA1058DFE4B74CC5BCC /* MainWindowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindowView.swift; sourceTree = "<group>"; };
 		DFD68341AD384D61C4E766AF /* CozyBrewApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CozyBrewApp.swift; sourceTree = "<group>"; };
+		E4C212C6372D542366BA3C77 /* CozyBrewL10n.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CozyBrewL10n.swift; sourceTree = "<group>"; };
 		F12AC5B83F5715CC64C614AC /* CozyBrewUIComponents.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CozyBrewUIComponents.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A8170596A877500F371DC7 /* PackageText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackageText.swift; sourceTree = "<group>"; };
 		FB5BDDF4617773C824AE2CE7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -187,8 +212,12 @@
 				5CBDC8F86DE28B6F36AAC568 /* BrewCatalogAPIParsing.swift */,
 				BC98B221E9086D3F5D4B1494 /* BrewDoctorParser.swift */,
 				B05D9C722BF7C7F29C7DF804 /* BrewFormulaeAPIClient.swift */,
+				67D0B0F4071E30E4364957C1 /* BrewGitHubReadmeFetcher.swift */,
 				AD12F123838B11ACC532A5A5 /* BrewManager.swift */,
+				AD1019779C3B64B54F6D44E2 /* BrewManager+TapAndMigration.swift */,
+				3675046321FBC44E747ACC6D /* BrewOperationHistory.swift */,
 				A63E30CEA571480E4DC24304 /* BrewUserMessage.swift */,
+				D4F2A4AF3900CD7B493BCAB9 /* CakebrewMigration.swift */,
 				A463384C9B5203400FDCB3A4 /* JSONLenient.swift */,
 				6078BC8DA5BDF5D19E901F94 /* Models.swift */,
 				F6A8170596A877500F371DC7 /* PackageText.swift */,
@@ -218,12 +247,21 @@
 				89A9DFBCCA0B306B3E307357 /* CozyBrewCore */,
 				29FA24F6D15C48991497D94C /* CozyBrewService */,
 				850393485C3C469710D0535B /* CozyBrewUIComponents */,
+				A6B3AC64360EDC2606B9515B /* CozyBrewUITests */,
 				C77D3A262F28E3CAD16DD093 /* Products */,
 			);
 			indentWidth = 4;
 			sourceTree = "<group>";
 			tabWidth = 4;
 			usesTabs = 0;
+		};
+		719754CB76A8210B69BDC8B1 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8CEBEC8831590BACBBB5FD01 /* Localizable.strings */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
 		};
 		850393485C3C469710D0535B /* CozyBrewUIComponents */ = {
 			isa = PBXGroup;
@@ -232,13 +270,16 @@
 				FDFA9A26A67866925D9E5868 /* BrewOperationOverlay.swift */,
 				6B24B929402682CE21AA576B /* BrewTerminalLauncher.swift */,
 				A3C10193842C777E757CB27C /* BrewUpgradeTerminalFallbackView.swift */,
+				E4C212C6372D542366BA3C77 /* CozyBrewL10n.swift */,
 				8F0C57479302DBF096A050D3 /* InstallFlowView.swift */,
 				6565204FBBB36530349FCFE9 /* InstallProgressView.swift */,
 				DAAD9AA1058DFE4B74CC5BCC /* MainWindowView.swift */,
 				9FA1E6C10226117F80638010 /* PackageDetailView.swift */,
 				5789A3C976FAEF48AC0F444B /* PackageRowView.swift */,
 				633657FBD1F65CDC37010F3F /* PackageUpgradeFailurePanel.swift */,
+				62B21716B2FC46CFF3E71CAE /* ProductShouldViews.swift */,
 				125C233FEE42AD01B1E21C46 /* S2JSourceListAdapter.swift */,
+				719754CB76A8210B69BDC8B1 /* Resources */,
 			);
 			name = CozyBrewUIComponents;
 			path = Sources/CozyBrewUIComponents;
@@ -256,6 +297,15 @@
 			path = Sources/CozyBrewCore;
 			sourceTree = "<group>";
 		};
+		A6B3AC64360EDC2606B9515B /* CozyBrewUITests */ = {
+			isa = PBXGroup;
+			children = (
+				454B7322BC404417A40E3381 /* CozyBrewUITests.swift */,
+			);
+			name = CozyBrewUITests;
+			path = Tests/CozyBrewUITests;
+			sourceTree = "<group>";
+		};
 		C77D3A262F28E3CAD16DD093 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -263,6 +313,7 @@
 				87EE5EA02351E1389DFD58E2 /* CozyBrewCore.framework */,
 				CB81C946043A7ED95F16B09F /* CozyBrewService.framework */,
 				F12AC5B83F5715CC64C614AC /* CozyBrewUIComponents.framework */,
+				C6434984A6065550AC22DAC7 /* CozyBrewUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -338,11 +389,30 @@
 			productReference = 607498AA178AF40B76AF1AC4 /* CozyBrewApp.app */;
 			productType = "com.apple.product-type.application";
 		};
+		F86DA3C4DFFE5DE8D6CC4EC9 /* CozyBrewUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7B57D4CD602C3F2CC53CF77D /* Build configuration list for PBXNativeTarget "CozyBrewUITests" */;
+			buildPhases = (
+				B2E8DE9602CA973651FA80F8 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				B0A8DD79AC5431D58FAB210C /* PBXTargetDependency */,
+			);
+			name = CozyBrewUITests;
+			packageProductDependencies = (
+			);
+			productName = CozyBrewUITests;
+			productReference = C6434984A6065550AC22DAC7 /* CozyBrewUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		FB80A0AA88F639FBEA33CFEB /* CozyBrewUIComponents */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 57045509FA44E1D7625D4D10 /* Build configuration list for PBXNativeTarget "CozyBrewUIComponents" */;
 			buildPhases = (
 				3AD685E371CFB59321C893C7 /* Sources */,
+				42EBD1411F8CE841E42BF6AD /* Resources */,
 				918B0C01656128A22CEEC727 /* Frameworks */,
 			);
 			buildRules = (
@@ -378,6 +448,9 @@
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
+					F86DA3C4DFFE5DE8D6CC4EC9 = {
+						TestTargetID = DAC84B78D469C0D87285DD12;
+					};
 					FB80A0AA88F639FBEA33CFEB = {
 						ProvisioningStyle = Automatic;
 					};
@@ -389,6 +462,7 @@
 			knownRegions = (
 				Base,
 				en,
+				ja,
 			);
 			mainGroup = 3AE0B9901776464AAA10B6B2;
 			minimizedProjectReferenceProxies = 1;
@@ -405,11 +479,20 @@
 				8A48EA971077CD908E26C861 /* CozyBrewCore */,
 				5561AFD1A757087C962F54D9 /* CozyBrewService */,
 				FB80A0AA88F639FBEA33CFEB /* CozyBrewUIComponents */,
+				F86DA3C4DFFE5DE8D6CC4EC9 /* CozyBrewUITests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		42EBD1411F8CE841E42BF6AD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00067B8EFD2E7EC56A6F5727 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		462D6461736BB988F237FC77 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -441,12 +524,14 @@
 				61D2EB78B542B60788F21F74 /* BrewOperationOverlay.swift in Sources */,
 				C2DDD5F6D90B8FAC3EC67789 /* BrewTerminalLauncher.swift in Sources */,
 				B75A989CAED842663251B28D /* BrewUpgradeTerminalFallbackView.swift in Sources */,
+				0768B3FA48BD8045EF81B3F7 /* CozyBrewL10n.swift in Sources */,
 				3C87F35182C786DCD6F012E4 /* InstallFlowView.swift in Sources */,
 				AC45A15034C846CC3C222F97 /* InstallProgressView.swift in Sources */,
 				C4F5BB533F9CB8FF79CAF061 /* MainWindowView.swift in Sources */,
 				275F69F078148404FEAEC69E /* PackageDetailView.swift in Sources */,
 				EBB101D2557D5BDFFCDF347F /* PackageRowView.swift in Sources */,
 				6988D916C2814A7EC26AE6ED /* PackageUpgradeFailurePanel.swift in Sources */,
+				EDAA0C4836BBC0AC2952AE3E /* ProductShouldViews.swift in Sources */,
 				500CA2D56226BBB3012C7FE6 /* S2JSourceListAdapter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -472,11 +557,23 @@
 				80576C5C0DA2776872EDED9E /* BrewCatalogAPIParsing.swift in Sources */,
 				2624AD91D76F999A69A06AC6 /* BrewDoctorParser.swift in Sources */,
 				D6EB5B96C33BD53659A9C551 /* BrewFormulaeAPIClient.swift in Sources */,
+				6382D9C3B6F01036C761323D /* BrewGitHubReadmeFetcher.swift in Sources */,
+				820A1BFEF0D30BEE150574E6 /* BrewManager+TapAndMigration.swift in Sources */,
 				8C2823642EFD1F87148CB3A0 /* BrewManager.swift in Sources */,
+				719B35F972747D66B48C956B /* BrewOperationHistory.swift in Sources */,
 				22C062E1E84A9F8FDB766185 /* BrewUserMessage.swift in Sources */,
+				127B61288049C43E608E8335 /* CakebrewMigration.swift in Sources */,
 				31A610F4D1BCB1763ADE4481 /* JSONLenient.swift in Sources */,
 				4BE162CED37EFEB285E6ADF2 /* Models.swift in Sources */,
 				83BE01DDCE59C2A45483AA7A /* PackageText.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B2E8DE9602CA973651FA80F8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E28FD1BC8F7691239AF9888E /* CozyBrewUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -492,6 +589,11 @@
 			isa = PBXTargetDependency;
 			target = 5561AFD1A757087C962F54D9 /* CozyBrewService */;
 			targetProxy = ADB734EED7BF2FC8D78C421A /* PBXContainerItemProxy */;
+		};
+		B0A8DD79AC5431D58FAB210C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DAC84B78D469C0D87285DD12 /* CozyBrewApp */;
+			targetProxy = 08C7848AE93D71C2BBE703F5 /* PBXContainerItemProxy */;
 		};
 		BE0ECADE2F08C043D5700062 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -509,6 +611,18 @@
 			targetProxy = 13DF1BBA3B3FBDCDF35833EE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		8CEBEC8831590BACBBB5FD01 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				618BA27ABE48AF7C4E93C965 /* en */,
+				A46E1AC21CE66F5D02A22692 /* ja */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		118C3B26CB1B112215A79C01 /* Debug */ = {
@@ -528,7 +642,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.0.17;
+				MARKETING_VERSION = 1.0.19;
 				PRODUCT_BUNDLE_IDENTIFIER = com.s2j.CozyBrew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -795,7 +909,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 15.0;
-				MARKETING_VERSION = 1.0.17;
+				MARKETING_VERSION = 1.0.19;
 				PRODUCT_BUNDLE_IDENTIFIER = com.s2j.CozyBrew;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
@@ -831,6 +945,46 @@
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
+		};
+		EB5E9FA03F6D9EAC8381EF4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.s2j.CozyBrewUITests;
+				PRODUCT_NAME = CozyBrewUITests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				TEST_TARGET_NAME = CozyBrewApp;
+			};
+			name = Release;
+		};
+		EB65C7909003A227A0B4B9A9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.s2j.CozyBrewUITests;
+				PRODUCT_NAME = CozyBrewUITests;
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.0;
+				TEST_TARGET_NAME = CozyBrewApp;
+			};
+			name = Debug;
 		};
 		EED29AC443ECC98CEAE10108 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -886,6 +1040,15 @@
 			buildConfigurations = (
 				9BBB0E610367F288E81239B4 /* Debug */,
 				237BA21F13C5901DFC4B7AE0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		7B57D4CD602C3F2CC53CF77D /* Build configuration list for PBXNativeTarget "CozyBrewUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EB65C7909003A227A0B4B9A9 /* Debug */,
+				EB5E9FA03F6D9EAC8381EF4B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

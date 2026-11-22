@@ -20,6 +20,7 @@
 | [security_spec.md](security_spec.md) | 権限・サンドボックス・スクリプト実行・アクセシビリティの定義 |
 | [design_spec.md](design_spec.md) | デザイン・ブランディングの定義 |
 | [dependency_updates.md](dependency_updates.md) | npm / SPM 依存の確認・更新手順 |
+| [testing_spec.md](testing_spec.md) | テスト層・ CI 範囲 (brew / UI / スナップショット) |
 | [status.md](status.md) | **実装状況の入口** (スナップショット・ focus 一覧) |
 
 ---

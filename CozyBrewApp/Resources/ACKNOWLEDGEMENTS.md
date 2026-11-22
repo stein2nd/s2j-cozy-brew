@@ -1,6 +1,6 @@
 # OSS Notice for CozyBrewApp
 
-_Generated: 2026-11-21_
+_Generated: 2026-11-22_
 
 This product includes open source software components listed below. The full license texts are reproduced in the Licenses section.
 
@@ -8,28 +8,33 @@ This product includes open source software components listed below. The full lic
 
 | Name | Version | License | Copyright |
 |---|---|---|---|
-| CozyBrewApp | 1.0.14 |  |  |
-| s2j-about-window | 3.0.3 | GPL-3.0-or-later |  |
-| s2j-source-list | 2.0.15 | GPL-3.0-or-later |  |
+| CozyBrewApp | 1.0.17 |  |  |
+| s2j-about-window | 3.0.9 | GPL-3.0-or-later |  |
+| s2j-source-list | 2.0.23 | GPL-3.0-or-later |  |
 | swift-concurrency-extras | 1.3.1 |  |  |
 | swift-concurrency-extras | 1.3.2 |  |  |
 | swift-concurrency-extras | 1.4.3 |  |  |
 | swift-custom-dump | 1.3.3 |  |  |
+| swift-custom-dump | 1.7.3 |  |  |
 | swift-docc-plugin | 1.0.0 |  |  |
 | swift-docc-plugin | 1.3.0 |  |  |
 | swift-docc-symbolkit | 1.0.0 |  |  |
+| swift-issue-reporting | 2.1.2 |  |  |
 | swift-snapshot-testing | 1.18.7 |  |  |
+| swift-snapshot-testing | 1.19.7 |  |  |
 | swift-syntax | 600.0.1 |  |  |
 | swift-syntax | 602.0.0 |  |  |
+| swift-syntax | 604.0.0 |  |  |
 | swiftui-math | 0.1.0 |  |  |
 | textual | 0.5.0 |  |  |
+| viewinspector | 0.10.5 |  |  |
 | xctest-dynamic-overlay | 1.5.2 |  |  |
 | xctest-dynamic-overlay | 1.8.0 |  |  |
 | xctest-dynamic-overlay | 1.8.1 |  |  |
 
 ## Licenses
 ### GNU General Public License v3.0 or later (`GPL-3.0-or-later`)
-Used by: s2j-about-window 3.0.3, s2j-source-list 2.0.15
+Used by: s2j-about-window 3.0.9, s2j-source-list 2.0.23
 
 ```text
 GNU GENERAL PUBLIC LICENSE

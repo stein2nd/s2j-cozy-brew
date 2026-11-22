@@ -1,5 +1,5 @@
 {
-  "originHash" : "62b61d642141e86ef0c6138bff49b87375a355ff4eb374e04f7addae2f524c41",
+  "originHash" : "c9eac8f102074c92cbae78d9c4ada63501553461cdf33c99d5cb9ed00d63d272",
   "pins" : [
     {
       "identity" : "s2j-about-window",
@@ -7,7 +7,7 @@
       "location" : "https://github.com/stein2nd/s2j-about-window.git",
       "state" : {
         "branch" : "main",
-        "revision" : "f885a3bf8dc41276278006583e1d5a4181b7b3fd"
+        "revision" : "290fbffdf83c3b27988243ab054b924d351e64c8"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/stein2nd/s2j-source-list.git",
       "state" : {
         "branch" : "main",
-        "revision" : "0002d6481c2108dd23a8feb819dea3da7b4fbd9f"
+        "revision" : "1f7375e44935209767270653fe753fa0bb4423ce"
       }
     },
     {

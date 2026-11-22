@@ -14,6 +14,7 @@ public struct PackageDetailView: View {
     @State private var infoErrorMessage: String?
     @State private var actionErrorMessage: String?
     @State private var upgradeFailureStderr: String?
+    @State private var showsInstallFlow = false
 
     public init(package: Binding<Package>, manager: BrewManager) {
         _package = package
@@ -31,7 +32,7 @@ public struct PackageDetailView: View {
                     HStack(spacing: 8) {
                         ProgressView()
                             .controlSize(.small)
-                        Text("Loading package info…")
+                        Text(CozyBrewL10n.loadingPackageInfo)
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -56,6 +57,7 @@ public struct PackageDetailView: View {
                 formulaSourceSection
                 licenseSection
                 dependenciesSection
+                readmeSection
                 statusSection
                 Divider()
                 actionButtons
@@ -92,6 +94,22 @@ public struct PackageDetailView: View {
         .task(id: package.id) {
             await loadPackageInfo()
         }
+        .sheet(isPresented: $showsInstallFlow) {
+            InstallFlowView(
+                package: activePackage,
+                onConfirm: {
+                    try await manager.install(activePackage)
+                    await manager.refreshInstalledPackages()
+                    if let fresh = manager.freshListPackage(matching: package) {
+                        package = fresh
+                    }
+                    await loadPackageInfo()
+                },
+                onCancel: {
+                    showsInstallFlow = false
+                }
+            )
+        }
     }
 
     private var headerSection: some View {
@@ -116,7 +134,7 @@ public struct PackageDetailView: View {
 
             HStack(spacing: 8) {
                 if activePackage.isOutdated {
-                    Label("Update Available", systemImage: "arrow.down.circle.fill")
+                    Label(CozyBrewL10n.badgeUpdateAvailable, systemImage: "arrow.down.circle.fill")
                         .font(.caption)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
@@ -126,7 +144,7 @@ public struct PackageDetailView: View {
                 }
 
                 if activePackage.isDeprecated {
-                    Label("Deprecated", systemImage: "exclamationmark.triangle.fill")
+                    Label(CozyBrewL10n.badgeDeprecated, systemImage: "exclamationmark.triangle.fill")
                         .font(.caption)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 4)
@@ -150,7 +168,7 @@ public struct PackageDetailView: View {
     private var descriptionSection: some View {
         if let desc = activePackage.desc, !desc.isEmpty {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Description")
+                Text(CozyBrewL10n.sectionDescription)
                     .font(.headline)
                 Text(desc)
                     .font(.body)
@@ -162,7 +180,7 @@ public struct PackageDetailView: View {
     private var versionSections: some View {
         if let installedVersion = activePackage.installedVersion {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Installed Version")
+                Text(CozyBrewL10n.sectionInstalledVersion)
                     .font(.headline)
                 Text(installedVersion)
                     .font(.body)
@@ -185,7 +203,7 @@ public struct PackageDetailView: View {
     private var homepageSection: some View {
         if let homepage = activePackage.homepage, let url = homepageURL(homepage) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Homepage")
+                Text(CozyBrewL10n.sectionHomepage)
                     .font(.headline)
                 Link(homepage, destination: url)
             }
@@ -196,7 +214,7 @@ public struct PackageDetailView: View {
     private var installationKindSection: some View {
         if let label = activePackage.installationKindLabel {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Installation")
+                Text(CozyBrewL10n.sectionInstallation)
                     .font(.headline)
                 Text(label)
                     .font(.body)
@@ -209,7 +227,7 @@ public struct PackageDetailView: View {
     private var formulaSourceSection: some View {
         if let source = activePackage.formulaSourceURL, let url = homepageURL(source) {
             VStack(alignment: .leading, spacing: 4) {
-                Text("From")
+                Text(CozyBrewL10n.sectionFrom)
                     .font(.headline)
                 Link(source, destination: url)
             }
@@ -220,7 +238,7 @@ public struct PackageDetailView: View {
     private var licenseSection: some View {
         if let license = activePackage.license, !license.isEmpty {
             VStack(alignment: .leading, spacing: 4) {
-                Text("License")
+                Text(CozyBrewL10n.sectionLicense)
                     .font(.headline)
                 Text(license)
                     .font(.body)
@@ -233,7 +251,7 @@ public struct PackageDetailView: View {
     private var dependenciesSection: some View {
         if let dependencies = activePackage.dependencies, !dependencies.isEmpty {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Dependencies")
+                Text(CozyBrewL10n.sectionDependencies)
                     .font(.headline)
                 Text(dependencies.joined(separator: ", "))
                     .font(.body)
@@ -243,7 +261,7 @@ public struct PackageDetailView: View {
 
         if let buildDeps = activePackage.buildDependencies, !buildDeps.isEmpty {
             VStack(alignment: .leading, spacing: 4) {
-                Text("Build Dependencies")
+                Text(CozyBrewL10n.sectionBuildDependencies)
                     .font(.headline)
                 Text(buildDeps.joined(separator: ", "))
                     .font(.body)
@@ -252,16 +270,36 @@ public struct PackageDetailView: View {
         }
     }
 
+    @ViewBuilder
+    private var readmeSection: some View {
+        if let markdown = activePackage.infoMarkdown, !markdown.isEmpty {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(CozyBrewL10n.sectionReadme)
+                    .font(.headline)
+                Group {
+                    if let attributed = try? AttributedString(markdown: markdown) {
+                        Text(attributed)
+                    } else {
+                        Text(markdown)
+                            .font(.body)
+                            .textSelection(.enabled)
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+
     private var statusSection: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("Status")
+            Text(CozyBrewL10n.sectionStatus)
                 .font(.headline)
             if activePackage.isInstalled {
-                Text(activePackage.isOutdated ? "Installed (update available)" : "Installed")
+                Text(activePackage.isOutdated ? CozyBrewL10n.statusInstalledUpdate : CozyBrewL10n.statusInstalled)
                     .font(.body)
                     .foregroundColor(.green)
             } else {
-                Text("Not Installed")
+                Text(CozyBrewL10n.statusNotInstalled)
                     .font(.body)
                     .foregroundColor(.secondary)
             }
@@ -275,7 +313,8 @@ public struct PackageDetailView: View {
                     Button {
                         Task { await performUpgrade() }
                     } label: {
-                        Label("Upgrade", systemImage: "arrow.down.circle")
+                        Label(CozyBrewL10n.actionUpgrade, systemImage: "arrow.down.circle")
+                            .accessibilityLabel(CozyBrewL10n.actionUpgrade)
                     }
                     .buttonStyle(.borderedProminent)
                     .disabled(isPerformingAction || isLoadingInfo)
@@ -284,15 +323,17 @@ public struct PackageDetailView: View {
                 Button {
                     Task { await performUninstall() }
                 } label: {
-                    Label("Uninstall", systemImage: "trash")
+                    Label(CozyBrewL10n.actionUninstall, systemImage: "trash")
+                        .accessibilityLabel(CozyBrewL10n.actionUninstall)
                 }
                 .buttonStyle(.bordered)
                 .disabled(isPerformingAction || isLoadingInfo)
             } else {
                 Button {
-                    Task { await performInstall() }
+                    showsInstallFlow = true
                 } label: {
-                    Label("Install", systemImage: "arrow.down.circle.fill")
+                    Label(CozyBrewL10n.actionInstall, systemImage: "arrow.down.circle.fill")
+                        .accessibilityLabel(CozyBrewL10n.actionInstall)
                 }
                 .buttonStyle(.borderedProminent)
                 .disabled(isPerformingAction || isLoadingInfo)
@@ -310,17 +351,6 @@ public struct PackageDetailView: View {
             await manager.refreshInstalledPackages()
             await manager.refreshOutdatedPackages()
             await manager.refreshManagedServices()
-            if let fresh = manager.freshListPackage(matching: package) {
-                package = fresh
-            }
-            await loadPackageInfo()
-        }
-    }
-
-    private func performInstall() async {
-        await runBrewAction(title: "Installing…") {
-            try await manager.install(activePackage)
-            await manager.refreshInstalledPackages()
             if let fresh = manager.freshListPackage(matching: package) {
                 package = fresh
             }

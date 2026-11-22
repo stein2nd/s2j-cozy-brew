@@ -14,7 +14,7 @@ struct PackageUpgradeFailurePanel: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Label("Upgrade failed", systemImage: "exclamationmark.triangle.fill")
+            Label(CozyBrewL10n.upgradeFailed, systemImage: "exclamationmark.triangle.fill")
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundColor(.red)
@@ -33,7 +33,7 @@ struct PackageUpgradeFailurePanel: View {
                 }
                 .frame(maxHeight: 140)
             } label: {
-                Text("Show details")
+                Text(CozyBrewL10n.showDetails)
                     .font(.caption)
             }
         }

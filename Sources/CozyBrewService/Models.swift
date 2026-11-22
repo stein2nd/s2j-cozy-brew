@@ -88,6 +88,7 @@ public struct Formula: BrewPackage {
     public let license: String?
     public let tap: String?
     public let rubySourcePath: String?
+    public let caveats: String?
 
     public init(
         id: String,
@@ -108,7 +109,8 @@ public struct Formula: BrewPackage {
         disableReason: String? = nil,
         license: String? = nil,
         tap: String? = nil,
-        rubySourcePath: String? = nil
+        rubySourcePath: String? = nil,
+        caveats: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -129,6 +131,7 @@ public struct Formula: BrewPackage {
         self.license = license
         self.tap = tap
         self.rubySourcePath = rubySourcePath
+        self.caveats = caveats
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -151,6 +154,7 @@ public struct Formula: BrewPackage {
         case license
         case tap
         case rubySourcePath = "ruby_source_path"
+        case caveats
     }
 
     private enum OutdatedJSONKeys: String, CodingKey {
@@ -223,6 +227,7 @@ public struct Formula: BrewPackage {
         disableReason = try container.decodeIfPresent(String.self, forKey: .disableReason)
         tap = try container.decodeIfPresent(String.self, forKey: .tap)
         rubySourcePath = try container.decodeIfPresent(String.self, forKey: .rubySourcePath)
+        caveats = try container.decodeIfPresent(String.self, forKey: .caveats)
         if let licenseString = try? container.decodeIfPresent(String.self, forKey: .license) {
             license = licenseString
         } else if let licenseList = try? container.decodeIfPresent([String].self, forKey: .license) {
@@ -250,6 +255,7 @@ public struct Cask: BrewPackage {
     public let disableReason: String?
     public let appcast: String?
     public let url: String?
+    public let caveats: String?
 
     public init(
         id: String,
@@ -266,7 +272,8 @@ public struct Cask: BrewPackage {
         disabled: Bool? = nil,
         disableReason: String? = nil,
         appcast: String? = nil,
-        url: String? = nil
+        url: String? = nil,
+        caveats: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -283,6 +290,7 @@ public struct Cask: BrewPackage {
         self.disableReason = disableReason
         self.appcast = appcast
         self.url = url
+        self.caveats = caveats
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -301,6 +309,7 @@ public struct Cask: BrewPackage {
         case disableReason = "disable_reason"
         case appcast
         case url
+        case caveats
     }
 
     private enum OutdatedJSONKeys: String, CodingKey {
@@ -365,6 +374,7 @@ public struct Cask: BrewPackage {
         disableReason = JSONLenient.decodeString(from: container, forKey: .disableReason)
         appcast = JSONLenient.decodeString(from: container, forKey: .appcast)
         url = JSONLenient.decodeString(from: container, forKey: .url)
+        caveats = try container.decodeIfPresent(String.self, forKey: .caveats)
     }
 }
 
@@ -658,6 +668,8 @@ public struct Package: Identifiable, Hashable, Sendable {
     /// `brew info` の installed_on_request / installed_as_dependency 由来
     public let installedOnRequest: Bool?
     public let installedAsDependency: Bool?
+    /// `brew info` の caveats、または README フォールバック (Markdown テキスト)
+    public let infoMarkdown: String?
 
     public init(
         id: String,
@@ -676,7 +688,8 @@ public struct Package: Identifiable, Hashable, Sendable {
         license: String? = nil,
         formulaSourceURL: String? = nil,
         installedOnRequest: Bool? = nil,
-        installedAsDependency: Bool? = nil
+        installedAsDependency: Bool? = nil,
+        infoMarkdown: String? = nil
     ) {
         self.id = PackageText.normalizeRequired(id)
         self.name = PackageText.normalizeRequired(name)
@@ -695,6 +708,31 @@ public struct Package: Identifiable, Hashable, Sendable {
         self.formulaSourceURL = PackageText.normalizeOptional(formulaSourceURL)
         self.installedOnRequest = installedOnRequest
         self.installedAsDependency = installedAsDependency
+        self.infoMarkdown = PackageText.normalizeOptional(infoMarkdown)
+    }
+
+    public func withInfoMarkdown(_ markdown: String?) -> Package {
+        guard let markdown, !markdown.isEmpty else { return self }
+        return Package(
+            id: id,
+            name: name,
+            fullName: fullName,
+            type: type,
+            desc: desc,
+            homepage: homepage,
+            version: version,
+            installedVersion: installedVersion,
+            isInstalled: isInstalled,
+            isOutdated: isOutdated,
+            isDeprecated: isDeprecated,
+            dependencies: dependencies,
+            buildDependencies: buildDependencies,
+            license: license,
+            formulaSourceURL: formulaSourceURL,
+            installedOnRequest: installedOnRequest,
+            installedAsDependency: installedAsDependency,
+            infoMarkdown: markdown
+        )
     }
 
     /// `brew info` 風のインストール区分ラベル
@@ -729,7 +767,8 @@ public struct Package: Identifiable, Hashable, Sendable {
             license: license ?? local.license,
             formulaSourceURL: formulaSourceURL ?? local.formulaSourceURL,
             installedOnRequest: local.installedOnRequest ?? installedOnRequest,
-            installedAsDependency: local.installedAsDependency ?? installedAsDependency
+            installedAsDependency: local.installedAsDependency ?? installedAsDependency,
+            infoMarkdown: infoMarkdown ?? local.infoMarkdown
         )
     }
 
@@ -785,7 +824,8 @@ public struct Package: Identifiable, Hashable, Sendable {
             license: detail.license ?? license,
             formulaSourceURL: detail.formulaSourceURL ?? formulaSourceURL,
             installedOnRequest: installedOnRequest ?? detail.installedOnRequest,
-            installedAsDependency: installedAsDependency ?? detail.installedAsDependency
+            installedAsDependency: installedAsDependency ?? detail.installedAsDependency,
+            infoMarkdown: detail.infoMarkdown ?? infoMarkdown
         )
     }
 
@@ -836,7 +876,8 @@ public struct Package: Identifiable, Hashable, Sendable {
             license: license,
             formulaSourceURL: formulaSourceURL,
             installedOnRequest: installedOnRequest ?? list.installedOnRequest,
-            installedAsDependency: installedAsDependency ?? list.installedAsDependency
+            installedAsDependency: installedAsDependency ?? list.installedAsDependency,
+            infoMarkdown: infoMarkdown
         )
     }
 
@@ -862,7 +903,8 @@ public struct Package: Identifiable, Hashable, Sendable {
                 rubySourcePath: formula.rubySourcePath
             ),
             installedOnRequest: primaryInstall?.installedOnRequest,
-            installedAsDependency: primaryInstall?.installedAsDependency
+            installedAsDependency: primaryInstall?.installedAsDependency,
+            infoMarkdown: formula.caveats
         )
     }
 
@@ -880,7 +922,8 @@ public struct Package: Identifiable, Hashable, Sendable {
             installedVersion: installedVersions.first,
             isInstalled: !installedVersions.isEmpty,
             isOutdated: cask.outdated ?? false,
-            isDeprecated: cask.deprecated ?? false
+            isDeprecated: cask.deprecated ?? false,
+            infoMarkdown: cask.caveats
         )
     }
 

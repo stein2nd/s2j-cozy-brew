@@ -10,10 +10,16 @@ enum SidebarItemSourceListRegistry {
         .warnings: UUID(uuidString: "C0A70900-0001-4000-8000-53696E650001")!,
         .installed: UUID(uuidString: "C0A70900-0002-4000-8000-53696E650002")!,
         .outdated: UUID(uuidString: "C0A70900-0003-4000-8000-53696E650003")!,
+        .history: UUID(uuidString: "C0A70900-0007-4000-8000-53696E650007")!,
         .taps: UUID(uuidString: "C0A70900-0004-4000-8000-53696E650004")!,
         .formulae: UUID(uuidString: "C0A70900-0005-4000-8000-53696E650005")!,
         .casks: UUID(uuidString: "C0A70900-0006-4000-8000-53696E650006")!,
     ]
+
+    private static let installedPackagesGroupID =
+        UUID(uuidString: "C0A70900-0010-4000-8000-53696E650010")!
+    private static let catalogGroupID =
+        UUID(uuidString: "C0A70900-0011-4000-8000-53696E650011")!
 
     private static let itemByID: [UUID: SidebarItem] = Dictionary(
         uniqueKeysWithValues: idsByItem.map { ($0.value, $0.key) }
@@ -31,15 +37,34 @@ enum SidebarItemSourceListRegistry {
     }
 
     static func makeRootItems() -> [SourceItem] {
-        SidebarItem.allCases.map { item in
+        func leaf(_ item: SidebarItem) -> SourceItem {
             SourceItem(
                 id: id(for: item),
-                title: item.rawValue,
+                title: item.localizedTitle,
                 icon: item.icon,
                 badge: nil,
                 isSelectable: true
             )
         }
+
+        return [
+            leaf(.warnings),
+            SourceItem.group(
+                id: installedPackagesGroupID,
+                title: CozyBrewL10n.sidebarGroupInstalledPackages,
+                icon: "shippingbox.fill",
+                children: [leaf(.installed), leaf(.outdated), leaf(.history)],
+                isExpanded: true
+            ),
+            leaf(.taps),
+            SourceItem.group(
+                id: catalogGroupID,
+                title: CozyBrewL10n.sidebarGroupCatalog,
+                icon: "square.grid.2x2.fill",
+                children: [leaf(.formulae), leaf(.casks)],
+                isExpanded: true
+            ),
+        ]
     }
 }
 
@@ -156,7 +181,7 @@ struct CozyBrewSourceListSidebar: View {
                 )
             }
         )
-        .navigationTitle("CozyBrew")
+        .navigationTitle(CozyBrewL10n.navigationTitle)
         .task {
             adapter.applyInitialSelectionIfNeeded()
         }

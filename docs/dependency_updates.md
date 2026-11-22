@@ -16,7 +16,9 @@ Xcode プロジェクト利用時は、ルートの `Package.resolved` に加え
 | スクリプト | 用途 |
 | --- | --- |
 | `npm run xcode:generate` | `project.yml` から `CozyBrew.xcodeproj` を再生成 (`Sources/` に `.swift` を追加したあと必須) |
-| `npm run lint:swift` | `xcode:generate` → SwiftLint → SwiftFormat → Periphery |
+| `npm run lint:swift` | `xcode:generate` → SwiftLint → SwiftFormat → Periphery (`lint:periphery`) |
+| `npm run lint:periphery` | `periphery scan --strict` (`.periphery.yml`)。PATH 上の `periphery` バイナリが必要 |
+| `npm run test:local:macOS` | `swift test` 等 ([testing_spec.md](testing_spec.md) の層どおり) |
 | `npm run swift:install` | SPM の入れ直し (`Package.resolved` 更新 + Xcode 側にコピー)。**lint のたびには実行しない** |
 | `npm run version:sync` | `package.json` の `version` / `buildNumber` → `project.yml`・`Info.plist` → `xcodegen` (アプリケーションの Version / Build の正本) |
 | `npm run version:check` | 上記が同期済みか確認 (CI 向け) |
@@ -46,6 +48,17 @@ Xcode プロジェクト利用時は、ルートの `Package.resolved` に加え
 7. 公開前: CHANGELOG 追記 → commit → **`npm run release:before-tag-push`** → `git tag v*`
 
 `lint:swift` のたびに `version:sync` は不要です。**配布・タグの直前**だけ上記マイルストーンを使います。
+
+`CozyBrewUIComponents` の `Localizable.strings` を更新したあとは **`npm run xcode:generate`** で Xcode プロジェクトにリソースを反映してください。
+
+### Periphery (ローカル vs CI) `{@dependency_updates:s-periphery}`
+
+| 環境 | 推奨 |
+| --- | --- |
+| **ローカル Mac** | `brew install periphery` (または PATH 上の3.x)。Xcode が入っていれば通常そのまま `npm run lint:swift` 可能 |
+| **GitHub Actions** | `.github/workflows/swift-quality.yml` が正本。Release **3.8.0** zip + `DYLD_LIBRARY_PATH` (Xcode toolchain の `libIndexStore.dylib`)。Homebrew formula は deprecated 注釈が Actions に出るほか、過去に Release 直置きのみだと runner で IndexStore 未解決で abort したため CI では使わない |
+
+workflow 内の `PERIPHERY_VERSION` を上げるときは、ローカルでも同じ版を試し、`lint:periphery` が通ることを確認してからコミットします。
 
 ### SPM の pin が変わったか見るには `{@dependency_updates:s-spm-pin}`
 

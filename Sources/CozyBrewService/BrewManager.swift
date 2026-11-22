@@ -63,10 +63,14 @@ public final class BrewManager: ObservableObject {
     @Published public private(set) var catalogFormulaeErrorMessage: String?
     @Published public private(set) var catalogCasksErrorMessage: String?
 
+    /// install / upgrade / tap 等の操作履歴 (最新順)
+    @Published public private(set) var operationHistory: [BrewOperationRecord] = []
+
     // MARK: - Private Properties
 
-    private let brewProcess: BrewProcess
+    let brewProcess: BrewProcess
     private let cache: BrewCache
+    let operationHistoryStore: BrewOperationHistoryStore
     private var catalogFormulaeBase: [Package] = []
     private var catalogCasksBase: [Package] = []
     private var catalogFormulaeOverlay: [Package] = []
@@ -105,7 +109,11 @@ public final class BrewManager: ObservableObject {
     /// - Parameters:
     ///   - brewPath: brew バイナリのパス。nil の場合は自動検出
     ///   - cacheDirectory: キャッシュディレクトリ。nil の場合はデフォルトを使用
-    public init(brewPath: String? = nil, cacheDirectory: URL? = nil) {
+    public init(
+        brewPath: String? = nil,
+        cacheDirectory: URL? = nil,
+        operationHistoryStore: BrewOperationHistoryStore = BrewOperationHistoryStore()
+    ) {
         // brew パスの検出
         if let brewPath {
             self.brewPath = brewPath
@@ -122,6 +130,8 @@ public final class BrewManager: ObservableObject {
         }
 
         cache = BrewCache(cacheDirectory: cacheDirectory)
+        self.operationHistoryStore = operationHistoryStore
+        operationHistory = operationHistoryStore.load()
     }
 
     // MARK: - Public Methods
@@ -450,6 +460,7 @@ public final class BrewManager: ObservableObject {
             throw BrewManagerError.installationFailed(stderr: result.stderr)
         }
 
+        recordOperation(kind: .install, title: package.fullName)
         // インストール済み一覧を更新
         await refreshInstalledPackages()
     }
@@ -473,6 +484,7 @@ public final class BrewManager: ObservableObject {
             throw BrewManagerError.uninstallationFailed(stderr: result.stderr)
         }
 
+        recordOperation(kind: .uninstall, title: package.fullName)
         // インストール済み一覧を更新
         await refreshInstalledPackages()
     }
@@ -509,6 +521,8 @@ public final class BrewManager: ObservableObject {
             }
             throw BrewManagerError.upgradeFailed(stderr: result.stderr)
         }
+
+        recordOperation(kind: .upgrade, title: package.fullName)
 
         if shouldRestartService {
             let start = try await brewProcess.run(["services", "start", serviceName])
@@ -565,7 +579,14 @@ public final class BrewManager: ObservableObject {
             enriched = listSeed.enriched(with: detail)
         }
 
-        return applyingCurrentLists(to: enriched)
+        let listed = applyingCurrentLists(to: enriched)
+        if let markdown = listed.infoMarkdown, !markdown.isEmpty {
+            return listed
+        }
+        if let readme = await BrewGitHubReadmeFetcher.fetch(homepage: listed.homepage) {
+            return listed.withInfoMarkdown(readme)
+        }
+        return listed
     }
 
     /// インストール済み / Outdated 一覧から最新の行 `Package` を返す
@@ -597,6 +618,7 @@ public final class BrewManager: ObservableObject {
             throw BrewManagerError.upgradeFailed(stderr: result.stderr)
         }
 
+        recordOperation(kind: .upgradeAll, title: "All outdated packages")
         // 一覧を更新
         await refreshInstalledPackages()
         await refreshOutdatedPackages()
@@ -740,6 +762,11 @@ public final class BrewManager: ObservableObject {
         }
     }
 
+    /// 操作履歴の更新 (`private(set)` のため extension からはこ経由)
+    func replaceOperationHistory(_ records: [BrewOperationRecord]) {
+        operationHistory = records
+    }
+
     private func rebuildCatalogsIfNeeded() {
         if !catalogFormulaeBase.isEmpty {
             republishCatalogFormulaeOverlay()
@@ -773,6 +800,10 @@ public enum BrewManagerError: Error, LocalizedError {
     case updateFailed(stderr: String)
     case packageInfoFailed(stderr: String)
     case packageInfoNotFound(name: String)
+    case tapInvalidName
+    case tapFailed(stderr: String)
+    case untapFailed(stderr: String)
+    case cannotUntapOfficialTap(String)
 
     public var errorDescription: String? {
         switch self {
@@ -794,6 +825,14 @@ public enum BrewManagerError: Error, LocalizedError {
             "Failed to load package info: \(stderr)"
         case let .packageInfoNotFound(name):
             "Package not found: \(name)"
+        case .tapInvalidName:
+            "Enter a tap name (for example user/repo)."
+        case let .tapFailed(stderr):
+            "brew tap failed: \(stderr)"
+        case let .untapFailed(stderr):
+            "brew untap failed: \(stderr)"
+        case let .cannotUntapOfficialTap(name):
+            "Cannot remove official tap \(name)."
         }
     }
 }

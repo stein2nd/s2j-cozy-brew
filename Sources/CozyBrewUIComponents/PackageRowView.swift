@@ -43,7 +43,7 @@ public struct PackageRowView: View {
                         .font(.headline)
 
                     if package.isOutdated {
-                        Text("Update Available")
+                        Text(CozyBrewL10n.badgeUpdateAvailable)
                             .font(.caption)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
@@ -53,7 +53,7 @@ public struct PackageRowView: View {
                     }
 
                     if package.isDeprecated {
-                        Text("Deprecated")
+                        Text(CozyBrewL10n.badgeDeprecated)
                             .font(.caption)
                             .padding(.horizontal, 6)
                             .padding(.vertical, 2)
@@ -94,7 +94,7 @@ public struct PackageRowView: View {
                             .foregroundColor(.secondary)
                     }
 
-                    Text(package.type == .formula ? "Formula" : "Cask")
+                    Text(package.type == .formula ? CozyBrewL10n.typeFormula : CozyBrewL10n.typeCask)
                         .font(.caption2)
                         .foregroundColor(.secondary)
                 }
@@ -106,17 +106,20 @@ public struct PackageRowView: View {
             HStack(spacing: 8) {
                 if package.isInstalled {
                     if package.isOutdated, let onUpgrade {
-                        Button("Upgrade", action: onUpgrade)
+                        Button(CozyBrewL10n.actionUpgrade, action: onUpgrade)
+                            .accessibilityLabel(CozyBrewL10n.actionUpgrade)
                             .buttonStyle(.borderedProminent)
                     }
 
                     if let onUninstall {
-                        Button("Uninstall", action: onUninstall)
+                        Button(CozyBrewL10n.actionUninstall, action: onUninstall)
+                            .accessibilityLabel(CozyBrewL10n.actionUninstall)
                             .buttonStyle(.bordered)
                     }
                 } else {
                     if let onInstall {
-                        Button("Install", action: onInstall)
+                        Button(CozyBrewL10n.actionInstall, action: onInstall)
+                            .accessibilityLabel(CozyBrewL10n.actionInstall)
                             .buttonStyle(.borderedProminent)
                     }
                 }
@@ -125,7 +128,13 @@ public struct PackageRowView: View {
         .padding(.vertical, 4)
         .accessibilityElement(children: .combine)
         .accessibilityLabel(
-            Text(verbatim: "\(displayName), \(package.type == .formula ? "Formula" : "Cask")")
+            Text(
+                verbatim: CozyBrewL10n.a11yPackageRow(
+                    displayName,
+                    type: package.type == .formula ? CozyBrewL10n.typeFormula : CozyBrewL10n.typeCask,
+                    installed: package.isInstalled
+                )
+            )
         )
     }
 }

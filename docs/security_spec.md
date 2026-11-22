@@ -40,7 +40,7 @@
 ### 4.1. ローカライズ `{@security_spec:s4-1}`
 
 * 初期ロケール: 英語 (en) / 日本語 (ja)
-* `Localizable.strings`、`Localizable.stringsdict` を用意します。
+* `Localizable.strings` (en / ja) を `CozyBrewUIComponents/Resources` に配置済み (`CozyBrewL10n`)。`Localizable.stringsdict` は未。
 * [COMMON_SPEC.md](https://github.com/stein2nd/xcode-common-specs/blob/main/docs/COMMON_SPEC.md) に準拠します。
 
 ### 4.2. VoiceOver `{@security_spec:s4-2}`

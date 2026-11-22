@@ -25,7 +25,7 @@ public struct InstallFlowView: View {
         VStack(alignment: .leading, spacing: 16) {
             if isInstalling {
                 InstallProgressView(
-                    title: "Installing \(package.name)...",
+                    title: CozyBrewL10n.installProgressTitle(package.name),
                     logOutput: logOutput,
                     onCancel: {
                         // キャンセル処理 (将来実装)
@@ -35,7 +35,7 @@ public struct InstallFlowView: View {
                 )
             } else if let errorMessage {
                 BrewAlertView(
-                    title: "Installation Failed",
+                    title: CozyBrewL10n.installFailedTitle,
                     message: errorMessage,
                     rawLog: logOutput,
                     onDismiss: {
@@ -46,7 +46,7 @@ public struct InstallFlowView: View {
             } else {
                 // 確認ダイアログ
                 VStack(alignment: .leading, spacing: 12) {
-                    Text("Install \(package.name)?")
+                    Text(CozyBrewL10n.installConfirmTitle(package.name))
                         .font(.headline)
 
                     if let desc = package.desc {
@@ -56,16 +56,16 @@ public struct InstallFlowView: View {
                     }
 
                     HStack {
-                        Text("Type:")
+                        Text(CozyBrewL10n.installTypeLabel)
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        Text(package.type == .formula ? "Formula" : "Cask")
+                        Text(package.type == .formula ? CozyBrewL10n.typeFormula : CozyBrewL10n.typeCask)
                             .font(.caption)
                     }
 
                     if let version = package.version {
                         HStack {
-                            Text("Version:")
+                            Text(CozyBrewL10n.installVersionLabel)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
                             Text(version)
@@ -77,14 +77,16 @@ public struct InstallFlowView: View {
 
                 HStack {
                     Spacer()
-                    Button("Cancel", action: onCancel)
+                    Button(CozyBrewL10n.actionCancel, action: onCancel)
                         .buttonStyle(.bordered)
-                    Button("Install", action: {
+                        .accessibilityLabel(CozyBrewL10n.actionCancel)
+                    Button(CozyBrewL10n.actionInstall, action: {
                         Task {
                             await performInstall()
                         }
                     })
                     .buttonStyle(.borderedProminent)
+                    .accessibilityLabel(CozyBrewL10n.actionInstall)
                 }
                 .padding()
             }

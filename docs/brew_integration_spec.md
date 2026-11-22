@@ -214,6 +214,9 @@ brew 未導入ユーザーに対して、公式インストール・スクリプ
 | アップグレード | `["upgrade", "--yes", name]` または `["upgrade", "--yes"]` |
 | リポジトリ更新 | `["update"]` |
 | 検索 | `["search", query]` |
-| Tap 一覧 | `["tap"]` |
+| Tap 一覧 | `["tap"]` / `["tap", "--json"]` |
+| Tap 追加 | `["tap", "user/repo"]` |
+| Tap 削除 | `["untap", name]` |
 
 * 詳細は [models_spec.md](models_spec.md) の JSON 形式と合わせて参照してください。
+* GUI: [ux_flows_spec.md §3.0](ux_flows_spec.md#30-現行実装-2026-11-22-時点) (公式 Tap の untap は拒否)。

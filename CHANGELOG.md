@@ -2,6 +2,26 @@
 
 ## unreleased
 
+## 1.0.19 - 2026-11-22
+
+* SPM pin: `s2j-source-list` → `1f7375e`、`s2j-about-window` → `290fbff` (`main`)
+* **リファクタ**: Tap / Cakebrew / 履歴記録を `BrewManager+TapAndMigration.swift` に分割 (`replaceOperationHistory`)
+* **品質**: `lint:swift` 通過 — `type_body_length`、行長、`optional_data_string_conversion`、`repeatedGuard` (`BrewGitHubReadmeFetcher`)
+* **docs**: `architecture.md` に `BrewManager+TapAndMigration` を追記
+
+* **Service**: `BrewOperationHistoryStore`、tap/untap (`addTap` / `removeTap`)、`CakebrewMigration`、`BrewGitHubReadmeFetcher` (`Package.infoMarkdown`)
+* **UI**: `ProductShouldViews` (History、Cakebrew シート)、サイドバー History、詳細 README セクション
+* **テスト**: `BrewOperationHistoryTests`、`BrewGitHubReadmeFetcherTests`、`CozyBrewUITests` `@MainActor` (Swift v6)
+* **docs**: `status.md` プロダクトゴール (Should) 100%、`ux_flows_spec` / `brew_integration_spec` / `architecture` / `testing_spec` 同期
+
+## 1.0.18 - 2026-11-22
+
+* **UI**: サイドバー フェーズ2、`InstallFlowView`、`Upgrade All`、**Taps** (add/untap)、**History**、詳細 **README**、**Cakebrew** 移行シート
+* **L10n/A11y**: `CozyBrewL10n` + en/ja `Localizable.strings`、主要画面の `accessibilityLabel`
+* **テスト**: [docs/testing_spec.md](docs/testing_spec.md)、`BrewServiceIntegrationTests`、`CozyBrewUIComponentsTests` (`UISnapshotRenderTests`)、`CozyBrewUITests` (XCUITest、ローカル)
+* **ビルド**: `Package.swift` / `project.yml` — UI リソース、`CozyBrewUIComponentsTests`、`knownLocalizations` en/ja
+* **docs**: `status.md` 各セクション100%追跡、`SPEC.md` / `overview` / `ux_flows` / `architecture` / `security_spec` / `specs.md` 同期
+
 ## 1.0.17 - 2026-11-21
 
 * CI `lint-swift`: Periphery を GitHub Release `3.8.0` + `DYLD_LIBRARY_PATH` (Xcode `libIndexStore.dylib`) で導入。Homebrew formula は upstream アーカイブにより deprecated 注釈が出るため
@@ -73,7 +93,7 @@
 * Formulae / Casks サイドバーで未インストールパッケージのカタログ表示を追加 (`formulae.brew.sh` API、`BrewFormulaeAPIClient`、カタログ用モデル・パース)
 * カタログ一覧の `A–E` 等ページ切替と検索、読み込み・エラー表示を `MainWindowView` に実装
 * カタログ取得時のクラッシュ対策 (`Info.plist` の `CFBundleVersion` を文字列化、明示的 `User-Agent`)
-* Swift 向け lint / ビルド用 npm スクリプトを拡張 (`lint:swiftlint`、`lint:swiftformat`、`lint:periphery`、`lint:build` 等) と設定ファイル (`.swiftlint.yml`、`.periphery.yml`、`.swift-version`)
+* Swift 向け lint / ビルド用 npm スクリプトをエクステンション (`lint:swiftlint`、`lint:swiftformat`、`lint:periphery`、`lint:build` 等) と設定ファイル (`.swiftlint.yml`、`.periphery.yml`、`.swift-version`)
 * Xcode ビルド・解析スキームを `CozyBrewApp` に統一
 * カタログ、API パース、モデル周りのユニットテストを追加・更新
 * 仕様ドキュメント (`docs/*`) をカタログ UI、Homebrew 連携の実装に合わせて更新

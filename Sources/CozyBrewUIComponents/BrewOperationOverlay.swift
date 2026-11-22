@@ -51,6 +51,8 @@ struct BrewOperationOverlay: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .allowsHitTesting(true)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(title)
         .accessibilityAddTraits(.isModal)
     }
 
