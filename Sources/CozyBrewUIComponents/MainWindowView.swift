@@ -788,15 +788,28 @@ struct TapListView: View {
         }
         .confirmationDialog(
             CozyBrewL10n.tapUntapTitle,
-            item: $tapToRemove,
+            isPresented: Binding(
+                get: { tapToRemove != nil },
+                set: {
+                    if !$0 {
+                        tapToRemove = nil
+                    }
+                }
+            ),
             titleVisibility: .visible
-        ) { tap in
-            Button(CozyBrewL10n.tapUntapConfirm, role: .destructive) {
-                Task { await submitUntap(tap) }
+        ) {
+            if let tap = tapToRemove {
+                Button(CozyBrewL10n.tapUntapConfirm, role: .destructive) {
+                    Task { await submitUntap(tap) }
+                }
             }
-            Button(CozyBrewL10n.actionCancel, role: .cancel) {}
-        } message: { tap in
-            Text(CozyBrewL10n.tapUntapMessage(tap.name))
+            Button(CozyBrewL10n.actionCancel, role: .cancel) {
+                tapToRemove = nil
+            }
+        } message: {
+            if let tap = tapToRemove {
+                Text(CozyBrewL10n.tapUntapMessage(tap.name))
+            }
         }
         .alert(CozyBrewL10n.tapActionFailed, isPresented: Binding(
             get: { tapActionError != nil },

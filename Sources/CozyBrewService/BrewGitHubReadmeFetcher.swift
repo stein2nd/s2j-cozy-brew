@@ -44,7 +44,7 @@ struct GitHubRepositoryReference {
 
     static func parse(homepage: String) -> GitHubRepositoryReference? {
         let trimmed = homepage.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard var components = URLComponents(string: trimmed), components.host?.contains("github.com") == true else {
+        guard let components = URLComponents(string: trimmed), components.host?.contains("github.com") == true else {
             return nil
         }
         let parts = components.path.split(separator: "/").map(String.init)

@@ -76,7 +76,7 @@ public struct BrewOperationHistoryStore: Sendable {
         _ record: BrewOperationRecord,
         to existing: [BrewOperationRecord]
     ) throws -> [BrewOperationRecord] {
-        var next = [record] + existing
+        let next = [record] + existing
         try save(next)
         return load()
     }
