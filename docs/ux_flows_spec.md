@@ -87,7 +87,7 @@
 | upgrade (単体) | 同上。一覧では `BrewOperationOverlay` (Cask は `passwordFriendly`)。失敗時は対象行下 `PackageUpgradeFailurePanel` |
 | ターミナルで Cask を上げた後 | ツールバー **Refresh** → `refreshApplicationState()` で Outdated 再同期 |
 | upgrade (一括) | **Outdated** 選択時ツールバー **Upgrade All** → `confirmationDialog` → `BrewManager.upgradeAll` + blocking オーバーレイ |
-| tap / untap | **Taps** セクション: ツールバー **Add Tap** シート → `brew tap`、行コンテキストメニュー → untap 確認 → `brew untap` |
+| tap / untap | **Taps** セクション: ツールバー **Add Tap** シート → `brew tap`、行コンテキストメニュー → `confirmationDialog(isPresented:)` で untap 確認 → `brew untap` |
 | 操作履歴 | サイドバー **History** (`BrewOperationHistoryStore`、install/upgrade/tap 等を記録) |
 | パッケージ詳細 README | `brew info` caveats + GitHub README フォールバック (`PackageDetailView`) |
 | Cakebrew 移行 | 起動時 `com.brunophilipe.Cakebrew.plist` 検出時オプションシート (`CakebrewMigration`) |

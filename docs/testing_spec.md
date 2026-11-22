@@ -16,6 +16,8 @@
 
 **原則:** CI では **決定的** な `swift test` のみをゲートとする。実機の `brew install` 等は本リポジトリの CI 範囲外 ([overview.md](overview.md))。
 
+**ビルド注意:** `CozyBrewUIComponents` は SPM ターゲットとしても `swift test` / Periphery がコンパイルする。macOS 向け SwiftUI の一部 API (例: `confirmationDialog(item:)`) は Xcode アプリターゲットと可用性が異なる場合があるため、ライブラリ側は `isPresented` 等の互換パターンを優先する。
+
 ---
 
 ## 2. ターゲット一覧 `{@testing_spec:s2}`

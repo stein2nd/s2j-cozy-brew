@@ -8,8 +8,8 @@ This product includes open source software components listed below. The full lic
 
 | Name | Version | License | Copyright |
 |---|---|---|---|
-| CozyBrewApp | 1.0.17 |  |  |
-| s2j-about-window | 3.0.9 | GPL-3.0-or-later |  |
+| CozyBrewApp | 1.0.19 |  |  |
+| s2j-about-window | 3.0.10 | GPL-3.0-or-later |  |
 | s2j-source-list | 2.0.23 | GPL-3.0-or-later |  |
 | swift-concurrency-extras | 1.3.1 |  |  |
 | swift-concurrency-extras | 1.3.2 |  |  |
@@ -34,7 +34,7 @@ This product includes open source software components listed below. The full lic
 
 ## Licenses
 ### GNU General Public License v3.0 or later (`GPL-3.0-or-later`)
-Used by: s2j-about-window 3.0.9, s2j-source-list 2.0.23
+Used by: s2j-about-window 3.0.10, s2j-source-list 2.0.23
 
 ```text
 GNU GENERAL PUBLIC LICENSE

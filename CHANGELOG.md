@@ -2,6 +2,12 @@
 
 ## unreleased
 
+## 1.0.20 - 2026-11-22
+
+* **fix**: Taps の untap 確認を `confirmationDialog(isPresented:)` に変更 (SPM、CI `test-macos`、Periphery で `item:` が解決できない問題)
+* **品質**: `BrewOperationHistory` / `BrewGitHubReadmeFetcher` の未使用 `var` 警告を解消
+* **docs**: `testing_spec` / `ux_flows_spec` に SPM 向け SwiftUI 注意を追記
+
 ## 1.0.19 - 2026-11-22
 
 * SPM pin: `s2j-source-list` → `1f7375e`、`s2j-about-window` → `290fbff` (`main`)

@@ -3,7 +3,7 @@
 | 項目 | 内容 |
 | --- | --- |
 | 最終更新 | 2026-11-22 |
-| アプリ版 (正本) | `package.json` → **1.0.19** (build **4**) |
+| アプリ版 (正本) | `package.json` → **1.0.20** (build **4**) |
 | SPM pin | `s2j-source-list` revision `1f7375e` / `main`、`s2j-about-window` revision `290fbff` / `main` |
 
 ---
@@ -264,7 +264,7 @@
 * GitHub Actions: Swift テスト、docs lint、`swift-quality` (`version:check` / `lint:swift`)
 * **v1.0.13– v1.0.14** — Cask ターミナル委譲・行下失敗パネル、ツールバー `refreshApplicationState`、SPM pin 更新
 * **v1.0.15– v1.0.17** — `swift-quality.yml` 本番運用、CI 上の Periphery 導入 (Release `3.8.0` + IndexStore、`brew install periphery` は非推奨注釈・`libIndexStore` 問題のため不採用)
-* **unreleased** — `BrewManager+TapAndMigration` 分割、`lint:swift` 整合 (Should 機能は v1.0.19)
+* **v1.0.19– v1.0.20** — プロダクト Should、L10n、テストエクステンション、CI untap ダイアログ修正
 
 ---
 
