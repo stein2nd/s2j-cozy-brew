@@ -42,6 +42,25 @@ public extension BrewManager {
         await refreshTaps()
     }
 
+    /// untap 確認用に `brew tap-info <name> --json` を要約する
+    func tapRemovalSummary(for tap: Tap) async -> TapRemovalSummary? {
+        guard isBrewAvailable else { return nil }
+
+        do {
+            let result = try await brewProcess.run(["tap-info", tap.name, "--json"])
+            guard result.isSuccess,
+                  !result.stdout.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            else {
+                return nil
+            }
+            let records = try JSONDecoder().decode([BrewTapInfoRecord].self, from: Data(result.stdout.utf8))
+            guard let record = records.first else { return nil }
+            return BrewTapInfo.removalSummary(record: record, installedPackages: installedPackages)
+        } catch {
+            return nil
+        }
+    }
+
     /// Cakebrew 設定を検出した場合に履歴へ取り込む
     func performCakebrewMigration() throws {
         guard let legacy = CakebrewMigration.detectLegacyPreferences() else { return }

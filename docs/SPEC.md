@@ -153,7 +153,9 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 ││└─ BrewResult.swift  # 実行結果の型定義
 │├┬─ CozyBrewService/  # サービス・モジュール (モデル、ViewModel、キャッシュ)
 ││├─ BrewCache.swift  # JSON キャッシュ機構 (TTL 対応)
-││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理)
+││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理、`refreshApplicationState`)
+││├─ BrewManager+PackageInfo.swift / BrewManager+TapAndMigration.swift  # info 補完、tap/untap
+││├─ BrewInfoTextParser.swift / BrewTapInfo.swift / FormulaDecoding.swift
 ││├─ BrewCaskTerminalFallback.swift  # Cask ターミナル委譲コマンド・判定
 ││├─ BrewUserMessage.swift  # brew 出力の UI 向け意訳
 ││└─ Models.swift  # Formula、Cask、Tap、Package モデル定義
@@ -193,12 +195,11 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 
 ### 4.3.2. About Window `{@spec:s4-3-2}`
 
-* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (v3.0.0以降) の `AboutView` を組込みます。
-* メニュー **About CozyBrew** および `ContentView` の `.sheet` から `CozyBrewAboutSheet` を表示します。
-* ヘッダー: Dock と同じアプリアイコン、`appName` / `Info.plist` のバージョン・著作権。
+* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (v3.0.0以降) の `AboutWindow` を組込みます (`AboutView` はライブラリ内。アプリケーションは独立 `NSWindow` を表示)。
+* メニュー **About CozyBrew** から `CozyBrewAboutPresenter.show()` → S2J `AboutWindow` (タイトルバー付き、ドラッグ移動可)。SwiftUI `.sheet` は使いません。
+* ヘッダー: Dock と同じアプリケーション・アイコン、`appName` / `Info.plist` のバージョン・著作権。
 * 本文: `CozyBrewAbout.markdown` (説明、GitHub リポジトリリンク)。
-* **License** / **Acknowledgements**: バンドル `CozyBrewApp/Resources/LICENSE.txt` と `ACKNOWLEDGEMENTS.md` を `licenseResourceName` / `acknowledgementsResourceName` でシート表示 (オフライン可)。Acknowledgements は onot 生成の Markdown (v3.0.0以降は Textual により表表示に対応)。
-* シート下部に **Close** (`@Environment(\.dismiss)`)。
+* **License** / **Acknowledgements**: バンドル `CozyBrewApp/Resources/LICENSE.txt` と `ACKNOWLEDGEMENTS.md` を `licenseResourceName` / `acknowledgementsResourceName` でアプリケーション内表示 (オフライン可)。Acknowledgements は onot 生成の Markdown (v3.0.0以降は Textual により表表示に対応)。ウィンドウは標準の閉じる操作で dismiss します。
 
 ### 4.3.3. BrewCore (s2j-cozy-brew / CozyBrewCore) `{@spec:s4-3-3}`
 
@@ -259,6 +260,7 @@ struct BrewCommand {
   * Manager / ViewModel (`BrewManager`: `ObservableObject`):
     * ViewModel 層への公開 API (`@Published var installed: [Package]` など) を提供します。
     * UI 側に `@Published` プロパティで状態を公開します (installed, outdated, taps, searchResults など)。
+    * `refreshApplicationState()` で `brew update` のあと Installed / Outdated / Taps を再取得します。`packageInfo` は JSON + プレーン `brew info` を併用します。
   * Installer / Upgrader:
     * インストール、アンインストール、アップデートの実行と進行管理を実装します。
 
@@ -272,7 +274,7 @@ struct BrewCommand {
   * `PackageRowView`:
     * アイコン、名前、バージョン、バッジ表示 (アップデート有無)、インストール/アンインストール・ボタンを表示します。
   * `PackageDetailView`:
-    * `brew info` 情報、依存関係ツリー、README 表示 (Markdown)、ホームページ・リンクを表示します。
+    * `brew info --json=v2` + プレーン `brew info` 補完 (Installed Versions / Options / Analytics / Recursive Runtime)、依存関係、README (Markdown)、ホームページ・リンク。詳細表示中は一覧の検索バーを非表示にします。
   * `InstallProgressView`:
     * ログストリーム、キャンセルボタンを表示します。
   * `BrewAlertView`:
@@ -301,7 +303,9 @@ struct BrewCommand {
 ```swift
 @main
 struct CozyBrewApp: App {
-    @StateObject var manager = BrewManager()
+    @StateObject private var manager = BrewManager()
+    @StateObject private var aboutPresenter = CozyBrewAboutPresenter()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
@@ -309,7 +313,9 @@ struct CozyBrewApp: App {
         }
         .commands {
             CommandGroup(replacing: .appInfo) {
-                Button("About CozyBrew") { showAboutWindow = true }
+                Button("About CozyBrew") {
+                    aboutPresenter.show()
+                }
             }
         }
     }
@@ -488,7 +494,7 @@ let package = Package(
 
 #### 11.1.4. CozyBrewUIComponents モジュール `{@spec:s11-1-4}`
 * ✅ `PackageRowView` - パッケージ一覧の行表示 (アイコン、バッジ、アクションボタン)
-* ✅ `PackageDetailView` - パッケージ詳細表示 (説明、バージョン、ホームページ、アクションボタン)
+* ✅ `PackageDetailView` - パッケージ詳細 (`brew info` 補完セクション、README、ホームページ、アクションボタン。詳細中は検索バー非表示)
 * ✅ `InstallProgressView` - インストール進捗表示 (ログストリーム、キャンセルボタン)
 * ✅ `BrewAlertView` - エラー表示 (friendly メッセージ + raw log toggle)
 * ✅ `MainWindowView` - メインウィンドウ (`NavigationSplitView`、Formulae/Casks カタログ・ページバー・検索)
@@ -502,9 +508,8 @@ let package = Package(
 * ✅ `CozyBrewApp.swift` - アプリケーション・エントリーポイント
   * ✅ Homebrew 未検出時のインストールフロー実装
   * ✅ 自動インストールオプション (opt-in)
-  * ✅ About ウィンドウ (`CozyBrewAbout.swift` + `S2JAboutWindow` v3 `AboutView`)
-  * ✅ License / Acknowledgements シート (`LICENSE.txt` / `ACKNOWLEDGEMENTS.md` バンドル)
-  * ✅ About シートの Close ボタン (`@Environment(\.dismiss)`)
+  * ✅ About ウィンドウ (`CozyBrewAboutPresenter` + `CozyBrewAbout.swift` + S2J `AboutWindow` v3+)
+  * ✅ License / Acknowledgements (`LICENSE.txt` / `ACKNOWLEDGEMENTS.md` バンドル、About 内表示)
   * ✅ `AppDelegate` クラスの実装 - macOS アプリケーションのライフサイクル管理
     * ✅ `applicationDidFinishLaunching` - アプリケーション起動時にウィンドウを前面に表示
     * ✅ `applicationShouldHandleReopen` - Dock アイコンクリック時にウィンドウを表示
@@ -605,7 +610,7 @@ let package = Package(
 | CozyBrewCore | 100% | 全機能を実装済み |
 | CozyBrewService | 100% | 一覧・操作に加え Formulae/Casks カタログ、`brew doctor` パース等 |
 | CozyBrewUIComponents | 100% | サイドバー フェーズ2、`InstallFlowView` (Install)、`Upgrade All` 確認 |
-| CozyBrewApp Target | 100% | `AboutView` シート、App Icon、`AppDelegate`、Homebrew 未導入フロー |
+| CozyBrewApp Target | 100% | S2J `AboutWindow` (`CozyBrewAboutPresenter`)、App Icon、`AppDelegate`、Homebrew 未導入フロー |
 | テストコード | 100% | UT + `BrewServiceIntegrationTests` + `UISnapshotRenderTests` + ローカル XCUITest ([testing_spec.md](testing_spec.md)) |
 | ローカライズ | 100% | en/ja `Localizable.strings` + `CozyBrewL10n` |
 | CI/CD | 100% | `swift-test` + `docs-lint` + `swift-quality` (`version:check` / `lint:swift`、Periphery は Release + IndexStore) |
@@ -665,7 +670,7 @@ let package = Package(
 
 #### 12.1.2. ローカライズ (初期対応) `{@spec:s12-1-2}`
 * ✅ en / ja `Localizable.strings` (`CozyBrewUIComponents/Resources`)
-* **残り**: メニューバー、About シート、`stringsdict`、翻訳カバレッジ拡大
+* **残り**: メニューバー、`stringsdict`、翻訳カバレッジ拡大
 
 #### 12.1.3. CI/CD ワークフロー `{@spec:s12-1-3}`
 * ✅ `.github/workflows/swift-test.yml` の作成 (完了)

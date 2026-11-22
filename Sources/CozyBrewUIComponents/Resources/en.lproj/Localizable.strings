@@ -12,7 +12,7 @@
 
 /* Toolbar */
 "toolbar.refresh" = "Refresh";
-"toolbar.refresh.help" = "Run brew update, then reload installed and outdated packages";
+"toolbar.refresh.help" = "Run brew update, then reload installed, outdated, and tap lists";
 "toolbar.upgrade_all" = "Upgrade All";
 "toolbar.upgrade_all.help" = "Upgrade all outdated packages";
 "toolbar.back" = "Back";
@@ -42,6 +42,12 @@
 "detail.section.dependencies" = "Dependencies";
 "detail.section.build_dependencies" = "Build Dependencies";
 "detail.section.readme" = "README / Notes";
+"detail.section.brew_version" = "Versions";
+"detail.section.installed_kegs" = "Installed Versions";
+"detail.section.recursive_runtime" = "Recursive Runtime";
+"detail.section.options" = "Options";
+"detail.section.analytics" = "Analytics";
+"detail.runtime.direct" = "direct";
 "detail.section.status" = "Status";
 "detail.status.not_installed" = "Not Installed";
 "detail.status.installed_update" = "Installed (update available)";
@@ -85,6 +91,8 @@
 "tap.untap" = "Remove Tap";
 "tap.untap.title" = "Remove this tap?";
 "tap.untap.message" = "Run brew untap %@.";
+"tap.untap.summary" = "This tap has %d formulae and %d casks. %d installed from this tap: %@";
+"tap.untap.summary.no_installed" = "This tap has %d formulae and %d casks. None are installed from this tap.";
 "tap.untap.confirm" = "Remove";
 "tap.action_failed" = "Tap action failed";
 "tap.working" = "Updating taps…";

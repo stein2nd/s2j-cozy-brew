@@ -52,6 +52,7 @@ public struct PackageDetailView: View {
                 Divider()
                 descriptionSection
                 versionSections
+                brewInfoExtrasSections
                 homepageSection
                 installationKindSection
                 formulaSourceSection
@@ -172,6 +173,85 @@ public struct PackageDetailView: View {
                     .font(.headline)
                 Text(desc)
                     .font(.body)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var brewInfoExtrasSections: some View {
+        if let extras = activePackage.infoExtras {
+            if let summary = extras.versionSummary, !summary.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(CozyBrewL10n.sectionBrewVersionLine)
+                        .font(.headline)
+                    Text(summary)
+                        .font(.body)
+                        .foregroundColor(.secondary)
+                }
+            }
+
+            if !extras.installedKegLines.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(CozyBrewL10n.sectionInstalledKegs)
+                        .font(.headline)
+                    ForEach(extras.installedKegLines, id: \.self) { line in
+                        Text(line)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+
+            if !extras.runtimeDependencies.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(CozyBrewL10n.sectionRecursiveRuntime)
+                        .font(.headline)
+                    ForEach(extras.runtimeDependencies, id: \.name) { dep in
+                        HStack(spacing: 6) {
+                            Image(systemName: dep.isInstalled ? "checkmark.circle.fill" : "circle")
+                                .foregroundColor(dep.isInstalled ? .green : .secondary)
+                                .font(.caption)
+                            Text(dep.name)
+                                .font(.body)
+                                .foregroundColor(.secondary)
+                            if dep.declaredDirectly {
+                                Text(CozyBrewL10n.runtimeDependencyDirect)
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary.opacity(0.8))
+                            }
+                        }
+                    }
+                }
+            }
+
+            if !extras.options.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(CozyBrewL10n.sectionOptions)
+                        .font(.headline)
+                    ForEach(extras.options, id: \.flag) { option in
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(option.flag)
+                                .font(.body.monospaced())
+                            if !option.description.isEmpty {
+                                Text(option.description)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                    }
+                }
+            }
+
+            if !extras.analyticsLines.isEmpty {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(CozyBrewL10n.sectionAnalytics)
+                        .font(.headline)
+                    ForEach(extras.analyticsLines, id: \.self) { line in
+                        Text(line)
+                            .font(.body)
+                            .foregroundColor(.secondary)
+                    }
+                }
             }
         }
     }

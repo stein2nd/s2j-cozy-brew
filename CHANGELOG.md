@@ -2,6 +2,18 @@
 
 ## unreleased
 
+## 1.0.21 - 2026-11-22
+
+* SPM pin: 変更なし (`s2j-source-list` `1f7375e`、`s2j-about-window` `290fbff`、`main` 最新)
+* **UI**: パッケージ詳細に Installed Kegs、Options、Analytics、Recursive Runtime を表示 (`brew info --json=v2` + プレーン `brew info` → `BrewInfoTextParser` / `PackageInfoExtras`)
+* **UX**: 詳細表示中は検索バーを非表示。一覧検索は入力即時フィルター (#17)
+* **UX**: About を SwiftUI シートから S2J **`AboutWindow`** (`CozyBrewAboutPresenter`、タイトルバーで移動) に変更 (#9)。License / Acknowledgements は従来どおりバンドル表示 (#14相当)
+* **Taps**: `refreshApplicationState()` で Tap 一覧も再取得。untap 確認に `brew tap-info --json` 要約 (#11)
+* **Service**: `BrewManager+PackageInfo`、`BrewTapInfo` / `tapRemovalSummary`、`FormulaDecoding`
+* **品質**: `BrewManager` / `Models` の行数制限に合わせた分割、`lint:swift` (SwiftLint / SwiftFormat) 通過
+* **テスト**: `BrewInfoTextParserTests`、`BrewTapInfoTests`
+* **docs**: `overview` / `architecture` / `status` / `testing_spec` / `brew_integration_spec` / `ux_flows_spec` / `SPEC.md` を上記に同期
+
 ## 1.0.20 - 2026-11-22
 
 * **fix**: Taps の untap 確認を `confirmationDialog(isPresented:)` に変更 (SPM、CI `test-macos`、Periphery で `item:` が解決できない問題)

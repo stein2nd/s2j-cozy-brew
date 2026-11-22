@@ -6,7 +6,6 @@ import SwiftUI
 /// メインコンテンツビュー
 struct ContentView: View {
     @ObservedObject var manager: BrewManager
-    @Binding var showAboutWindow: Bool
 
     var body: some View {
         Group {
@@ -15,9 +14,6 @@ struct ContentView: View {
             } else {
                 BrewNotAvailableView(manager: manager)
             }
-        }
-        .sheet(isPresented: $showAboutWindow) {
-            CozyBrewAboutSheet()
         }
         .onAppear {
             // ウィンドウサイズを設定し、前面に表示

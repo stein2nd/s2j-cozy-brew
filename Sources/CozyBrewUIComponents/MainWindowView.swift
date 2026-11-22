@@ -191,8 +191,8 @@ struct ContentAreaView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                if selectedSidebarItem != .warnings {
-                    // 検索バー
+                if selectedSidebarItem != .warnings, selectedPackage == nil {
+                    // 検索バー (詳細表示中は非表示 — #17)
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.secondary)
@@ -685,6 +685,7 @@ struct TapListView: View {
     @State private var showsAddTap = false
     @State private var newTapName = ""
     @State private var tapToRemove: Tap?
+    @State private var untapSummary: TapRemovalSummary?
     @State private var tapActionError: String?
     @State private var isTapActionRunning = false
 
@@ -808,7 +809,14 @@ struct TapListView: View {
             }
         } message: {
             if let tap = tapToRemove {
-                Text(CozyBrewL10n.tapUntapMessage(tap.name))
+                if let untapSummary {
+                    Text(
+                        "\(CozyBrewL10n.tapUntapMessage(tap.name))\n\n"
+                            + CozyBrewL10n.tapUntapSummary(untapSummary)
+                    )
+                } else {
+                    Text(CozyBrewL10n.tapUntapMessage(tap.name))
+                }
             }
         }
         .alert(CozyBrewL10n.tapActionFailed, isPresented: Binding(
@@ -829,6 +837,13 @@ struct TapListView: View {
             }
         }
         .disabled(isTapActionRunning)
+        .onChange(of: tapToRemove?.id) { _, tapID in
+            untapSummary = nil
+            guard let tapID, let tap = tapToRemove, tap.id == tapID else { return }
+            Task {
+                untapSummary = await manager.tapRemovalSummary(for: tap)
+            }
+        }
     }
 
     private func submitAddTap() async {

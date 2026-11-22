@@ -12,7 +12,7 @@
 
 /* Toolbar */
 "toolbar.refresh" = "更新";
-"toolbar.refresh.help" = "brew update を実行し、インストール済みと更新可能一覧を再読み込みします";
+"toolbar.refresh.help" = "brew update を実行し、インストール済み・更新可能・Tap 一覧を再読み込みします";
 "toolbar.upgrade_all" = "すべて更新";
 "toolbar.upgrade_all.help" = "更新可能なパッケージをすべてアップグレードします";
 "toolbar.back" = "戻る";
@@ -42,6 +42,12 @@
 "detail.section.dependencies" = "依存関係";
 "detail.section.build_dependencies" = "ビルド依存関係";
 "detail.section.readme" = "README / 注意事項";
+"detail.section.brew_version" = "バージョン";
+"detail.section.installed_kegs" = "インストール済みバージョン";
+"detail.section.recursive_runtime" = "Recursive Runtime (実行時依存)";
+"detail.section.options" = "Options";
+"detail.section.analytics" = "Analytics";
+"detail.runtime.direct" = "direct";
 "detail.section.status" = "状態";
 "detail.status.not_installed" = "未インストール";
 "detail.status.installed_update" = "インストール済み (更新あり)";
@@ -85,6 +91,8 @@
 "tap.untap" = "Tap を削除";
 "tap.untap.title" = "この Tap を削除しますか？";
 "tap.untap.message" = "brew untap %@ を実行します。";
+"tap.untap.summary" = "この Tap には Formula %d 件・Cask %d 件があります。この Tap 由来のインストール済みは %d 件: %@";
+"tap.untap.summary.no_installed" = "この Tap には Formula %d 件・Cask %d 件があります。この Tap 由来のインストール済みはありません。";
 "tap.untap.confirm" = "削除";
 "tap.action_failed" = "Tap 操作に失敗しました";
 "tap.working" = "Tap を更新中…";

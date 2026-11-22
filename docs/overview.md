@@ -30,19 +30,20 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 
 ### 2.1.1. 現行ビルドでできること / まだのこと `{@overview:s2-1-1}`
 
-| 領域 | プロダクトゴール | 現行実装 (2026-11-22時点) |
+| 領域 | プロダクトゴール | 現行実装 (2026-11-22時点、未タグ分含む) |
 | --- | --- | --- |
-| brew 一覧・検索・詳細 | list / info 相当の GUI | ✅ Installed / Outdated / Taps / Formulae / Casks、クライアント検索 |
+| brew 一覧・検索・詳細 | list / info 相当の GUI | ✅ 一覧・クライアント検索。詳細は `brew info` JSON + テキスト補完 (Keg / Options / Analytics / Runtime)。詳細中は検索バー非表示 |
 | install / uninstall / upgrade | GUI から安全に操作 | ✅ 行・詳細から実行。Cask の `sudo`/TTY 失敗時は行下 `PackageUpgradeFailurePanel` |
-| `brew update` / doctor | 更新・警告表示 | ✅ ツールバー Refresh (`brew update` + 一覧再取得)、Warnings タブ。Cask はターミナル委譲後も Refresh で Outdated 反映 |
+| `brew update` / doctor | 更新・警告表示 | ✅ ツールバー Refresh (`brew update` + Installed / Outdated / **Taps** 再取得)、Warnings タブ。Cask はターミナル委譲後も Refresh で Outdated 反映 |
 | brew 未導入時の導入 | ガイド + opt-in 自動インストール | ✅ `BrewNotAvailableView` (`ContentView` 分岐) |
 | 確認付き Install フロー | `InstallFlowView` による統一 UI | ✅ 一覧・詳細の Install |
-| tap / untap の操作 | GUI から tap 管理 | ✅ Add Tap + untap 確認 |
+| tap / untap の操作 | GUI から tap 管理 | ✅ Add Tap + untap 確認 (`brew tap-info` 要約付き) |
 | インストール履歴 | 履歴・ログの保持表示 | ✅ 操作履歴 + サイドバー History |
 | パッケージ README | Markdown 表示 | ✅ caveats + GitHub README |
 | Cakebrew からの移行 | 設定・履歴のオプション取り込み | ✅ 検出シート |
 | Upgrade All | 一括アップグレード + 確認 | ✅ Outdated ツールバー + 確認ダイアログ |
 | サイドバー S2J | Source List 統合 | ✅ フェーズ2 (`SourceItem.group` 階層) |
+| About / License | GPL 系のオフライン表示 | ✅ S2J `AboutWindow` (`CozyBrewAboutPresenter`)。License / Acknowledgements はバンドル |
 | ローカライズ en/ja | 初期二言語 | ✅ `CozyBrewL10n` + `Localizable.strings` (主要 UI。メニュー等は一部英語) |
 | テスト (エクステンション) | UT / 統合 / UI | ✅ `swift test` + [testing_spec.md](testing_spec.md)。XCUITest はローカル |
 

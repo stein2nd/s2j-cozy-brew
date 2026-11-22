@@ -16,7 +16,7 @@
 
 **原則:** CI では **決定的** な `swift test` のみをゲートとする。実機の `brew install` 等は本リポジトリの CI 範囲外 ([overview.md](overview.md))。
 
-**ビルド注意:** `CozyBrewUIComponents` は SPM ターゲットとしても `swift test` / Periphery がコンパイルする。macOS 向け SwiftUI の一部 API (例: `confirmationDialog(item:)`) は Xcode アプリターゲットと可用性が異なる場合があるため、ライブラリ側は `isPresented` 等の互換パターンを優先する。
+**ビルド注意:** `CozyBrewUIComponents` は SPM ターゲットとしても `swift test` / Periphery がコンパイルする。macOS 向け SwiftUI の一部 API (例: `confirmationDialog(item:)`) は Xcode アプリケーション・ターゲットと可用性が異なる場合があるため、ライブラリ側は `isPresented` 等の互換パターンを優先する。
 
 ---
 
@@ -25,9 +25,9 @@
 | テストターゲット | パス | 内容 |
 | --- | --- | --- |
 | `CozyBrewCoreTests` | `Tests/CozyBrewCoreTests/` | バイナリ検出、プロセス env |
-| `CozyBrewServiceTests` | `Tests/CozyBrewServiceTests/` | モデル、キャッシュ、カタログ API、doctor、**統合**、操作履歴 (`BrewOperationHistoryTests`)、GitHub README URL パース |
+| `CozyBrewServiceTests` | `Tests/CozyBrewServiceTests/` | モデル、キャッシュ、カタログ API、doctor、**統合**、操作履歴 (`BrewOperationHistoryTests`)、GitHub README URL パース、`brew info` テキスト (`BrewInfoTextParserTests`)、`brew tap-info` 要約 (`BrewTapInfoTests`) |
 | `CozyBrewUIComponentsTests` | `Tests/CozyBrewUIComponentsTests/` | SwiftUI レンダリング・**UI スナップショット風**メトリクス |
-| `CozyBrewUITests` | `Tests/CozyBrewUITests/` | アプリ起動・ウィンドウ表示 (XCUITest) |
+| `CozyBrewUITests` | `Tests/CozyBrewUITests/` | アプリケーション起動・ウィンドウ表示 (XCUITest) |
 
 ローカル一括: `npm run test:local:macOS` → `scripts/test-local.sh`(`swift test` + 任意で Xcode テスト)。
 
@@ -53,5 +53,5 @@
 
 ## 5. UI テスト (XCUITest) `{@testing_spec:s5}`
 
-* `CozyBrewUITests` は **アプリ起動とメインウィンドウの存在** を確認するスモーク (`@MainActor`、Swift6コンカレンシー)。
+* `CozyBrewUITests` は **アプリケーション起動とメインウィンドウの存在** を確認するスモーク (`@MainActor`、Swift6コンカレンシー)。
 * GitHub Actions には未組込み (macOS ランナーでの署名・ GUI 安定性のため)。リリース前のローカル `xcodebuild test` を推奨。

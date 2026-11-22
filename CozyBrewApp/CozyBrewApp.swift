@@ -34,18 +34,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 struct CozyBrewApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var manager = BrewManager()
-    @State private var showAboutWindow = false
+    @StateObject private var aboutPresenter = CozyBrewAboutPresenter()
 
     var body: some Scene {
         WindowGroup {
-            ContentView(manager: manager, showAboutWindow: $showAboutWindow)
+            ContentView(manager: manager)
                 .frame(minWidth: 800, minHeight: 600)
         }
         .windowStyle(.automatic)
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button("About CozyBrew") {
-                    showAboutWindow = true
+                    aboutPresenter.show()
                 }
             }
         }

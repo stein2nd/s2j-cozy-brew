@@ -72,6 +72,7 @@
 │　　　└─ CozyBrewApp.xcscheme
 ├┬─ CozyBrewApp/  # アプリケーション・プロジェクト (SwiftUI App Target `CozyBrew.app`)
 │├─ CozyBrewApp.swift  # アプリケーション・エントリーポイント (Homebrew 未検出時のインストール・フロー含む)
+│├─ CozyBrewAboutPresenter.swift / CozyBrewAbout.swift  # S2J AboutWindow 表示
 │├─ CozyBrewApp.entitlements  # アプリケーション・リソース (作成済み)
 │├─ ContentView.swift  # メイン・コンテンツ・ビュー
 │├─ Info.plist  # アプリケーション・リソース (作成済み)
@@ -88,7 +89,10 @@
 │├┬─ CozyBrewService/  # サービス・モジュール (モデル、ViewModel、キャッシュ)
 ││├─ BrewCache.swift  # JSON キャッシュ機構 (TTL 対応)
 ││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理、`refreshApplicationState`)
-││├─ BrewManager+TapAndMigration.swift  # tap/untap、Cakebrew 移行、操作履歴記録
+││├─ BrewManager+PackageInfo.swift  # `packageInfo` / `brew info` 補完
+││├─ BrewManager+TapAndMigration.swift  # tap/untap、tap-info 要約、Cakebrew 移行、操作履歴記録
+││├─ BrewInfoTextParser.swift / BrewTapInfo.swift  # 詳細表示・untap 確認の CLI テキスト・JSON 補完
+││├─ FormulaDecoding.swift  # `Formula` の JSON デコード補助
 ││├─ BrewCaskTerminalFallback.swift / BrewUserMessage.swift  # Cask 失敗・ターミナル委譲
 ││├─ BrewCatalog.swift / BrewFormulaeAPIClient.swift  # formulae.brew.sh カタログ
 ││├─ BrewDoctorParser.swift  # `brew doctor` パース
@@ -106,7 +110,7 @@
 │　├─ InstallFlowView.swift  # Install 確認シート
 │　├─ ProductShouldViews.swift  # History 一覧・Cakebrew 移行シート
 │　├─ InstallProgressView.swift  # インストール進捗表示
-│　├─ PackageDetailView.swift  # パッケージ詳細 (README / caveats)
+│　├─ PackageDetailView.swift  # パッケージ詳細 (`brew info` セクション + README / caveats)
 │　├─ PackageRowView.swift  # パッケージ一覧の行表示
 │　├─ PackageUpgradeFailurePanel.swift  # Upgrade 失敗 UI (行下)
 │　├─ BrewUpgradeTerminalFallbackView.swift / BrewTerminalLauncher.swift
@@ -133,14 +137,14 @@
 
 ### 3.2. About Window `{@architecture:s3-2}`
 
-* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (≥ v3.0.0) の `AboutView` を `CozyBrewAboutSheet` (`CozyBrewApp/CozyBrewAbout.swift`) 経由でシート表示します。
+* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (≥ v3.0.0) の `AboutWindow` を `CozyBrewAboutPresenter` から表示します (タイトルバー付き `NSWindow`、ドラッグ移動可)。
 * アイコン・タイトル・バージョン・著作権はライブラリヘッダー、本文は Markdown (GitHub)。**License** / **Acknowledgements** でバンドル `LICENSE.txt` と `ACKNOWLEDGEMENTS.md` をアプリケーション内表示。メニュー **About CozyBrew** と同一 UI です。
 
 ### 3.3. BrewUIComponents (CozyBrewUIComponents) `{@architecture:s3-3}`
 
 * **UI 要素**
   * `PackageRowView`: アイコン、名前、バージョン、バッジ表示 (アップデート有無)、インストール/アンインストール・ボタンを表示します。
-  * `PackageDetailView`: `brew info` 情報、依存関係ツリー、README 表示 (Markdown)、ホームページ・リンクを表示します。
+  * `PackageDetailView`: `brew info` 情報 (Installed Versions / Options / Analytics / Recursive Runtime 含む)、依存関係、README (Markdown)、ホームページ・リンク。
   * `InstallProgressView`: ログストリーム、キャンセルボタンを表示します。
   * `BrewAlertView`: friendly error + raw log toggle を表示します。
   * `MainWindow`: Sidebar (S2J Source List) + Content Area (パッケージ一覧、検索、ステータスバー) を表示します。
@@ -149,7 +153,7 @@
   * `PackageUpgradeFailurePanel` / `BrewUpgradeTerminalFallbackView`: Cask Upgrade のターミナル委譲 (一覧は対象行の直下)。
 
 * **メインウィンドウ・ツールバー**
-  * Warnings 以外: **Refresh** → `BrewManager.refreshApplicationState()` (`brew update` + インストール済み、Outdated 再取得、`isLoading`)。
+  * Warnings 以外: **Refresh** → `BrewManager.refreshApplicationState()` (`brew update` + インストール済み、Outdated、**Taps** 再取得、`isLoading`)。
 
 * **サイドバー**
   * `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` が `S2JSourceList.SidebarView` を `MainWindowView` に載せます。

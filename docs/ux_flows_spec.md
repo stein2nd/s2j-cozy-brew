@@ -87,7 +87,7 @@
 | upgrade (単体) | 同上。一覧では `BrewOperationOverlay` (Cask は `passwordFriendly`)。失敗時は対象行下 `PackageUpgradeFailurePanel` |
 | ターミナルで Cask を上げた後 | ツールバー **Refresh** → `refreshApplicationState()` で Outdated 再同期 |
 | upgrade (一括) | **Outdated** 選択時ツールバー **Upgrade All** → `confirmationDialog` → `BrewManager.upgradeAll` + blocking オーバーレイ |
-| tap / untap | **Taps** セクション: ツールバー **Add Tap** シート → `brew tap`、行コンテキストメニュー → `confirmationDialog(isPresented:)` で untap 確認 → `brew untap` |
+| tap / untap | **Taps** セクション: ツールバー **Add Tap** シート → `brew tap`、行コンテキストメニュー → `confirmationDialog(isPresented:)` で untap 確認 (`brew tap-info` 要約付き) → `brew untap`。ツールバー **Refresh** で Tap 一覧も再取得 |
 | 操作履歴 | サイドバー **History** (`BrewOperationHistoryStore`、install/upgrade/tap 等を記録) |
 | パッケージ詳細 README | `brew info` caveats + GitHub README フォールバック (`PackageDetailView`) |
 | Cakebrew 移行 | 起動時 `com.brunophilipe.Cakebrew.plist` 検出時オプションシート (`CakebrewMigration`) |
@@ -142,6 +142,7 @@ Uninstall / 単体 Upgrade は従来どおり直実行 (オーバーレイは Up
 ### 4.1. 一覧 → 詳細 → 戻る `{@ux_flows_spec:s4-1}`
 
 * 行タップで詳細を表示しても、**サイドバーで選んでいるセクション** (Installed / Outdated 等) は維持します。
+* 詳細表示中は **検索バーを非表示** にします (一覧でのフィルターは入力を即時反映。詳細で Enter を押しても何も起きない混乱を避ける)。
 * **[戻る]** では同一セクションの一覧に戻ります (別タブには自動遷移しません)。
 * 詳細のナビゲーションタイトルは **パッケージ名** のみです。直前が Outdated 由来か Installed 由来かは、サイドバーのハイライトで判別します。
 * 詳細の Upgrade / Status は `brew outdated` 一覧と照合した結果を優先し、操作後の再読み込みで更新します。

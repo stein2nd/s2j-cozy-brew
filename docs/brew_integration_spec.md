@@ -126,6 +126,8 @@ brew 未導入ユーザーに対して、公式インストール・スクリプ
 ## 5. パッケージ詳細 (`brew info`) `{@brew_integration_spec:s5}`
 
 * 詳細画面の表示時に `brew info --json=v2 <name>` を実行します (Cask は `--cask` を付与)。
+* 併せてプレーン `brew info <name>` を実行し、**Installed Versions / Options / Analytics** など JSON にない行を `BrewInfoTextParser` で補完します。
+* `installed[].runtime_dependencies` から **Recursive Runtime** 行を組み立て、インストール済み一覧と照合して ✔ 表示します。
 * 一覧、Outdated 由来の `Package` (インストール状態・`installed_versions` 等) とマージし、**説明 (`desc`)**・**homepage**・**dependencies** を補完します。
 * 取得失敗時は一覧データのみ表示し、警告メッセージを出します。
 
@@ -165,7 +167,7 @@ brew 未導入ユーザーに対して、公式インストール・スクリプ
 ### 5.4. ツールバー Refresh (一覧の再同期)`{@brew_integration_spec:s5-4}`
 
 * **Warnings 以外**のサイドバーで、右上 `arrow.clockwise` (ラベル **Refresh**) を押すと `refreshApplicationState()` を実行します。
-* 手順: `["update"]` (`brew update`) → `refreshInstalledPackages(managingLoading: false)` → `refreshOutdatedPackages(managingLoading: false)` → `refreshManagedServices()`。外側で `isLoading` を1回だけ立て、一覧に `ProgressView` を出します。
+* 手順: `["update"]` (`brew update`) → `refreshInstalledPackages(managingLoading: false)` → `refreshOutdatedPackages(managingLoading: false)` → `refreshTaps(managingLoading: false)` → `refreshManagedServices()`。外側で `isLoading` を1回だけ立て、一覧に `ProgressView` を出します。
 * `update()` 単体は **brew の式更新のみ** (一覧は再取得しない)。ツールバーからは呼びません。
 * ターミナル委譲で Cask を上げた後、Outdated から消えない場合の**想定操作**はこの Refresh です。
 * **Warnings** タブでは同アイコンが `refreshDoctorWarnings()` のみ (`brew doctor` 再実行)。
@@ -219,4 +221,4 @@ brew 未導入ユーザーに対して、公式インストール・スクリプ
 | Tap 削除 | `["untap", name]` |
 
 * 詳細は [models_spec.md](models_spec.md) の JSON 形式と合わせて参照してください。
-* GUI: [ux_flows_spec.md §3.0](ux_flows_spec.md#30-現行実装-2026-11-22-時点) (公式 Tap の untap は拒否)。
+* GUI: [ux_flows_spec.md §3.0](ux_flows_spec.md#30-現行実装-2026-11-22-時点) (公式 Tap の untap は拒否。untap 前に `brew tap-info --json` で Formula/Cask 件数とインストール済み名を確認ダイアログに表示)。

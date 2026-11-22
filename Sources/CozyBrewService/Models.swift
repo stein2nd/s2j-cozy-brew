@@ -89,6 +89,10 @@ public struct Formula: BrewPackage {
     public let tap: String?
     public let rubySourcePath: String?
     public let caveats: String?
+    public let linkedKeg: String?
+    public let versions: BrewFormulaVersions?
+    /// `brew info --json=v2` の `installed` (runtime_dependencies を含む行)
+    public let installedKegRecords: [FormulaInstalledKegRecord]?
 
     public init(
         id: String,
@@ -110,7 +114,10 @@ public struct Formula: BrewPackage {
         license: String? = nil,
         tap: String? = nil,
         rubySourcePath: String? = nil,
-        caveats: String? = nil
+        caveats: String? = nil,
+        linkedKeg: String? = nil,
+        versions: BrewFormulaVersions? = nil,
+        installedKegRecords: [FormulaInstalledKegRecord]? = nil
     ) {
         self.id = id
         self.name = name
@@ -132,9 +139,12 @@ public struct Formula: BrewPackage {
         self.tap = tap
         self.rubySourcePath = rubySourcePath
         self.caveats = caveats
+        self.linkedKeg = linkedKeg
+        self.versions = versions
+        self.installedKegRecords = installedKegRecords
     }
 
-    private enum CodingKeys: String, CodingKey {
+    enum CodingKeys: String, CodingKey {
         case id
         case name
         case fullName = "full_name"
@@ -155,9 +165,11 @@ public struct Formula: BrewPackage {
         case tap
         case rubySourcePath = "ruby_source_path"
         case caveats
+        case linkedKeg = "linked_keg"
+        case versions
     }
 
-    private enum OutdatedJSONKeys: String, CodingKey {
+    enum OutdatedJSONKeys: String, CodingKey {
         case installedVersions = "installed_versions"
         case currentVersion = "current_version"
     }
@@ -196,18 +208,14 @@ public struct Formula: BrewPackage {
         }
         version = decodedVersion
 
-        var decodedInstalled: [InstalledVersion]?
-        if let installedArray = try? container.decode([InstalledVersion].self, forKey: .installed) {
-            decodedInstalled = installedArray
-        }
-        if decodedInstalled == nil,
-           let versionStrings = JSONLenient.decodeStringArray(from: outdatedContainer, forKey: .installedVersions)
-        {
-            decodedInstalled = versionStrings.map {
-                InstalledVersion(version: $0, installedOnRequest: true, installedAsDependency: false)
-            }
-        }
-        installed = decodedInstalled
+        linkedKeg = JSONLenient.decodeString(from: container, forKey: .linkedKeg)
+        versions = try infoContainer.decodeIfPresent(BrewFormulaVersions.self, forKey: .versions)
+        let installedFields = FormulaDecoding.installedFields(
+            from: container,
+            outdatedContainer: outdatedContainer
+        )
+        installedKegRecords = installedFields.kegRecords
+        installed = installedFields.versions
 
         dependencies = JSONLenient.decodeStringArray(from: container, forKey: .dependencies)
         buildDependencies = JSONLenient.decodeStringArray(from: container, forKey: .buildDependencies)
@@ -215,7 +223,7 @@ public struct Formula: BrewPackage {
         pinned = try container.decodeIfPresent(Bool.self, forKey: .pinned)
 
         var decodedOutdated = try container.decodeIfPresent(Bool.self, forKey: .outdated)
-        if decodedOutdated == nil, let decodedInstalled, !decodedInstalled.isEmpty,
+        if decodedOutdated == nil, let installed, !installed.isEmpty,
            decodedVersion != nil
         {
             decodedOutdated = true
@@ -228,13 +236,7 @@ public struct Formula: BrewPackage {
         tap = try container.decodeIfPresent(String.self, forKey: .tap)
         rubySourcePath = try container.decodeIfPresent(String.self, forKey: .rubySourcePath)
         caveats = try container.decodeIfPresent(String.self, forKey: .caveats)
-        if let licenseString = try? container.decodeIfPresent(String.self, forKey: .license) {
-            license = licenseString
-        } else if let licenseList = try? container.decodeIfPresent([String].self, forKey: .license) {
-            license = licenseList.joined(separator: " AND ")
-        } else {
-            license = nil
-        }
+        license = FormulaDecoding.license(from: container)
     }
 }
 
@@ -670,6 +672,8 @@ public struct Package: Identifiable, Hashable, Sendable {
     public let installedAsDependency: Bool?
     /// `brew info` の caveats、または README フォールバック (Markdown テキスト)
     public let infoMarkdown: String?
+    /// Keg / Options / Analytics 等 (`brew info` CLI 寄せ)
+    public let infoExtras: PackageInfoExtras?
 
     public init(
         id: String,
@@ -689,7 +693,8 @@ public struct Package: Identifiable, Hashable, Sendable {
         formulaSourceURL: String? = nil,
         installedOnRequest: Bool? = nil,
         installedAsDependency: Bool? = nil,
-        infoMarkdown: String? = nil
+        infoMarkdown: String? = nil,
+        infoExtras: PackageInfoExtras? = nil
     ) {
         self.id = PackageText.normalizeRequired(id)
         self.name = PackageText.normalizeRequired(name)
@@ -709,6 +714,31 @@ public struct Package: Identifiable, Hashable, Sendable {
         self.installedOnRequest = installedOnRequest
         self.installedAsDependency = installedAsDependency
         self.infoMarkdown = PackageText.normalizeOptional(infoMarkdown)
+        self.infoExtras = infoExtras
+    }
+
+    public func withInfoExtras(_ extras: PackageInfoExtras?) -> Package {
+        Package(
+            id: id,
+            name: name,
+            fullName: fullName,
+            type: type,
+            desc: desc,
+            homepage: homepage,
+            version: version,
+            installedVersion: installedVersion,
+            isInstalled: isInstalled,
+            isOutdated: isOutdated,
+            isDeprecated: isDeprecated,
+            dependencies: dependencies,
+            buildDependencies: buildDependencies,
+            license: license,
+            formulaSourceURL: formulaSourceURL,
+            installedOnRequest: installedOnRequest,
+            installedAsDependency: installedAsDependency,
+            infoMarkdown: infoMarkdown,
+            infoExtras: extras
+        )
     }
 
     public func withInfoMarkdown(_ markdown: String?) -> Package {
@@ -731,7 +761,8 @@ public struct Package: Identifiable, Hashable, Sendable {
             formulaSourceURL: formulaSourceURL,
             installedOnRequest: installedOnRequest,
             installedAsDependency: installedAsDependency,
-            infoMarkdown: markdown
+            infoMarkdown: markdown,
+            infoExtras: infoExtras
         )
     }
 
@@ -768,7 +799,8 @@ public struct Package: Identifiable, Hashable, Sendable {
             formulaSourceURL: formulaSourceURL ?? local.formulaSourceURL,
             installedOnRequest: local.installedOnRequest ?? installedOnRequest,
             installedAsDependency: local.installedAsDependency ?? installedAsDependency,
-            infoMarkdown: infoMarkdown ?? local.infoMarkdown
+            infoMarkdown: infoMarkdown ?? local.infoMarkdown,
+            infoExtras: infoExtras ?? local.infoExtras
         )
     }
 
@@ -825,7 +857,8 @@ public struct Package: Identifiable, Hashable, Sendable {
             formulaSourceURL: detail.formulaSourceURL ?? formulaSourceURL,
             installedOnRequest: installedOnRequest ?? detail.installedOnRequest,
             installedAsDependency: installedAsDependency ?? detail.installedAsDependency,
-            infoMarkdown: detail.infoMarkdown ?? infoMarkdown
+            infoMarkdown: detail.infoMarkdown ?? infoMarkdown,
+            infoExtras: detail.infoExtras ?? infoExtras
         )
     }
 
@@ -877,7 +910,8 @@ public struct Package: Identifiable, Hashable, Sendable {
             formulaSourceURL: formulaSourceURL,
             installedOnRequest: installedOnRequest ?? list.installedOnRequest,
             installedAsDependency: installedAsDependency ?? list.installedAsDependency,
-            infoMarkdown: infoMarkdown
+            infoMarkdown: infoMarkdown,
+            infoExtras: infoExtras
         )
     }
 

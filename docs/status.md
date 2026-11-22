@@ -3,7 +3,7 @@
 | 項目 | 内容 |
 | --- | --- |
 | 最終更新 | 2026-11-22 |
-| アプリ版 (正本) | `package.json` → **1.0.20** (build **4**) |
+| アプリケーション版 (正本) | `package.json` → **1.0.21** (build **4**) |
 | SPM pin | `s2j-source-list` revision `1f7375e` / `main`、`s2j-about-window` revision `290fbff` / `main` |
 
 ---
@@ -53,7 +53,7 @@
 | テストエクステンション (UI / 統合) | 実装済み | 100 | [§テスト拡張](#status-quality-ui) (4/4) |
 | プロダクトゴール (Should) | 実装済み | 100 | [§プロダクト Should](#status-should-product) (7/7) |
 
-**Must 範囲 (上表の先頭6行):** **100%** — macOS アプリとして Homebrew を GUI で日常操作できる水準。
+**Must 範囲 (上表の先頭6行):** **100%** — macOS アプリケーションとして Homebrew を GUI で日常操作できる水準。
 
 **全体 (Should ・テストエクステンション等を含む):** チェックリスト **76項目中76項目** = **100%** (下記と [SPEC.md §11.4](SPEC.md) のカテゴリー平均は別集計)。
 
@@ -109,7 +109,7 @@
 ### CozyBrewApp ターゲット (Must) `{@status:s-status-app}`
 
 * [x] `BrewNotAvailableView` + opt-in 自動インストール ([ux_flows_spec.md](ux_flows_spec.md) §1)
-* [x] About / License / Acknowledgements ([design_spec.md](design_spec.md)、S2J About v3+)
+* [x] About / License / Acknowledgements ([design_spec.md](design_spec.md)、S2J `AboutWindow` + `CozyBrewAboutPresenter`)
 * [x] `AppDelegate` / ウィンドウ前面表示
 * [x] `AppIcon.appiconset`
 * [x] `MARKETING_VERSION` / `buildNumber` → `Info.plist`
@@ -121,11 +121,12 @@
 
 * [x] サイドバー6セクション (S2J Source List **フェーズ1**)
 * [x] Installed / Outdated / Taps / Formulae / Casks 一覧
-* [x] クライアント検索 (一覧フィルター)
-* [x] 詳細表示、Installed / Outdated 照合
+* [x] クライアント検索 (一覧フィルター、入力の即時反映)
+* [x] 詳細表示、Installed / Outdated 照合 (`brew info` JSON + テキスト補完セクション)
+* [x] 詳細表示中は検索バー非表示
 * [x] install / uninstall / upgrade (行・詳細)
 * [x] Cask Upgrade 失敗時のターミナル委譲 (行下 `PackageUpgradeFailurePanel`)
-* [x] ツールバー Refresh (`refreshApplicationState`、ローディング表示)
+* [x] ツールバー Refresh (`refreshApplicationState`: `brew update` + Installed / Outdated / **Taps**、ローディング表示)
 * [x] `BrewOperationOverlay` (Upgrade blocking)
 * [x] Formulae/Casks カタログページ分割
 * [x] `brew doctor` Warnings + バッジ
@@ -165,7 +166,7 @@
 
 ### テストエクステンション (UI / 統合) `{@status:s-status-quality-ui}`
 
-* [x] Core / Service ユニットテスト (現状の主テスト)
+* [x] Core / Service ユニットテスト (現状の主テスト、`BrewInfoTextParserTests` / `BrewTapInfoTests` 含む)
 * [x] UI テスト (macOS) — `Tests/CozyBrewUITests/` (起動・ウィンドウスモーク、ローカル `xcodebuild test`)
 * [x] brew 連携の統合テスト — `BrewServiceIntegrationTests` + [testing_spec.md](testing_spec.md) で CI 範囲を明文化
 * [x] UI スナップショット — `UISnapshotRenderTests` (ビットマップ/レイアウトメトリクス、CI の `swift test`)
@@ -179,7 +180,8 @@
 * [x] GPL 系リソース (LICENSE / ACK) のバンドル表示
 * [x] tap / **untap** の GUI 操作 — Taps ツールバー + コンテキストメニュー (`BrewManager.addTap` / `removeTap`)
 * [x] インストール **履歴** の保持・表示 — `BrewOperationHistoryStore` + サイドバー **History**
-* [x] パッケージ詳細での README (Markdown) 表示 — `brew info` caveats + GitHub README フォールバック
+* [x] パッケージ詳細での README (Markdown) 表示 — `brew info` caveats + GitHub README フォールバック。Keg / Options / Analytics / Runtime は `BrewInfoTextParser` 補完
+* [x] untap 確認に `brew tap-info --json` 要約 (`BrewTapInfo` / `tapRemovalSummary`)
 * [x] Cakebrew 設定移行 — `CakebrewMigration` 検出シート + 履歴取り込み
 
 ## ゲート外・任意 `{@status:s-status-gates}`

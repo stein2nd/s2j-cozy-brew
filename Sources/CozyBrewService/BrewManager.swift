@@ -361,14 +361,21 @@ public final class BrewManager: ObservableObject {
     }
 
     /// Tap 一覧を取得
-    public func refreshTaps() async {
+    public func refreshTaps(managingLoading: Bool = true) async {
         guard isBrewAvailable else {
             tapsErrorMessage = "Homebrew is not available"
             return
         }
 
-        isLoading = true
+        if managingLoading {
+            isLoading = true
+        }
         tapsErrorMessage = nil
+        defer {
+            if managingLoading {
+                isLoading = false
+            }
+        }
 
         do {
             if let cached: BrewTapResponse = try cache.load(BrewTapResponse.self, forKey: .taps) {
@@ -396,8 +403,6 @@ public final class BrewManager: ObservableObject {
         } catch {
             tapsErrorMessage = "Failed to load taps: \(error.localizedDescription)"
         }
-
-        isLoading = false
     }
 
     /// パッケージを検索
@@ -537,73 +542,10 @@ public final class BrewManager: ObservableObject {
         await refreshManagedServices()
     }
 
-    /// `brew info --json=v2` で説明・依存関係等を補完した `Package` を返す
-    public func packageInfo(for package: Package) async throws -> Package {
-        guard isBrewAvailable else {
-            throw BrewManagerError.brewNotAvailable
-        }
-
-        var args = ["info", "--json=v2"]
-        if package.type == .cask {
-            args.append("--cask")
-        }
-        args.append(package.name)
-
-        let result = try await brewProcess.run(args)
-        guard result.isSuccess else {
-            throw BrewManagerError.packageInfoFailed(stderr: result.errorMessage)
-        }
-
-        let decoder = JSONDecoder()
-        let response = try decoder.decode(BrewInfoResponse.self, from: Data(result.stdout.utf8))
-
-        let listSeed = freshListPackage(matching: package) ?? package
-
-        let enriched: Package
-        switch package.type {
-        case .formula:
-            guard let formula = response.formulae?.first else {
-                throw BrewManagerError.packageInfoNotFound(name: package.name)
-            }
-            let detail = Package.from(formula)
-            enriched = listSeed.enriched(
-                with: detail,
-                dependencies: formula.dependencies,
-                buildDependencies: formula.buildDependencies
-            )
-        case .cask:
-            guard let cask = response.casks?.first else {
-                throw BrewManagerError.packageInfoNotFound(name: package.name)
-            }
-            let detail = Package.from(cask)
-            enriched = listSeed.enriched(with: detail)
-        }
-
-        let listed = applyingCurrentLists(to: enriched)
-        if let markdown = listed.infoMarkdown, !markdown.isEmpty {
-            return listed
-        }
-        if let readme = await BrewGitHubReadmeFetcher.fetch(homepage: listed.homepage) {
-            return listed.withInfoMarkdown(readme)
-        }
-        return listed
-    }
-
     /// インストール済み / Outdated 一覧から最新の行 `Package` を返す
     public func freshListPackage(matching package: Package) -> Package? {
         outdatedPackages.first { $0.id == package.id && $0.type == package.type }
             ?? installedPackages.first { $0.id == package.id && $0.type == package.type }
-    }
-
-    /// `brew outdated` / `brew list` の結果で `isOutdated` 等を上書きする (`brew info` 単体より優先)
-    private func applyingCurrentLists(to package: Package) -> Package {
-        if let outdated = outdatedPackages.first(where: { $0.id == package.id && $0.type == package.type }) {
-            return package.withListPresentation(from: outdated, isOutdated: true)
-        }
-        if let installed = installedPackages.first(where: { $0.id == package.id && $0.type == package.type }) {
-            return package.withListPresentation(from: installed, isOutdated: false)
-        }
-        return package
     }
 
     /// すべてのパッケージをアップグレード
@@ -662,6 +604,7 @@ public final class BrewManager: ObservableObject {
 
         await refreshInstalledPackages(managingLoading: false)
         await refreshOutdatedPackages(managingLoading: false)
+        await refreshTaps(managingLoading: false)
         await refreshManagedServices()
     }
 

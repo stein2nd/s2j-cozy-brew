@@ -1,5 +1,4 @@
-import S2JAboutWindow
-import SwiftUI
+import Foundation
 
 enum CozyBrewAbout {
     /// バンドル内 GPL 全文（`CozyBrewApp/Resources/LICENSE.txt`、ルート LICENSE と同期）
@@ -14,30 +13,4 @@ enum CozyBrewAbout {
 
     [GitHub Repository](https://github.com/stein2nd/s2j-cozy-brew)
     """
-}
-
-struct CozyBrewAboutSheet: View {
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        VStack(spacing: 0) {
-            AboutView(
-                content: CozyBrewAbout.markdown,
-                appName: "CozyBrew",
-                licenseResourceName: CozyBrewAbout.licenseResourceName,
-                acknowledgementsResourceName: CozyBrewAbout.acknowledgementsResourceName
-            )
-            Divider()
-            HStack {
-                Spacer()
-                Button("Close") {
-                    dismiss()
-                }
-                .keyboardShortcut(.cancelAction)
-                .buttonStyle(.borderedProminent)
-            }
-            .padding()
-        }
-        .frame(width: 400)
-    }
 }

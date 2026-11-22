@@ -1,3 +1,4 @@
+import CozyBrewService
 import Foundation
 
 /// CozyBrewUIComponents 用ローカライズ文字列 (`Localizable.strings` / `Bundle.module`)
@@ -168,6 +169,30 @@ public enum CozyBrewL10n: Sendable {
         tr("detail.section.readme")
     }
 
+    public static var sectionBrewVersionLine: String {
+        tr("detail.section.brew_version")
+    }
+
+    public static var sectionInstalledKegs: String {
+        tr("detail.section.installed_kegs")
+    }
+
+    public static var sectionRecursiveRuntime: String {
+        tr("detail.section.recursive_runtime")
+    }
+
+    public static var sectionOptions: String {
+        tr("detail.section.options")
+    }
+
+    public static var sectionAnalytics: String {
+        tr("detail.section.analytics")
+    }
+
+    public static var runtimeDependencyDirect: String {
+        tr("detail.runtime.direct")
+    }
+
     public static var sectionStatus: String {
         tr("detail.section.status")
     }
@@ -282,6 +307,24 @@ public enum CozyBrewL10n: Sendable {
 
     public static func tapUntapMessage(_ name: String) -> String {
         tr("tap.untap.message", name)
+    }
+
+    public static func tapUntapSummary(_ summary: TapRemovalSummary) -> String {
+        let installedList = summary.installedNames.joined(separator: ", ")
+        if summary.installedNames.isEmpty {
+            return tr(
+                "tap.untap.summary.no_installed",
+                summary.formulaCount,
+                summary.caskCount
+            )
+        }
+        return tr(
+            "tap.untap.summary",
+            summary.formulaCount,
+            summary.caskCount,
+            summary.installedNames.count,
+            installedList
+        )
     }
 
     public static var tapUntapConfirm: String {
