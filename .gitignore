@@ -69,6 +69,7 @@ node_modules
 
 # Cursor / VS Code workspace (local)
 *.code-workspace
+.textlintrc.backup.json
 
 .venv
 venv/
