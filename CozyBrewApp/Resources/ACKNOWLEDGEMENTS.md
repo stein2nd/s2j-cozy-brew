@@ -1,6 +1,6 @@
 # OSS Notice for CozyBrewApp
 
-_Generated: 2026-11-22_
+_Generated: 2026-11-23_
 
 This product includes open source software components listed below. The full license texts are reproduced in the Licenses section.
 
@@ -8,7 +8,7 @@ This product includes open source software components listed below. The full lic
 
 | Name | Version | License | Copyright |
 |---|---|---|---|
-| CozyBrewApp | 1.0.21 |  |  |
+| CozyBrewApp | 1.0.22 |  |  |
 | s2j-about-window | 3.0.10 | GPL-3.0-or-later |  |
 | s2j-source-list | 2.0.23 | GPL-3.0-or-later |  |
 | swift-concurrency-extras | 1.3.1 |  |  |
