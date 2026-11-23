@@ -2,6 +2,13 @@
 
 ## unreleased
 
+## 1.0.23 - 2026-11-23
+
+* SPM pin: 変更なし (`s2j-source-list` `9e872f0`、`s2j-about-window` `01d4fae`、`main` 最新)
+* **開発**: Release ビルドを `/Applications/CozyBrew.app` に `ditto` する `scripts/install-applications.sh` (`npm run install:applications` / `install:applications:build`、`build:release`)
+* **ビルド**: `project.yml` の `DEVELOPMENT_TEAM` を Project 共通に統一 (空のターゲット Team 削除。Configuration 切替で Team が None に戻る問題の緩和)
+* **docs**: `dependency_updates.md` に install スクリプト・署名注意を追記
+
 ## 1.0.22 - 2026-11-23
 
 * SPM pin: `s2j-source-list` `9e872f0`、`s2j-about-window` `01d4fae` (`main` 最新)

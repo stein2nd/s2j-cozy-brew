@@ -1,0 +1,5 @@
+# 任意: XcodeGen は project.yml のみを正本とします。
+# 別 Team でビルドする場合は project.yml の settings.base.DEVELOPMENT_TEAM を変更するか、
+# 生成後に Xcode で一度設定したあと、project.yml に同じ Team を書いて xcodegen で維持してください。
+#
+# DEVELOPMENT_TEAM: YOUR_TEAM_ID

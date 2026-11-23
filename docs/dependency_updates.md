@@ -28,6 +28,9 @@ Xcode プロジェクト利用時は、ルートの `Package.resolved` に加え
 | `npm run release:before-release-build` | Xcode **Release Build** の直前 |
 | `npm run release:after-release-build` | Release ビルド後: `ack:doctor` → `ack:generate` |
 | `npm run release:before-tag-push` | `git tag` / GitHub Release の直前 |
+| `npm run build:release` | Release を `build/DerivedData` にビルドのみ |
+| `npm run install:applications` | Release `.app` を `/Applications/CozyBrew.app` に ditto (実行中は中止、`--build` でビルド併用) |
+| `npm run install:applications:build` | 上記と同じ (Release ビルド → 複製) |
 
 ### 版番号の正本 (CozyBrewApp) `{@dependency_updates:s-cozybrewapp}`
 
@@ -50,6 +53,11 @@ Xcode プロジェクト利用時は、ルートの `Package.resolved` に加え
 `lint:swift` のたびに `version:sync` は不要です。**配布・タグの直前** だけ上記マイルストーンを使います。
 
 `CozyBrewUIComponents` の `Localizable.strings` を更新したあとは **`npm run xcode:generate`** で Xcode プロジェクトにリソースを反映してください。
+
+### 署名 (Team / Configuration) `{@dependency_updates:s-signing}`
+
+* **正本:** `project.yml` の `settings.base` に `CODE_SIGN_STYLE: Automatic` と `DEVELOPMENT_TEAM` を置きます。`CozyBrewApp` ターゲットに **空の** `DEVELOPMENT_TEAM: ""` を書くと、Project の Configuration を Debug ↔ Release で切り替えたときに Xcode の **Signing** が None に見えることがあります (ターゲット側の空値が Project より優先されるため)。
+* **`npm run xcode:generate` のあと:** Xcode を閉じてから再生成するか、プロジェクトを開き直してください。Team が別 ID なら `project.yml` の `DEVELOPMENT_TEAM` を自分の Team に変えてから `xcodegen` します。
 
 ### Periphery (ローカル vs CI) `{@dependency_updates:s-periphery}`
 
