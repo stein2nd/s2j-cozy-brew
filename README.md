@@ -20,31 +20,41 @@ S2J CozyBrew は、Homebrew パッケージを管理するためのモダンな 
 ## Features
 
 <!-- 
-* **User-Friendly GUI**: Manage Homebrew packages without terminal knowledge
-* **Package Management**: List, search, install, uninstall, and update packages
-* **Homebrew Installation Guide**: Guided installation flow for users without Homebrew
-* **Real-time Progress**: View installation and update progress with real-time logs
-* **Package Details**: View detailed information about packages including dependencies
-* **Dark Mode**: Full dark mode support
-* **Localization**: Built-in support for multiple languages (English, Japanese)
-* **SwiftUI Native**: Built entirely with SwiftUI for modern UI
-* **Swift Package**: Core logic available as reusable Swift Package
+* **User-friendly GUI**: Perform everyday Homebrew (Formula / Cask) operations without any terminal knowledge
+* **Sidebar ([S2J Source List](https://github.com/stein2nd/s2j-source-list))**: Catalogs for Installed / Outdated / Taps / Formulae / Casks, **Warnings** (`brew doctor`), **History** (operation history)
+* **Listing & Search**: Instant client-side filtering. Package details via `brew info` (JSON + text completion: Keg / Options / Analytics / Runtime) and README (caveats / GitHub)
+* **Install / uninstall / upgrade**: Execute from rows or details. Verify **Install** in `InstallFlowView`. From the Outdated section, use **Upgrade All** (with confirmation)
+* **Cask Fallback**: Upgrades that cannot be completed via the GUI (due to lack of `sudo` or TTY, etc.) can be delegated to the terminal from the panel below the row (Copy Command / Run in Terminal)
+* **Tap Management**: Add taps; confirm with a summary of `brew tap-info` before untapping
+* **Toolbar Refresh**: Re-fetch Installed / Outdated / Taps after running `brew update`
+* **Brew Not Installed**: Full-screen `BrewNotAvailableView` (official installation script can be run via opt-in)
+* **Migration from Cakebrew**: Optionally import history and other data when detecting old Cakebrew settings
+* **Settings…** (⌘,): Cozy Brew-specific (`CozyBrewSettingsView` — version information, re-import Cakebrew settings, and save telemetry opt-in only)
+* **Homebrew Environment…** (⇧⌘ E): Displays `brew config`, key paths, and CozyBrew data in read-only mode (Copy / Finder / Terminal, jump to **Warnings**) — [ux_flows_spec §6](docs/ux_flows_spec.md)
+* **About / License**: Displays the `AboutView` from the [S2J About Window](https://github.com/stein2nd/s2j-about-window) as a SwiftUI window. GPL and Acknowledgments are displayed offline from the bundle
+* **Localization**: English and Japanese (`CozyBrewL10n` + `Localizable.strings`. Some menu items, etc., remain in English)
+* **Swift Package**: Reusable as `CozyBrewCore` / `CozyBrewService` / `CozyBrewUIComponents`
  -->
 
-* **ユーザーフレンドリーな GUI**: ターミナルの知識なしで Homebrew パッケージを管理
-* **パッケージ管理**: パッケージの一覧表示、検索、インストール、アンインストール、アップデート
-* **Homebrew インストールガイド**: Homebrew が未導入のユーザー向けのガイド付きインストールフロー
-* **リアルタイム進捗**: リアルタイムログでインストールとアップデートの進捗を表示
-* **パッケージ詳細**: 依存関係を含むパッケージの詳細情報を表示
-* **ダークモード**: 完全なダークモード対応
-* **ローカライズ**: 複数言語 (英語、日本語) の組込みサポート
-* **SwiftUI ネイティブ**: モダン UI を実現する SwiftUI 完全構築
-* **Swift Package**: 再利用可能な Swift Package としてコアロジックを提供
+* **ユーザーフレンドリーな GUI**: ターミナルの知識なしで Homebrew (Formula / Cask) を日常操作
+* **サイドバー ([S2J Source List](https://github.com/stein2nd/s2j-source-list))**: Installed / Outdated / Taps / Formulae / Casks カタログ、**Warnings** (`brew doctor`)、**History** (操作履歴)
+* **一覧・検索**: クライアント側の即時フィルター。パッケージ詳細は `brew info` (JSON + テキスト補完: Keg / Options / Analytics / Runtime) と README (caveats / GitHub)
+* **Install / uninstall / upgrade**: 行・詳細から実行。**Install** は `InstallFlowView` で確認。Outdated から **Upgrade All** (確認付き)
+* **Cask のフォールバック**: `sudo` / TTY 不足などで GUI 完了できない Upgrade は行下パネルからターミナルへ委譲 (Copy Command / Run in Terminal)
+* **Tap 管理**: Tap の追加、untap 前の `brew tap-info` 要約付き確認
+* **ツールバー Refresh**: `brew update` のあと Installed / Outdated / Taps を再取得
+* **brew 未導入**: 全画面 `BrewNotAvailableView` (opt-in で公式インストールスクリプト実行可)
+* **Cakebrew からの移行**: 旧 Cakebrew 設定の検出時にオプションで履歴などを取り込み
+* **Settings…** (⌘,): Cozy Brew 専用 (`CozyBrewSettingsView` — 版情報、Cakebrew 再取り込み、テレメトリ opt-in 保存のみ)
+* **Homebrew 環境…** (⇧⌘ E): `brew config`・主要パス・ CozyBrew データを read-only 表示 (コピー / Finder / ターミナル、**Warnings** へジャンプ) — [ux_flows_spec §6](docs/ux_flows_spec.md)
+* **About / License**: [S2J About Window](https://github.com/stein2nd/s2j-about-window) の `AboutView` を SwiftUI ウィンドウで表示。GPL / Acknowledgements はバンドルからオフライン表示
+* **ローカライズ**: 英語・日本語 (`CozyBrewL10n` + `Localizable.strings`。メニュー等は一部英語)
+* **Swift Package**: `CozyBrewCore` / `CozyBrewService` / `CozyBrewUIComponents` として再利用可能
 
 ## License
 
 <!-- 
-This project is licensed under the GPL 3.0+ License. See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GPL v3.0 or later. For details, please refer to the [LICENSE](LICENSE) file.
  -->
 
 本プロジェクトは GPL3.0以降ライセンスの下で提供されています。詳細は [LICENSE](LICENSE) ファイルを参照してください。
@@ -63,9 +73,17 @@ For support, feature requests, or bug reports, please visit the [GitHub Issues](
 
 ### Requirements
 
+<!-- 
+* macOS v15.0 or later
+* Xcode v26.5 or later
+* Swift v6.3 or later
+* **Homebrew** must be installed in your runtime environment (the `brew` command must be found in your PATH). Even if it is not installed, the application will launch and display the installation guide.
+ -->
+
 * macOS v15.0+
-* Xcode v26.0+
+* Xcode v26.5+
 * Swift v6.3+
+* 実行環境に **Homebrew** (`brew` が PATH 上で検出できること)。未導入でもアプリケーションは起動し、導入ガイドを表示します
 
 ### Building from Source
 
@@ -77,25 +95,6 @@ To build the application from source:
 
 <!-- 
 1. Clone the repository:
-
-   ```zsh
-   git clone https://github.com/stein2nd/s2j-cozy-brew.git
-   cd s2j-cozy-brew
-   ```
-
-2. Generate the Xcode project (if needed):
-
-   ```zsh
-   xcodegen generate
-   ```
-
-3. Open the project in Xcode:
-
-   ```zsh
-   open CozyBrew.xcodeproj
-   ```
-
-4. Build and run the application in Xcode
  -->
 
 1. リポジトリをクローンします:
@@ -105,11 +104,19 @@ To build the application from source:
    cd s2j-cozy-brew
    ```
 
+<!-- 
+2. Create an Xcode project (if necessary):
+ -->
+
 2. Xcode プロジェクトを生成します (必要な場合):
 
    ```zsh
    xcodegen generate
    ```
+
+<!-- 
+3. Open the project in Xcode:
+ -->
 
 3. Xcode でプロジェクトを開きます:
 
@@ -117,12 +124,16 @@ To build the application from source:
    open CozyBrew.xcodeproj
    ```
 
+<!-- 
+4. Build and run the application in Xcode.
+ -->
+
 4. Xcode でアプリケーションをビルドして実行します
 
 ### Using as a Swift Package
 
 <!-- 
-The core logic is available as a Swift Package. Add the following to your `Package.swift` file:
+CoreLogic is available as a Swift package. Add the following to your `Package.swift` file:
  -->
 
 コアロジックは Swift Package として利用可能です。`Package.swift` ファイルに下記を追加します:
@@ -134,96 +145,94 @@ dependencies: [
 ```
 
 <!-- 
-The package provides the following products:
+This package provides the following products:
  -->
 
 パッケージは下記の製品を提供します:
 
+<!-- 
 * `CozyBrewCore` - Core functionality for Homebrew operations
 * `CozyBrewService` - Service layer with models and ViewModels
 * `CozyBrewUIComponents` - Reusable SwiftUI components
+ -->
+
+* `CozyBrewCore` - Homebrew の操作に関する中核機能
+* `CozyBrewService` - モデルと ViewModel を含むサービス層
+* `CozyBrewUIComponents` - 再利用可能な SwiftUI コンポーネント
 
 ## Usage
 
-<!-- 
 ### First Launch
- -->
-
-### 初回起動
 
 <!-- 
-When you first launch S2J CozyBrew, the application will check if Homebrew is installed on your system. If Homebrew is not found, you'll be presented with a guided installation flow that helps you install Homebrew safely.
+When you launch S2J CozyBrew for the first time, the application checks to see if Homebrew is installed on your system. If Homebrew is not found, a guided installation process will appear to help you install Homebrew safely.
  -->
 
 S2J CozyBrew を初めて起動すると、アプリケーションはシステムに Homebrew がインストールされているか確認します。Homebrew が見つからない場合、Homebrew を安全にインストールするためのガイド付きインストールフローが表示されます。
 
-<!-- 
 ### Managing Packages
- -->
-
-### パッケージの管理
 
 <!-- 
-Once Homebrew is installed and detected:
+If Homebrew is installed and detected:
  -->
 
 Homebrew がインストールされ、検出されると:
 
 <!-- 
-* **Browse Packages**: View installed packages, available packages, and outdated packages
-* **Search**: Search for packages by name
-* **Install**: Install packages with a single click
-* **Uninstall**: Remove packages you no longer need
-* **Update**: Update individual packages or all packages at once
-* **View Details**: See detailed information about packages including dependencies and descriptions
+* **Sidebar**: Switch between sections to view the list. Under **Warnings**, you can view the results of `brew doctor`, and under **History**, you can check the history of operations such as install, upgrade, and tap.
+* **Search**: Filter by name in the list (searches as you type). The search bar is hidden when viewing details.
+* **Actions**: Install (confirmation dialog), uninstall, and upgrade can be performed from a row or the details view. In the “Outdated” section, you can also use **Upgrade All**
+* **Details**: Dependencies, `brew info` supplementary section, and README. Use the **Refresh** button in the toolbar to update the main list and run `brew update`
+* **Settings & Diagnostics**: Access application settings via **Settings…** (⌘,) and view `brew config` and related information via **Homebrew Environment…** (⇧⌘ E) (editing is done in Terminal). The **About CozyBrew** menu displays the license and acknowledgments
  -->
 
-* **パッケージの閲覧**: インストール済みパッケージ、利用可能なパッケージ、アップデート可能なパッケージを表示
-* **検索**: 名前でパッケージを検索
-* **インストール**: ワンクリックでパッケージをインストール
-* **アンインストール**: 不要になったパッケージを削除
-* **アップデート**: 個別のパッケージまたはすべてのパッケージを一度にアップデート
-* **詳細表示**: 依存関係や説明を含むパッケージの詳細情報を表示
+* **サイドバー**: セクションを切り替えて一覧を表示します。**Warnings** で `brew doctor` の結果、**History** で install / upgrade / tap 等の操作履歴を確認できます
+* **検索**: 一覧上で名前フィルター (入力即時)。詳細表示中は検索バーを隠します
+* **操作**: Install (確認シート) / uninstall / upgrade は行または詳細から。Outdated では **Upgrade All** も利用できます
+* **詳細**: 依存関係、`brew info` 補足セクション、README。ツールバー **Refresh** で `brew update` と主要一覧を更新します
+* **設定・診断**: **Settings…** (⌘,) でアプリケーション設定、**Homebrew 環境…** (⇧⌘ E) で `brew config` 等を参照 (編集はターミナル)。メニュー **About CozyBrew** でライセンスと謝辞を表示します
+
+<!-- 
+For implementation details, see [docs/overview.md](docs/overview.md) §2.1.1 and [docs/ux_flows_spec.md](docs/ux_flows_spec.md).
+ -->
+
+実装の詳細は [docs/overview.md](docs/overview.md) §2.1.1と [docs/ux_flows_spec.md](docs/ux_flows_spec.md) を参照してください。
 
 ## Development
 
-<!-- 
 ### Project Structure
- -->
-
-### プロジェクト構造
 
 <!-- 
-The project follows a hybrid structure with both Swift Package and Xcode App Target:
+This project follows a hybrid structure that includes both a Swift package and an Xcode app target:
  -->
 
 このプロジェクトは、Swift Package と Xcode App Target の両方を持つハイブリッド構造に従っています:
 
 <!-- 
-* `Sources/` - Swift Package source code
-  * `CozyBrewCore/` - Core functionality (binary detection, process execution, installer)
-  * `CozyBrewService/` - Service layer (models, ViewModels, cache)
-  * `CozyBrewUIComponents/` - Reusable SwiftUI components
-* `CozyBrewApp/` - Application target (App resources, Info.plist, Assets)
-* `Tests/` - Test files
-* `Package.swift` - Package configuration
-* `project.yml` - XcodeGen configuration
+* `Sources/` — Swift Package source code
+  * `CozyBrewCore/` — `brew` binary detection, asynchronous `BrewProcess`, and installation assistance when not installed
+  * `CozyBrewService/` — `BrewManager`, models, cache, doctor / catalog API, operation history, environment snapshots (`BrewEnvironmentInfo`), `CozyBrewAppSettings`
+  * `CozyBrewUIComponents/` — Main window, Install flow, Details and Failure UI, `CozyBrewSettingsView` / `BrewEnvironmentView`, en/ja resources
+* `CozyBrewApp/` — SwiftUI `@main` (`WindowGroup` + `Settings` + About / `Window` for environment), `CozyBrewAbout` body
+* `Tests/` — `CozyBrewCoreTests` / `CozyBrewServiceTests` / `CozyBrewUIComponentsTests` / `CozyBrewUITests` (XCUITest is local)
+* `docs/` — Specifications and status ([docs/status.md](docs/status.md), [docs/SPEC.md](docs/SPEC.md))
+* `Package.swift` / `Package.resolved` — SPM (Dependencies: `s2j-source-list`, `s2j-about-window`)
+* `project.yml` — XcodeGen (Generates `CozyBrew.xcodeproj` with `npm run xcode:generate`)
+* `package.json` — Official version numbers (`version` / `buildNumber`), npm scripts for linting, testing, and release
  -->
 
-* `Sources/` - Swift Package ソースコード
-  * `CozyBrewCore/` - コア機能 (バイナリ検出、プロセス実行、インストーラ)
-  * `CozyBrewService/` - サービス層 (モデル、ViewModel、キャッシュ)
-  * `CozyBrewUIComponents/` - 再利用可能な SwiftUI コンポーネント
-* `CozyBrewApp/` - アプリケーションターゲット (アプリケーションリソース、Info.plist、Assets)
-* `Tests/` - テストファイル
-* `Package.swift` - パッケージ設定
-* `project.yml` - XcodeGen 設定
+* `Sources/` — Swift Package ソースコード
+  * `CozyBrewCore/` — `brew` バイナリ検出、非同期 `BrewProcess`、未導入時インストール補助
+  * `CozyBrewService/` — `BrewManager`、モデル、キャッシュ、doctor / カタログ API、操作履歴、環境スナップショット (`BrewEnvironmentInfo`)、`CozyBrewAppSettings`
+  * `CozyBrewUIComponents/` — メインウィンドウ、Install フロー、詳細・失敗 UI、`CozyBrewSettingsView` / `BrewEnvironmentView`、en/ja リソース
+* `CozyBrewApp/` — SwiftUI `@main` (`WindowGroup` + `Settings` + About / 環境用 `Window`)、`CozyBrewAbout` 本文
+* `Tests/` — `CozyBrewCoreTests` / `CozyBrewServiceTests` / `CozyBrewUIComponentsTests` / `CozyBrewUITests` (XCUITest はローカル)
+* `docs/` — 仕様・状態 ([docs/status.md](docs/status.md)、[docs/SPEC.md](docs/SPEC.md))
+* `Package.swift` / `Package.resolved` — SPM (依存: `s2j-source-list`、`s2j-about-window`)
+* `project.yml` — XcodeGen (`npm run xcode:generate` で `CozyBrew.xcodeproj` を生成)
+* `package.json` — 版番号正本 (`version` / `buildNumber`)、lint / テスト / リリース用 npm スクリプト
 
-<!-- 
 ### Setting Up Development Environment
- -->
-
-### 開発環境のセットアップ
 
 <!-- 
 To set up the development environment for this project:
@@ -233,41 +242,6 @@ To set up the development environment for this project:
 
 <!-- 
 1. Clone the repository:
-
-   ```zsh
-   git clone https://github.com/stein2nd/s2j-cozy-brew.git
-   cd s2j-cozy-brew
-   ```
-
-2. Install dependencies:
-
-   ```zsh
-   npm install
-   ```
-
-3. Generate the Xcode project:
-
-   ```zsh
-   xcodegen generate
-   ```
-
-4. Open the project in Xcode:
-
-   ```zsh
-   open CozyBrew.xcodeproj
-   ```
-
-5. Build the project:
-
-   ```zsh
-   swift build
-   ```
-
-6. Run tests:
-
-   ```zsh
-   swift test
-   ```
  -->
 
 1. リポジトリをクローンします:
@@ -277,11 +251,19 @@ To set up the development environment for this project:
    cd s2j-cozy-brew
    ```
 
+<!-- 
+2. Install the dependencies:
+ -->
+
 2. 依存関係をインストールします:
 
    ```zsh
    npm install
    ```
+
+<!-- 
+3. Create an Xcode project:
+ -->
 
 3. Xcode プロジェクトを生成します:
 
@@ -289,11 +271,19 @@ To set up the development environment for this project:
    xcodegen generate
    ```
 
+<!-- 
+4. Open the project in Xcode:
+ -->
+
 4. Xcode でプロジェクトを開きます:
 
    ```zsh
    open CozyBrew.xcodeproj
    ```
+
+<!-- 
+5. Build the project:
+ -->
 
 5. プロジェクトをビルドします:
 
@@ -301,70 +291,88 @@ To set up the development environment for this project:
    swift build
    ```
 
+<!-- 
+6. Run the test:
+ -->
+
 6. テストを実行します:
 
    ```zsh
+   npm run test:local:macOS
+   # or
    swift test
    ```
 
-<!-- 
 ### Building and Testing
- -->
-
-### ビルドとテスト
-
-<!-- 
-To build the project, use:
- -->
-
-プロジェクトをビルドするには:
 
 ```zsh
 swift build
-```
-
-<!-- 
-To run tests with code coverage:
- -->
-
-コードカバレッジ付きでテストを実行するには:
-
-```zsh
+swift test
 swift test --enable-code-coverage
 ```
 
-### 依存モジュールの更新
+<!-- 
+Daily quality checks (similar to CI's `swift-quality` / `docs-lint`):
+ -->
 
-npm (ドキュメント lint) と SPM (`s2j-source-list` / `s2j-about-window`) の更新手順は [docs/dependency_updates.md](docs/dependency_updates.md) に記載しています。
-
-**SPM (推奨):**
+日常の品質チェック (CI の `swift-quality` / `docs-lint` に近い):
 
 ```zsh
-npm run swift:ncu          # 更新があるか確認 (ncu 相当)
-npm run swift:ncu:update   # 最新に更新して入れ直し (ncu -u + npm install 相当)
+npm run lint:docs          # README / CHANGELOG / docs (textlint)
+npm run lint:swift         # xcodegen → SwiftLint → SwiftFormat → Periphery
+npm run version:check      # Verifying that the versions of `package.json`, Xcode, and the build are synchronized
+```
+
+<!-- 
+* **CI**: Run `swift test`, documentation linting, and `lint:swift` / `version:check` using GitHub Actions ([docs/testing_spec.md](docs/testing_spec.md))
+* **XCUITest**: `CozyBrewUITests` is for local macOS testing (not integrated into CI)
+* Batch script: `npm run test:local:macOS` or `./scripts/test-local_macOS.sh`
+ -->
+
+* **CI**: GitHub Actions で `swift test`、ドキュメント lint、`lint:swift` / `version:check` を実行 ([docs/testing_spec.md](docs/testing_spec.md))
+* **XCUITest**: `CozyBrewUITests` は macOS ローカル向け (CI 未組込み)
+* 一括スクリプト: `npm run test:local:macOS` または `./scripts/test-local_macOS.sh`
+
+### Updating Dependency Modules
+
+<!-- 
+The official source for the procedures and release milestones for npm (documentation lint) and SPM (`s2j-source-list` / `s2j-about-window`) is [docs/dependency_updates.md](docs/dependency_updates.md).
+ -->
+
+npm (ドキュメント lint) と SPM (`s2j-source-list` / `s2j-about-window`) の手順・リリースマイルストーンは [docs/dependency_updates.md](docs/dependency_updates.md) が正本です。
+
+**SPM:**
+
+```zsh
+npm run swift:ncu          # Check if there are any updates to the pin
+npm run swift:ncu:update   # Update → install (Package.resolved / Xcode workspace)
+npm run xcode:generate     # Run the program even after adding .swift to Sources
 swift build
 ```
 
-**npm (`@s2j/docs-linter` など):** `ncu` → `ncu -u` → `node_modules` と `package-lock.json` を削除して `npm install` (詳細は上記ドキュメント)。
+<!-- 
+**npm** (`@s2j/docs-linter`, etc.):
+ -->
 
-ローカルで CI/CD と同じテストを実行するには:
+**npm** (`@s2j/docs-linter` 等):
 
-```zsh
-# 基本的な使用方法 (Package.swift から自動検出)
-./scripts/test-local.sh
+<!-- 
+`ncu` → `ncu -u` → `npm install` (see the documentation above for details).
+ -->
 
-# npm スクリプトから引数を渡す場合
-npm run test:local -- --skip-ios
-npm run test:local -- --scheme-name MyApp --ios-device "iPhone 15"
+`ncu` → `ncu -u` → `npm install` (詳細は上記ドキュメント)。
 
-# 環境変数でカスタマイズする場合
-SCHEME_NAME=MyApp IOS_DEVICE="iPhone 15" ./scripts/test-local.sh
+<!-- 
+**Application Version Number**:
+ -->
 
-# コマンドライン引数で直接指定する場合
-./scripts/test-local.sh --scheme-name MyApp --ios-device "iPhone 15" --skip-ios
-```
+**アプリケーションのバージョン番号**:
 
-**優先順位**: 1. コマンドライン引数 (npm スクリプトからの引数含む) > 2. 自動検出 (Package.swift から) > 3. 環境変数 > 4. デフォルト値
+<!-- 
+The `version` and `buildNumber` in `package.json` are the official values. Before distributing, run `npm run version:sync` (or `version:bump-build`).
+ -->
+
+`package.json` の `version` / `buildNumber` が正本です。配布前は `npm run version:sync` (または `version:bump-build`) を実行してください。
 
 ## Contributing
 

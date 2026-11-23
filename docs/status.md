@@ -69,7 +69,7 @@
 * [x] GitHub Actions `docs-lint.yml` (`npm run lint:docs`)
 * [x] 見出しタグと `npm run docs:heading-tags`
 * [x] [dependency_updates.md](dependency_updates.md) (npm / SPM、リリース手順)
-* [x] [testing_spec.md](testing_spec.md) (テスト層 ・ CI 範囲)
+* [x] [testing_spec.md](testing_spec.md) (テスト層、CI 範囲)
 
 ### Swift Package 基盤 (Must) `{@status:s-status-spm-base}`
 
@@ -109,7 +109,8 @@
 ### CozyBrewApp ターゲット (Must) `{@status:s-status-app}`
 
 * [x] `BrewNotAvailableView` + opt-in 自動インストール ([ux_flows_spec.md](ux_flows_spec.md) §1)
-* [x] About / License / Acknowledgements ([design_spec.md](design_spec.md)、S2J `AboutWindow` + `CozyBrewAboutPresenter`)
+* [x] About / License / Acknowledgements ([design_spec.md](design_spec.md)、S2J `AboutView` + `Window(id: about-cozy-brew)`)
+* [x] Settings (⌘,) / Homebrew 環境 (⇧⌘ E) — G6/G7 ([ux_flows_spec.md](ux_flows_spec.md) §6)
 * [x] `AppDelegate` / ウィンドウ前面表示
 * [x] `AppIcon.appiconset`
 * [x] `MARKETING_VERSION` / `buildNumber` → `Info.plist`
@@ -194,7 +195,9 @@
 | G2 | Mac App Store 提出 | Sandbox 見直しが別途必要 |
 | G3 | `brew search --json` を GUI 検索に使用 | 現状はクライアントフィルターで十分 |
 | G4 | brew 未導入 UI の DEBUG 強制分岐 | [ux_flows_spec §3.4](ux_flows_spec.md) |
-| G5 | `InstallFlowView` 相当の「初期設定」専用シート | 現状は `BrewNotAvailableView` が担う |
+| G5 | 初回導入フロー (オンボーディング) | `BrewNotAvailableView` (§ ux_flows_spec §1・§6.3)。任意の初回チェックリストは未実装 |
+| G6 | **A. Settings…** (Cozy Brew 専用・薄い Preferences) | ✅ `CozyBrewSettingsView` (⌘,)。[ux_flows_spec §6.1](ux_flows_spec.md) |
+| G7 | **B. Homebrew 環境** (診断・`brew config` 等 read-only) | ✅ `BrewEnvironmentView`・⇧⌘ E。[ux_flows_spec §6.2](ux_flows_spec.md) |
 
 **補足:** [§全体スナップショット](#status-s-h005) のカテゴリー平均と本チェックリストの機械集計は別集計 (Should / ゲート外を含む項数目線)。
 
@@ -236,7 +239,8 @@
 | インストール履歴 | ✅ | `Application Support` 永続化 + History タブ |
 | 詳細 README | ✅ | caveats / GitHub README |
 | Cakebrew 移行 | ✅ | 初回検出シート (オプション) |
-| About / License / Acknowledgements | ✅ | S2J About Window v3+ |
+| About / License / Acknowledgements | ✅ | S2J `AboutView` (SwiftUI `Window`) |
+| Settings / Homebrew 環境 | ✅ | G6/G7 ([ux_flows_spec §6](ux_flows_spec.md)) |
 | バージョン同期 (`version` / `buildNumber`) | ✅ | `npm run version:sync` |
 
 ---

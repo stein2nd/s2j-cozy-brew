@@ -156,7 +156,7 @@ brew 未導入ユーザーに対して、公式インストール・スクリプ
 * `/Applications` への配置などで Homebrew が `sudo` を使う Cask では、Upgrade 中に **macOS 標準の管理者パスワードダイアログ** が出ることがあります (CozyBrew 側では `NONINTERACTIVE` / `--yes` でも抑止できません)。
 * UI は Cask Upgrade 中に「パスワードを求められることがある」旨を **右上の進行カード** で案内します (全画面の暗幕オーバーレイは使わず、管理者ダイアログが前面に来やすくする)。
 * ダイアログをキャンセルした / CLI が失敗した (`sudo` / TTY 不足 / App Management など) 場合は、意訳メッセージと生ログを表示します。
-* 失敗ログが Cask の**ターミナル委譲**条件に該当するとき、**失敗した行の直下** (一覧) または操作欄の下 (詳細) に `PackageUpgradeFailurePanel` を出します。長い意訳・ログは DisclosureGroup「Show details」、ターミナル UI は `BrewUpgradeTerminalFallbackView` が担います:
+* 失敗ログが Cask の **ターミナル委譲** 条件に該当するとき、**失敗した行の直下** (一覧) または操作欄の下 (詳細) に `PackageUpgradeFailurePanel` を出します。長い意訳・ログは DisclosureGroup「Show details」、ターミナル UI は `BrewUpgradeTerminalFallbackView` が担います:
   * **Copy Command** — `BrewBinaryLocator` と同じ絶対パスの `brew upgrade --yes --cask <token>` をクリップボードに (先頭に `sudo brew` は付けない。Homebrew が必要箇所で `sudo` を呼ぶ)。
   * **Run in Terminal** — 上記をコピーした後、Apple Events 経由で Terminal を起動し `do script` で実行 (`BrewTerminalLauncher`)。初回は Automation (CozyBrew → Terminal) と `Info.plist` の `NSAppleEventsUsageDescription` が必要。
   * **App Management…** — 既存の `x-apple.systempreferences:` リンク (`BrewUserMessage.appManagementSettingsURL`)。
@@ -166,10 +166,10 @@ brew 未導入ユーザーに対して、公式インストール・スクリプ
 
 ### 5.4. ツールバー Refresh (一覧の再同期)`{@brew_integration_spec:s5-4}`
 
-* **Warnings 以外**のサイドバーで、右上 `arrow.clockwise` (ラベル **Refresh**) を押すと `refreshApplicationState()` を実行します。
+* **Warnings 以外** のサイドバーで、右上 `arrow.clockwise` (ラベル **Refresh**) を押すと `refreshApplicationState()` を実行します。
 * 手順: `["update"]` (`brew update`) → `refreshInstalledPackages(managingLoading: false)` → `refreshOutdatedPackages(managingLoading: false)` → `refreshTaps(managingLoading: false)` → `refreshManagedServices()`。外側で `isLoading` を1回だけ立て、一覧に `ProgressView` を出します。
 * `update()` 単体は **brew の式更新のみ** (一覧は再取得しない)。ツールバーからは呼びません。
-* ターミナル委譲で Cask を上げた後、Outdated から消えない場合の**想定操作**はこの Refresh です。
+* ターミナル委譲で Cask を上げた後、Outdated から消えない場合の **想定操作** はこの Refresh です。
 * **Warnings** タブでは同アイコンが `refreshDoctorWarnings()` のみ (`brew doctor` 再実行)。
 
 ---
@@ -222,3 +222,13 @@ brew 未導入ユーザーに対して、公式インストール・スクリプ
 
 * 詳細は [models_spec.md](models_spec.md) の JSON 形式と合わせて参照してください。
 * GUI: [ux_flows_spec.md §3.0](ux_flows_spec.md#30-現行実装-2026-11-22-時点) (公式 Tap の untap は拒否。untap 前に `brew tap-info --json` で Formula/Cask 件数とインストール済み名を確認ダイアログに表示)。
+
+---
+
+## 11. 設定の表示 (GUI 方針) `{@brew_integration_spec:s11}`
+
+* **正本:** ユーザーの Homebrew 設定は **`brew config`** および環境変数 (`HOMEBREW_*`)。Cozy Brew はこれを **上書きしない** (GUI からの `brew config set` はフェーズ1では行わない)。
+* **取得 (実装済み):** `BrewEnvironmentFetcher` (`BrewProcess` 経由、非同期) — `brew config`、`brew --version`、`brew --prefix` 等。`BrewManager.fetchEnvironmentSnapshot` から UI が利用。
+* **表示:** [ux_flows_spec.md §6.2](ux_flows_spec.md) の **Homebrew 環境** 画面に集約。`brew doctor` は引き続き **Warnings** タブ ([§10 表](brew_integration_spec.md) の `doctor`)。
+* **ユーザー操作:** 全文コピー、Finder でパスを開く、ターミナルで編集用コマンドを開く。変更手順は Homebrew 公式ドキュメントにリンクしてよい。
+* **テスト:** 実 `brew` に依存しないユニットテストは、固定文字列のパースまたはモック stdout を用いる (CI ゲート)。

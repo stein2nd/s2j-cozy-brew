@@ -18,6 +18,10 @@ public final class BrewCache {
         case searchResults = "search_results"
     }
 
+    public var directoryURL: URL {
+        cacheDirectory
+    }
+
     /// 初期化
     /// - Parameter cacheDirectory: キャッシュディレクトリ。nil の場合はデフォルトを使用
     public init(cacheDirectory: URL? = nil) {

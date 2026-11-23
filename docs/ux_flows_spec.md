@@ -91,6 +91,9 @@
 | 操作履歴 | サイドバー **History** (`BrewOperationHistoryStore`、install/upgrade/tap 等を記録) |
 | パッケージ詳細 README | `brew info` caveats + GitHub README フォールバック (`PackageDetailView`) |
 | Cakebrew 移行 | 起動時 `com.brunophilipe.Cakebrew.plist` 検出時オプションシート (`CakebrewMigration`) |
+| About | メニュー **About CozyBrew** → `Window(id: about-cozy-brew)` + S2J `AboutView` (License / Acknowledgements バンドル) |
+| Settings | **Settings…** (⌘,) → `CozyBrewSettingsView` (Cozy Brew 専用。`brew config` は **B** に) |
+| Homebrew 環境 | メニュー **Homebrew 環境…** (⇧⌘ E) → `BrewEnvironmentView` (read-only、`brew config` 等) |
 
 Uninstall / 単体 Upgrade は従来どおり直実行 (オーバーレイは Upgrade 時)。Install のみ `InstallFlowView` に統合済み。
 
@@ -158,3 +161,46 @@ Uninstall / 単体 Upgrade は従来どおり直実行 (オーバーレイは Up
 * friendly メッセージを主表示
 * raw log のトグル表示
 * "Show log" で詳細を展開
+
+---
+
+## 6. 設定・環境 (二系統) `{@ux_flows_spec:s6}`
+
+**方針:**「Cozy Brew 自身の設定」と「Homebrew の状態」を **別 UI** に分けます。Homebrew の正本は CLI (`brew config` 等) とし、GUI は原則 **読み取り・コピー・ターミナルへの誘導** までとします ([brew_integration_spec.md §11](brew_integration_spec.md))。
+
+| 系統 | 目的 | macOS 上の置き場 (目標) | 編集 |
+| --- | --- | --- | --- |
+| **A. Settings…** | Cozy Brew 専用の動作、opt-in | `Settings { }` シーン (⌘,) | Cozy Brew が保持する値のみ (`UserDefaults` 等) |
+| **B. Homebrew 環境** | 実行環境の可視化・サポート | メニューまたは独立ウィンドウ (例: **Homebrew Environment…**) | **しない** (変更はターミナルで `brew config` 等) |
+
+**Warnings タブとのぶん担:** `brew doctor` の文言は既存 **Warnings**。`brew config` 全文、prefix / Cellar パス一覧、検出した `brew` バイナリは **B** に集約し、doctor と重複表示しません。
+
+### 6.1. A. Settings… (Cozy Brew 専用・薄く) `{@ux_flows_spec:s6-1}`
+
+* **現状:** 実装済み (ゲート外 G6)。`Settings { CozyBrewSettingsView }` (⌘,)。About は別ウィンドウ (`about-cozy-brew`)。
+* **含める想定 (実装時):**
+  * 将来の **opt-in** (テレメトリ等 — [security_spec.md](security_spec.md) どおりデフォルトオフ)
+  * Cakebrew 移行の状態表示 (完了済み・履歴取り込み済み。再取り込みはオプション)
+  * UI ロケールの上書きが必要になった場合のみ (現状はシステム追従)
+* **含めない:** `brew config` の編集、`HOMEBREW_*` の書き換え、brew パスの手動指定 (検出は `BrewBinaryLocator` が担う)
+
+### 6.2. B. Homebrew 環境 (診断・読み取り) `{@ux_flows_spec:s6-2}`
+
+* **現状:** 実装済み (ゲート外 G7)。メニュー **Homebrew 環境…** (⇧⌘ E) または `Window(id: homebrew-environment)` → `BrewEnvironmentView`。
+* **表示ブロック (目標):**
+  1. **検出** — `brew` バイナリのパス、Apple Silicon / Intel、検出失敗時の理由
+  2. **`brew --version`**
+  3. **`brew config`** — 等幅テキスト、全文コピー
+  4. **主要パス** — `brew --prefix` 等から得た prefix / Cellar / Repository (Finder 表示・クリップボード)
+  5. **Cozy Brew データ** — 操作履歴ストア、キャッシュの場所、アプリバンドルパス (サポート用)
+  6. **ショートカット** — ターミナルで `brew config` を開く、**Warnings** タブに (`brew doctor`)
+* **アクセシビリティ:** コピー、Finder、ターミナルボタンに `accessibilityLabel` ([security_spec.md §4](security_spec.md))。
+
+### 6.3. 初回導入 (G5) との関係 `{@ux_flows_spec:s6-3}`
+
+| フェーズ | UI | 備考 |
+| --- | --- | --- |
+| brew **未導入** | `BrewNotAvailableView` (§1.2) — ブロッキング全画面 | opt-in 公式インストール。G5の初期設定 UI に相当 |
+| brew **導入済み** | メインウィンドウ + (将来) **B** で環境確認 | 初回だけ短いチェックリストシートは任意 (ゲート外)。日常の確認は **B** |
+
+`InstallFlowView` は **パッケージ操作の確認** 用であり、環境設定ウィザードとは混ぜません。

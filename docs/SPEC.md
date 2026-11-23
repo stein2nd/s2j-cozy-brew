@@ -188,15 +188,15 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 
 ### 4.3.1. マイグレーションと互換性 / Cakebrew からの留意点 `{@spec:s4-3-1}`
 
-* Cakebrew は Objective-C / AppKit 実装です。そのため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈**して SwiftUI に適した状態駆動の設計に変換します。
+* Cakebrew は Objective-C / AppKit 実装です。そのため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈** して SwiftUI に適した状態駆動の設計に変換します。
 * Cakebrew のコード (Objective-C) でのライセンス、リソース (アイコン、翻訳) を確認し、再利用条件を満たします。
 * Cakebrew の preferences やインストール履歴を引き継ぐ場合:
   * 初回起動時に `Cakebrew` の設定ファイル (保存場所や形式) を検出し、移行ウィザードを表示します (オプション)。
 
 ### 4.3.2. About Window `{@spec:s4-3-2}`
 
-* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (v3.0.0以降) の `AboutWindow` を組込みます (`AboutView` はライブラリ内。アプリケーションは独立 `NSWindow` を表示)。
-* メニュー **About CozyBrew** から `CozyBrewAboutPresenter.show()` → S2J `AboutWindow` (タイトルバー付き、ドラッグ移動可)。SwiftUI `.sheet` は使いません。
+* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (v3.0.0以降) の `AboutView` を組込みます (SwiftUI `Window(id: about-cozy-brew)`。Homebrew 環境ウィンドウと同型)。
+* メニュー **About CozyBrew** から `openWindow(id: about-cozy-brew)` → S2J `AboutView` (SwiftUI `Window`、中央配置)。`.sheet` は使いません。
 * ヘッダー: Dock と同じアプリケーション・アイコン、`appName` / `Info.plist` のバージョン・著作権。
 * 本文: `CozyBrewAbout.markdown` (説明、GitHub リポジトリリンク)。
 * **License** / **Acknowledgements**: バンドル `CozyBrewApp/Resources/LICENSE.txt` と `ACKNOWLEDGEMENTS.md` を `licenseResourceName` / `acknowledgementsResourceName` でアプリケーション内表示 (オフライン可)。Acknowledgements は onot 生成の Markdown (v3.0.0以降は Textual により表表示に対応)。ウィンドウは標準の閉じる操作で dismiss します。
@@ -285,6 +285,9 @@ struct BrewCommand {
     * Install 操作の確認シート (一覧・詳細)。進行状況・失敗表示。uninstall / 単体 upgrade は行/詳細から直実行。
   * `BrewOperationOverlay`:
     * Upgrade 等の blocking オーバーレイを表示します。
+  * **Settings / Homebrew 環境 (ゲート外・実装済み):**
+    * **A.** macOS **Settings…** (`CozyBrewSettingsView`) — Cozy Brew 専用 ([ux_flows_spec.md §6.1](ux_flows_spec.md))。
+    * **B.** **Homebrew 環境** — `brew config` 等の read-only ([ux_flows_spec.md §6.2](ux_flows_spec.md)、[brew_integration_spec.md §11](brew_integration_spec.md))。
 
 * **サイドバー**
   * `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` が `S2JSourceList.SidebarView` を `MainWindowView` に載せます (`s2j-source-list` v2.0.14以降)。
@@ -304,17 +307,20 @@ struct BrewCommand {
 @main
 struct CozyBrewApp: App {
     @StateObject private var manager = BrewManager()
-    @StateObject private var aboutPresenter = CozyBrewAboutPresenter()
+    @Environment(\.openWindow) private var openWindow
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(manager)
         }
+        Window("About", id: "about-cozy-brew") {
+            AboutView(/* CozyBrewAbout リソース */)
+        }
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button("About CozyBrew") {
-                    aboutPresenter.show()
+                    openWindow(id: "about-cozy-brew")
                 }
             }
         }
@@ -393,7 +399,7 @@ let package = Package(
   * 公式インストール・スクリプトはネットワークから取得するため、その実行は、**ユーザーの明示的承諾** を必須とします。ダウンロード先 URL は固定し、ユーザーに提示します。
   * 実行ログはローカルに保存し、ユーザーに提示しますが、デフォルトで送信しません (クラッシュ/クラッシュログ等も同様です)。
 * **プライバシー**:
-  * デフォルトでテレメトリー/クラッシュ・レポートはオフです。送る場合は opt-in にします。
+  * デフォルトでテレメトリ/クラッシュ・レポートはオフです。送る場合は opt-in にします。
   * もし匿名統計を送る場合は opt-in の設定を提供し、プライバシーポリシーを同梱します。
 
 ### 4.5. アクセシビリティとローカライズ `{@spec:s4-5}`
@@ -490,7 +496,9 @@ let package = Package(
   * ✅ `BrewCaskTerminalFallback` / `BrewUserMessage` (Cask 失敗意訳・ターミナル委譲判定)
   * ✅ Formulae / Casks カタログ取得・キャッシュ・ページ用スナップショット API (`BrewFormulaeAPIClient`、`BrewCatalog` / パース)
   * ✅ `brew doctor` 警告一覧 (Warnings タブ)
-* ✅ `BrewCache` - JSON キャッシュ機構 (TTL 対応、メタデータ管理)
+  * ✅ `fetchEnvironmentSnapshot` — Homebrew 環境画面用 (`BrewEnvironmentFetcher`)
+* ✅ `BrewCache` - JSON キャッシュ機構 (TTL 対応、メタデータ管理、`directoryURL` 公開)
+* ✅ `BrewEnvironmentInfo` / `CozyBrewAppSettings` — 環境 read-only 取得、Settings 用 `UserDefaults` (テレメトリ opt-in 等)
 
 #### 11.1.4. CozyBrewUIComponents モジュール `{@spec:s11-1-4}`
 * ✅ `PackageRowView` - パッケージ一覧の行表示 (アイコン、バッジ、アクションボタン)
@@ -503,12 +511,14 @@ let package = Package(
 * ✅ `PackageUpgradeFailurePanel` / `BrewUpgradeTerminalFallbackView` / `BrewTerminalLauncher` - Cask Upgrade 失敗時の行下パネルとターミナル委譲
 * ✅ `InstallFlowView` - 一覧・詳細の **Install** からシート表示 (確認 → 進行/失敗)。uninstall / 単体 upgrade は `PackageRowView` / `PackageDetailView` から直実行 (§11.3.4)
 * ✅ S2J Source List **フェーズ2** - `SourceItem.group` で Installed packages / Catalog 階層 (`S2JSourceListAdapter.makeRootItems`)
+* ✅ `CozyBrewSettingsView` / `BrewEnvironmentView` — Settings (⌘,) と Homebrew 環境 (⇧⌘ E、G6/G7)
 
 #### 11.1.5. CozyBrewApp Target `{@spec:s11-1-5}`
 * ✅ `CozyBrewApp.swift` - アプリケーション・エントリーポイント
   * ✅ Homebrew 未検出時のインストールフロー実装
   * ✅ 自動インストールオプション (opt-in)
-  * ✅ About ウィンドウ (`CozyBrewAboutPresenter` + `CozyBrewAbout.swift` + S2J `AboutWindow` v3+)
+  * ✅ About ウィンドウ (`CozyBrewAbout.swift` + S2J `AboutView` / `Window(id: about-cozy-brew)`)
+  * ✅ Settings シーン (`CozyBrewSettingsView`) と Homebrew 環境ウィンドウ (`BrewEnvironmentView`、`homebrew-environment`)
   * ✅ License / Acknowledgements (`LICENSE.txt` / `ACKNOWLEDGEMENTS.md` バンドル、About 内表示)
   * ✅ `AppDelegate` クラスの実装 - macOS アプリケーションのライフサイクル管理
     * ✅ `applicationDidFinishLaunching` - アプリケーション起動時にウィンドウを前面に表示
@@ -523,7 +533,7 @@ let package = Package(
 
 #### 11.1.6. テストコード `{@spec:s11-1-6}`
 * ✅ `CozyBrewCoreTests` - BrewBinaryLocator、BrewProcess の基本テスト
-* ✅ `CozyBrewServiceTests` - Models、BrewCache、カタログ API、`brew doctor`、`BrewServiceIntegrationTests`
+* ✅ `CozyBrewServiceTests` - Models、BrewCache、カタログ API、`brew doctor`、`BrewServiceIntegrationTests`、`BrewEnvironmentFetcherTests`、`CozyBrewAppSettingsTests`
 * ✅ `CozyBrewUIComponentsTests` - `UISnapshotRenderTests` (SwiftUI レンダリング)
 * ✅ `CozyBrewUITests` - macOS UI スモーク (ローカル。正本 [testing_spec.md](testing_spec.md))
 
@@ -610,7 +620,7 @@ let package = Package(
 | CozyBrewCore | 100% | 全機能を実装済み |
 | CozyBrewService | 100% | 一覧・操作に加え Formulae/Casks カタログ、`brew doctor` パース等 |
 | CozyBrewUIComponents | 100% | サイドバー フェーズ2、`InstallFlowView` (Install)、`Upgrade All` 確認 |
-| CozyBrewApp Target | 100% | S2J `AboutWindow` (`CozyBrewAboutPresenter`)、App Icon、`AppDelegate`、Homebrew 未導入フロー |
+| CozyBrewApp Target | 100% | S2J `AboutView` (SwiftUI `Window`)、App Icon、`AppDelegate`、Homebrew 未導入フロー |
 | テストコード | 100% | UT + `BrewServiceIntegrationTests` + `UISnapshotRenderTests` + ローカル XCUITest ([testing_spec.md](testing_spec.md)) |
 | ローカライズ | 100% | en/ja `Localizable.strings` + `CozyBrewL10n` |
 | CI/CD | 100% | `swift-test` + `docs-lint` + `swift-quality` (`version:check` / `lint:swift`、Periphery は Release + IndexStore) |
@@ -665,7 +675,7 @@ let package = Package(
 * ✅ **`InstallFlowView` 配線 (Install)** + **Upgrade All** 確認 UI
 * **残り (UI)**
   * Uninstall / 単体 Upgrade の確認フロー統一、ログストリームの共通化
-  * 選択・アクセシビリティ・ UI テストの拡充
+  * 選択、アクセシビリティ、UI テストの拡充
   * brew 未導入 UX (`BrewNotAvailableView`) の手動での検証手順の整備 (→ [ux_flows_spec.md](ux_flows_spec.md) §3.4)
 
 #### 12.1.2. ローカライズ (初期対応) `{@spec:s12-1-2}`

@@ -2,6 +2,19 @@
 
 ## unreleased
 
+## 1.0.22 - 2026-11-23
+
+* SPM pin: `s2j-source-list` `9e872f0`、`s2j-about-window` `01d4fae` (`main` 最新)
+* **README**: Features 〜依存モジュール更新を現行実装に同期
+* **Settings (G6)**: **Settings…** (⌘,) — `CozyBrewSettingsView` (バージョン情報、Homebrew 環境ショートカット、Cakebrew 再取り込み、テレメトリ opt-in は `UserDefaults` 保存のみ・未送信)
+* **UI (G7)**: **Homebrew 環境…** (⇧⌘ E) — `BrewEnvironmentView` で `brew config`、主要パス、CozyBrew データを read-only (コピー / Finder / ターミナル、`MainWindowView` の **Warnings** に遷移)
+* **UX**: About を S2J `AboutView` の SwiftUI `Window(id: about-cozy-brew)` に統一 (初回中央)。`CozyBrewAboutPresenter` 削除
+* **App**: `Settings { }`、`Window(id: homebrew-environment)`、メニュー ⇧⌘ E。`CozyBrewApp` の `.commands` を `WindowGroup` に付与 (SwiftFormat)
+* **Service**: `BrewEnvironmentInfo` (`BrewEnvironmentFetcher` / `BrewEnvironmentSnapshot`)、`CozyBrewAppSettings`、`BrewManager.fetchEnvironmentSnapshot`、操作履歴・キャッシュのパス API
+* **L10n**: Settings / Homebrew 環境の `CozyBrewL10n` + en/ja `Localizable.strings`
+* **テスト**: `BrewEnvironmentFetcherTests`、`CozyBrewAppSettingsTests`
+* **docs**: 設定二系統 (A/B)、G5– G7、`brew_integration_spec` §11、`architecture` / `SPEC` / `ux_flows_spec` / `overview` / `status` / `testing_spec` を同期
+
 ## 1.0.21 - 2026-11-22
 
 * SPM pin: 変更なし (`s2j-source-list` `1f7375e`、`s2j-about-window` `290fbff`、`main` 最新)

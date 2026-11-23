@@ -116,6 +116,51 @@
 "cakebrew_migration.import" = "取り込む";
 "cakebrew_migration.skip" = "あとで";
 
+/* Settings */
+"settings.tab.general" = "一般";
+"settings.tab.migration" = "移行";
+"settings.tab.privacy" = "プライバシー";
+"settings.section.application" = "CozyBrew";
+"settings.section.environment" = "環境";
+"settings.section.cakebrew" = "Cakebrew";
+"settings.app_version" = "バージョン";
+"settings.app_build" = "ビルド";
+"settings.cakebrew.status" = "状態";
+"settings.cakebrew.status.none" = "Cakebrew 設定は見つかりません";
+"settings.cakebrew.status.pending" = "Cakebrew 設定あり (未取り込み)";
+"settings.cakebrew.status.done" = "取り込み済みまたはスキップ済み";
+"settings.cakebrew.import" = "Cakebrew 履歴を再取り込み";
+"settings.cakebrew.import_success" = "Cakebrew データを操作履歴に統合しました。";
+"settings.telemetry.toggle" = "匿名の利用統計を共有";
+"settings.telemetry.footer" = "現時点で CozyBrew はテレメトリを送信しません。この設定は将来のオプション機能用に保存されます。";
+"a11y.settings.open_environment" = "Homebrew 環境を開く";
+"a11y.settings.telemetry" = "匿名の利用統計";
+
+/* Homebrew Environment */
+"environment.window_title" = "Homebrew 環境";
+"environment.menu" = "Homebrew 環境…";
+"environment.loading" = "環境を読み込み中…";
+"environment.section.detection" = "検出";
+"environment.section.version" = "バージョン";
+"environment.section.config" = "brew config";
+"environment.section.homebrew_paths" = "Homebrew パス";
+"environment.section.cozybrew_data" = "CozyBrew データ";
+"environment.section.shortcuts" = "ショートカット";
+"environment.brew_not_detected" = "Homebrew の実行ファイルを検出できませんでした。";
+"environment.architecture" = "アーキテクチャ:";
+"environment.path.prefix" = "Prefix";
+"environment.path.cellar" = "Cellar";
+"environment.path.repository" = "Repository";
+"environment.copy" = "コピー";
+"environment.copy.config" = "設定をコピー";
+"environment.reveal_in_finder" = "Finder";
+"environment.open_terminal_config" = "ターミナルで brew config";
+"environment.show_warnings" = "メインウィンドウで Warnings を表示";
+"a11y.environment.refresh" = "環境情報を更新";
+"a11y.environment.terminal_config" = "ターミナルで brew config を開く";
+"a11y.environment.show_warnings" = "メインウィンドウで Warnings を表示";
+"a11y.environment.reveal" = "Finder で %@ を表示";
+
 /* Accessibility */
 "a11y.package_row" = "%@、%@、%@";
 "a11y.search_field" = "パッケージを検索";

@@ -25,7 +25,7 @@
 | テストターゲット | パス | 内容 |
 | --- | --- | --- |
 | `CozyBrewCoreTests` | `Tests/CozyBrewCoreTests/` | バイナリ検出、プロセス env |
-| `CozyBrewServiceTests` | `Tests/CozyBrewServiceTests/` | モデル、キャッシュ、カタログ API、doctor、**統合**、操作履歴 (`BrewOperationHistoryTests`)、GitHub README URL パース、`brew info` テキスト (`BrewInfoTextParserTests`)、`brew tap-info` 要約 (`BrewTapInfoTests`) |
+| `CozyBrewServiceTests` | `Tests/CozyBrewServiceTests/` | モデル、キャッシュ、カタログ API、doctor、**統合**、操作履歴 (`BrewOperationHistoryTests`)、GitHub README URL パース、`brew info` テキスト (`BrewInfoTextParserTests`)、`brew tap-info` 要約 (`BrewTapInfoTests`)、環境スナップショット (`BrewEnvironmentFetcherTests`)、CozyBrew 設定 (`CozyBrewAppSettingsTests`) |
 | `CozyBrewUIComponentsTests` | `Tests/CozyBrewUIComponentsTests/` | SwiftUI レンダリング・**UI スナップショット風**メトリクス |
 | `CozyBrewUITests` | `Tests/CozyBrewUITests/` | アプリケーション起動・ウィンドウ表示 (XCUITest) |
 
@@ -54,4 +54,4 @@
 ## 5. UI テスト (XCUITest) `{@testing_spec:s5}`
 
 * `CozyBrewUITests` は **アプリケーション起動とメインウィンドウの存在** を確認するスモーク (`@MainActor`、Swift6コンカレンシー)。
-* GitHub Actions には未組込み (macOS ランナーでの署名・ GUI 安定性のため)。リリース前のローカル `xcodebuild test` を推奨。
+* GitHub Actions には未組込み (macOS ランナーでの署名、GUI 安定性のため)。リリース前のローカル `xcodebuild test` を推奨。

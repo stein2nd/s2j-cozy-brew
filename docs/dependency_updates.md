@@ -34,7 +34,7 @@ Xcode プロジェクト利用時は、ルートの `Package.resolved` に加え
 | 項目 | 正本 | 備考 |
 | --- | --- | --- |
 | 表示版 (`MARKETING_VERSION`) | `package.json` → `version` | SemVer。プレリリースは当面想定しない |
-| ビルド (`CURRENT_PROJECT_VERSION`) | `package.json` → `buildNumber` | **配布物を出すたび**に更新 (同じ `version` の再配布は Build のみ +1) |
+| ビルド (`CURRENT_PROJECT_VERSION`) | `package.json` → `buildNumber` | **配布物を出すたび** に更新 (同じ `version` の再配布は Build のみ +1) |
 | Run Number | **使わない** | ローカル Release + `ack:generate` と整合させるため |
 
 **リリースチェックリスト (配布用)**
@@ -47,7 +47,7 @@ Xcode プロジェクト利用時は、ルートの `Package.resolved` に加え
 6. ビルド後: **`npm run release:after-release-build`** → Run でスモーク
 7. 公開前: CHANGELOG 追記 → commit → **`npm run release:before-tag-push`** → `git tag v*`
 
-`lint:swift` のたびに `version:sync` は不要です。**配布・タグの直前**だけ上記マイルストーンを使います。
+`lint:swift` のたびに `version:sync` は不要です。**配布・タグの直前** だけ上記マイルストーンを使います。
 
 `CozyBrewUIComponents` の `Localizable.strings` を更新したあとは **`npm run xcode:generate`** で Xcode プロジェクトにリソースを反映してください。
 
@@ -138,7 +138,7 @@ swift build
 
 ### 現在の `Package.swift` (`branch: "main"`) `{@dependency_updates:s-package-swift-branch-main}`
 
-`s2j-source-list` と `s2j-about-window` は **`main` ブランチ追従**です。
+`s2j-source-list` と `s2j-about-window` は **`main` ブランチ追従** です。
 
 * **`swift:ncu`:** `Package.resolved` の revision と GitHub の `main` 先頭を比較します。
 * **`swift:ncu:update`:** `Package.swift` は変更不要 (`branch: main` のため)。続けて `swift:install` 相当で最新 `main` を取得します。
@@ -172,7 +172,7 @@ CozyBrew では SPM 依存が **2経路** あります。
 2. `npm run xcode:generate` (`pbxproj` の `requirement` が `kind = branch` になること)
 3. `npm run swift:install` (ルート `Package.resolved` を更新し、Xcode 側にコピー)
 
-Xcode の Package Dependencies パネルでは、`main` 指定でも **近い tag 番号が併記される**ことがあります。正は **`Package.resolved` の `state.branch`** です。
+Xcode の Package Dependencies パネルでは、`main` 指定でも **近い tag 番号が併記される** ことがあります。正は **`Package.resolved` の `state.branch`** です。
 
 ---
 

@@ -116,6 +116,51 @@
 "cakebrew_migration.import" = "Import";
 "cakebrew_migration.skip" = "Not Now";
 
+/* Settings */
+"settings.tab.general" = "General";
+"settings.tab.migration" = "Migration";
+"settings.tab.privacy" = "Privacy";
+"settings.section.application" = "Application";
+"settings.section.environment" = "Environment";
+"settings.section.cakebrew" = "Cakebrew";
+"settings.app_version" = "Version";
+"settings.app_build" = "Build";
+"settings.cakebrew.status" = "Status";
+"settings.cakebrew.status.none" = "No Cakebrew preferences found";
+"settings.cakebrew.status.pending" = "Cakebrew preferences available (not imported)";
+"settings.cakebrew.status.done" = "Imported or skipped";
+"settings.cakebrew.import" = "Import Cakebrew history again";
+"settings.cakebrew.import_success" = "Cakebrew data was merged into operation history.";
+"settings.telemetry.toggle" = "Share anonymous usage statistics";
+"settings.telemetry.footer" = "CozyBrew does not send telemetry today. This preference is saved for a future optional feature.";
+"a11y.settings.open_environment" = "Open Homebrew Environment";
+"a11y.settings.telemetry" = "Anonymous usage statistics";
+
+/* Homebrew Environment */
+"environment.window_title" = "Homebrew Environment";
+"environment.menu" = "Homebrew Environment…";
+"environment.loading" = "Loading environment…";
+"environment.section.detection" = "Detection";
+"environment.section.version" = "Version";
+"environment.section.config" = "brew config";
+"environment.section.homebrew_paths" = "Homebrew paths";
+"environment.section.cozybrew_data" = "CozyBrew data";
+"environment.section.shortcuts" = "Shortcuts";
+"environment.brew_not_detected" = "Homebrew binary was not detected.";
+"environment.architecture" = "Architecture:";
+"environment.path.prefix" = "Prefix";
+"environment.path.cellar" = "Cellar";
+"environment.path.repository" = "Repository";
+"environment.copy" = "Copy";
+"environment.copy.config" = "Copy config";
+"environment.reveal_in_finder" = "Finder";
+"environment.open_terminal_config" = "Open brew config in Terminal";
+"environment.show_warnings" = "Show Warnings in Main Window";
+"a11y.environment.refresh" = "Refresh environment information";
+"a11y.environment.terminal_config" = "Open brew config in Terminal";
+"a11y.environment.show_warnings" = "Show Warnings in main window";
+"a11y.environment.reveal" = "Reveal %@ in Finder";
+
 /* Accessibility */
 "a11y.package_row" = "%@, %@, %@";
 "a11y.search_field" = "Search packages";

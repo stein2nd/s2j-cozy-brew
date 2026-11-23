@@ -38,6 +38,10 @@ public struct BrewOperationHistoryStore: Sendable {
     private static let maxEntries = 500
     private let fileURL: URL
 
+    public var persistenceFileURL: URL {
+        fileURL
+    }
+
     public init(fileURL: URL? = nil) {
         if let fileURL {
             self.fileURL = fileURL

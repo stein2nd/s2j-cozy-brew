@@ -2,6 +2,7 @@ import AppKit
 import CozyBrewCore
 import CozyBrewService
 import CozyBrewUIComponents
+import S2JAboutWindow
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
@@ -34,7 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 struct CozyBrewApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject private var manager = BrewManager()
-    @StateObject private var aboutPresenter = CozyBrewAboutPresenter()
+    @Environment(\.openWindow) private var openWindow
 
     var body: some Scene {
         WindowGroup {
@@ -45,8 +46,38 @@ struct CozyBrewApp: App {
         .commands {
             CommandGroup(replacing: .appInfo) {
                 Button("About CozyBrew") {
-                    aboutPresenter.show()
+                    openWindow(id: "about-cozy-brew")
                 }
+            }
+            CommandGroup(after: .appInfo) {
+                Button(CozyBrewL10n.menuHomebrewEnvironment) {
+                    openWindow(id: "homebrew-environment")
+                }
+                .keyboardShortcut("e", modifiers: [.command, .shift])
+            }
+        }
+
+        Window(CozyBrewL10n.environmentWindowTitle, id: "homebrew-environment") {
+            BrewEnvironmentView(manager: manager, appBundlePath: Bundle.main.bundlePath)
+                .frame(minWidth: 520, minHeight: 480)
+        }
+        .defaultSize(width: 560, height: 640)
+
+        Window("About", id: "about-cozy-brew") {
+            AboutView(
+                content: CozyBrewAbout.markdown,
+                appName: "CozyBrew",
+                licenseResourceName: CozyBrewAbout.licenseResourceName,
+                acknowledgementsResourceName: CozyBrewAbout.acknowledgementsResourceName,
+                resourceBundle: .main
+            )
+            .frame(minWidth: 400, minHeight: 480)
+        }
+        .defaultSize(width: 400, height: 500)
+
+        Settings {
+            CozyBrewSettingsView(manager: manager) {
+                openWindow(id: "homebrew-environment")
             }
         }
     }

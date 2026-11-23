@@ -1,3 +1,4 @@
+import AppKit
 import CozyBrewService
 import SwiftUI
 
@@ -74,6 +75,15 @@ public struct MainWindowView: View {
             Button(CozyBrewL10n.actionCancel, role: .cancel) {}
         } message: {
             Text(CozyBrewL10n.upgradeAllDialogMessage(manager.outdatedPackages.count))
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .cozyBrewNavigateToWarnings)) { _ in
+            sourceListAdapter.selectSidebarItem(.warnings)
+            Task { await manager.refreshDoctorWarnings() }
+            NSApplication.shared.activate(ignoringOtherApps: true)
+            let envTitle = CozyBrewL10n.environmentWindowTitle
+            if let main = NSApplication.shared.windows.first(where: { $0.isVisible && $0.title != envTitle }) {
+                main.makeKeyAndOrderFront(nil)
+            }
         }
         .overlay {
             if isUpgradingAll {

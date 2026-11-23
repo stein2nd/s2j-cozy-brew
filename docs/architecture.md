@@ -72,7 +72,7 @@
 │　　　└─ CozyBrewApp.xcscheme
 ├┬─ CozyBrewApp/  # アプリケーション・プロジェクト (SwiftUI App Target `CozyBrew.app`)
 │├─ CozyBrewApp.swift  # アプリケーション・エントリーポイント (Homebrew 未検出時のインストール・フロー含む)
-│├─ CozyBrewAboutPresenter.swift / CozyBrewAbout.swift  # S2J AboutWindow 表示
+│├─ CozyBrewAbout.swift  # S2J `AboutView` 用本文・リソース名
 │├─ CozyBrewApp.entitlements  # アプリケーション・リソース (作成済み)
 │├─ ContentView.swift  # メイン・コンテンツ・ビュー
 │├─ Info.plist  # アプリケーション・リソース (作成済み)
@@ -91,6 +91,8 @@
 ││├─ BrewManager.swift  # ObservableObject ViewModel (パッケージ管理、`refreshApplicationState`)
 ││├─ BrewManager+PackageInfo.swift  # `packageInfo` / `brew info` 補完
 ││├─ BrewManager+TapAndMigration.swift  # tap/untap、tap-info 要約、Cakebrew 移行、操作履歴記録
+││├─ BrewEnvironmentInfo.swift  # `brew config` 等の環境スナップショット取得
+││├─ CozyBrewAppSettings.swift  # アプリ Settings 用 `UserDefaults`
 ││├─ BrewInfoTextParser.swift / BrewTapInfo.swift  # 詳細表示・untap 確認の CLI テキスト・JSON 補完
 ││├─ FormulaDecoding.swift  # `Formula` の JSON デコード補助
 ││├─ BrewCaskTerminalFallback.swift / BrewUserMessage.swift  # Cask 失敗・ターミナル委譲
@@ -110,6 +112,8 @@
 │　├─ InstallFlowView.swift  # Install 確認シート
 │　├─ ProductShouldViews.swift  # History 一覧・Cakebrew 移行シート
 │　├─ InstallProgressView.swift  # インストール進捗表示
+│　├─ CozyBrewSettingsView.swift  # Settings (⌘,、`CozyBrewAppSettings`)
+│　├─ BrewEnvironmentView.swift  # Homebrew 環境 (read-only、`brew config` 等)
 │　├─ PackageDetailView.swift  # パッケージ詳細 (`brew info` セクション + README / caveats)
 │　├─ PackageRowView.swift  # パッケージ一覧の行表示
 │　├─ PackageUpgradeFailurePanel.swift  # Upgrade 失敗 UI (行下)
@@ -130,14 +134,14 @@
 
 ### 3.1. マイグレーションと互換性 / Cakebrew からの留意点 `{@architecture:s3-1}`
 
-* Cakebrew は Objective-C / AppKit 実装です。そのため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈**して SwiftUI に適した状態駆動の設計に変換します。
+* Cakebrew は Objective-C / AppKit 実装です。そのため、UI ロジックをそのまま移植せず、**概念 (機能) を再解釈** して SwiftUI に適した状態駆動の設計に変換します。
 * Cakebrew のコード (Objective-C) でのライセンス、リソース (アイコン、翻訳) を確認し、再利用条件を満たします。
 * Cakebrew の preferences やインストール履歴を引き継ぐ場合:
   * 初回起動時に `~/Library/Preferences/com.brunophilipe.Cakebrew.plist` を検出し、`CakebrewMigrationSheet` でオプション取り込み ([ux_flows_spec §3.0](ux_flows_spec.md))。
 
 ### 3.2. About Window `{@architecture:s3-2}`
 
-* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (≥ v3.0.0) の `AboutWindow` を `CozyBrewAboutPresenter` から表示します (タイトルバー付き `NSWindow`、ドラッグ移動可)。
+* [S2J About Window](https://github.com/stein2nd/s2j-about-window) (≥ v3.0.0) の `AboutView` を SwiftUI `Window(id: about-cozy-brew)` で表示します (`openWindow`、Homebrew 環境ウィンドウと同様に初回は画面中央)。
 * アイコン・タイトル・バージョン・著作権はライブラリヘッダー、本文は Markdown (GitHub)。**License** / **Acknowledgements** でバンドル `LICENSE.txt` と `ACKNOWLEDGEMENTS.md` をアプリケーション内表示。メニュー **About CozyBrew** と同一 UI です。
 
 ### 3.3. BrewUIComponents (CozyBrewUIComponents) `{@architecture:s3-3}`
@@ -154,6 +158,7 @@
 
 * **メインウィンドウ・ツールバー**
   * Warnings 以外: **Refresh** → `BrewManager.refreshApplicationState()` (`brew update` + インストール済み、Outdated、**Taps** 再取得、`isLoading`)。
+  * **Settings / Homebrew 環境 (実装済み、G6/G7):** `Settings { CozyBrewSettingsView }` (⌘,)、`BrewEnvironmentView` (`Window(id: homebrew-environment)`、⇧⌘ E)。`BrewEnvironmentFetcher` が `brew config` 等を取得 — [ux_flows_spec.md §6](ux_flows_spec.md)。
 
 * **サイドバー**
   * `S2JSourceListAdapter` / `CozyBrewSourceListSidebar` が `S2JSourceList.SidebarView` を `MainWindowView` に載せます。

@@ -43,7 +43,8 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 | Cakebrew からの移行 | 設定・履歴のオプション取り込み | ✅ 検出シート |
 | Upgrade All | 一括アップグレード + 確認 | ✅ Outdated ツールバー + 確認ダイアログ |
 | サイドバー S2J | Source List 統合 | ✅ フェーズ2 (`SourceItem.group` 階層) |
-| About / License | GPL 系のオフライン表示 | ✅ S2J `AboutWindow` (`CozyBrewAboutPresenter`)。License / Acknowledgements はバンドル |
+| About / License | GPL 系のオフライン表示 | ✅ S2J `AboutView` (SwiftUI ウィンドウ)。License / Acknowledgements はバンドル |
+| Settings / Homebrew 環境 | 設定確認・診断 | ✅ **A** Settings (⌘,) + **B** Homebrew 環境 ([ux_flows_spec §6](ux_flows_spec.md)) |
 | ローカライズ en/ja | 初期二言語 | ✅ `CozyBrewL10n` + `Localizable.strings` (主要 UI。メニュー等は一部英語) |
 | テスト (エクステンション) | UT / 統合 / UI | ✅ `swift test` + [testing_spec.md](testing_spec.md)。XCUITest はローカル |
 

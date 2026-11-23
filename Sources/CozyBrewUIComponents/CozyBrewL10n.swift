@@ -420,6 +420,174 @@ public enum CozyBrewL10n: Sendable {
         tr("brew_missing.install_auto")
     }
 
+    // MARK: - Settings
+
+    public static var settingsTabGeneral: String {
+        tr("settings.tab.general")
+    }
+
+    public static var settingsTabMigration: String {
+        tr("settings.tab.migration")
+    }
+
+    public static var settingsTabPrivacy: String {
+        tr("settings.tab.privacy")
+    }
+
+    public static var settingsSectionApplication: String {
+        tr("settings.section.application")
+    }
+
+    public static var settingsSectionEnvironment: String {
+        tr("settings.section.environment")
+    }
+
+    public static var settingsSectionCakebrew: String {
+        tr("settings.section.cakebrew")
+    }
+
+    public static var settingsAppVersion: String {
+        tr("settings.app_version")
+    }
+
+    public static var settingsAppBuild: String {
+        tr("settings.app_build")
+    }
+
+    public static var settingsCakebrewStatus: String {
+        tr("settings.cakebrew.status")
+    }
+
+    public static var settingsCakebrewStatusNone: String {
+        tr("settings.cakebrew.status.none")
+    }
+
+    public static var settingsCakebrewStatusPending: String {
+        tr("settings.cakebrew.status.pending")
+    }
+
+    public static var settingsCakebrewStatusDone: String {
+        tr("settings.cakebrew.status.done")
+    }
+
+    public static var settingsCakebrewImport: String {
+        tr("settings.cakebrew.import")
+    }
+
+    public static var settingsCakebrewImportSuccess: String {
+        tr("settings.cakebrew.import_success")
+    }
+
+    public static var settingsTelemetryToggle: String {
+        tr("settings.telemetry.toggle")
+    }
+
+    public static var settingsTelemetryFooter: String {
+        tr("settings.telemetry.footer")
+    }
+
+    public static var a11ySettingsOpenEnvironment: String {
+        tr("a11y.settings.open_environment")
+    }
+
+    public static var a11ySettingsTelemetry: String {
+        tr("a11y.settings.telemetry")
+    }
+
+    // MARK: - Homebrew Environment
+
+    public static var environmentWindowTitle: String {
+        tr("environment.window_title")
+    }
+
+    public static var menuHomebrewEnvironment: String {
+        tr("environment.menu")
+    }
+
+    public static var environmentLoading: String {
+        tr("environment.loading")
+    }
+
+    public static var environmentSectionDetection: String {
+        tr("environment.section.detection")
+    }
+
+    public static var environmentSectionVersion: String {
+        tr("environment.section.version")
+    }
+
+    public static var environmentSectionConfig: String {
+        tr("environment.section.config")
+    }
+
+    public static var environmentSectionHomebrewPaths: String {
+        tr("environment.section.homebrew_paths")
+    }
+
+    public static var environmentSectionCozyBrewData: String {
+        tr("environment.section.cozybrew_data")
+    }
+
+    public static var environmentSectionShortcuts: String {
+        tr("environment.section.shortcuts")
+    }
+
+    public static var environmentBrewNotDetected: String {
+        tr("environment.brew_not_detected")
+    }
+
+    public static var environmentArchitecture: String {
+        tr("environment.architecture")
+    }
+
+    public static var environmentPathPrefix: String {
+        tr("environment.path.prefix")
+    }
+
+    public static var environmentPathCellar: String {
+        tr("environment.path.cellar")
+    }
+
+    public static var environmentPathRepository: String {
+        tr("environment.path.repository")
+    }
+
+    public static var environmentCopy: String {
+        tr("environment.copy")
+    }
+
+    public static var environmentCopyConfig: String {
+        tr("environment.copy.config")
+    }
+
+    public static var environmentRevealInFinder: String {
+        tr("environment.reveal_in_finder")
+    }
+
+    public static var environmentOpenTerminalConfig: String {
+        tr("environment.open_terminal_config")
+    }
+
+    public static var environmentShowWarnings: String {
+        tr("environment.show_warnings")
+    }
+
+    public static var a11yEnvironmentRefresh: String {
+        tr("a11y.environment.refresh")
+    }
+
+    public static var a11yEnvironmentTerminalConfig: String {
+        tr("a11y.environment.terminal_config")
+    }
+
+    public static var a11yEnvironmentShowWarnings: String {
+        tr("a11y.environment.show_warnings")
+    }
+
+    public static func a11yEnvironmentReveal(_ path: String) -> String {
+        tr("a11y.environment.reveal", path)
+    }
+
     // MARK: - Accessibility
 
     public static func a11yPackageRow(_ name: String, type: String, installed: Bool) -> String {

@@ -323,6 +323,17 @@ public final class BrewManager: ObservableObject {
         }
     }
 
+    /// Homebrew 環境の read-only スナップショット
+    public func fetchEnvironmentSnapshot(appBundlePath: String?) async -> BrewEnvironmentSnapshot {
+        await BrewEnvironmentFetcher.fetch(
+            brewProcess: brewProcess,
+            isBrewAvailable: isBrewAvailable,
+            operationHistoryPath: operationHistoryStore.persistenceFileURL.path,
+            cacheDirectoryPath: cache.directoryURL.path,
+            appBundlePath: appBundlePath
+        )
+    }
+
     /// `brew doctor` の Warning を取得する
     public func refreshDoctorWarnings() async {
         guard isBrewAvailable else {
