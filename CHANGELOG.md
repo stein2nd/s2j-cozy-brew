@@ -2,6 +2,12 @@
 
 ## unreleased
 
+## 1.0.25 - 2026-11-24
+
+* SPM pin: 変更なし (`s2j-source-list` `03edfcd`、`s2j-about-window` `41a2a76`、`main` 最新)
+* **開発**: `install-applications.sh` に `--clean` (`build/DerivedData` 削除後 Release)。`npm run build:release:clean` / `install:applications:build:clean`
+* **docs**: `dependency_updates.md`、`README.md` にクリーン付き install スクリプトを追記
+
 ## 1.0.24 - 2026-11-24
 
 * SPM pin: `s2j-about-window` → `41a2a76` (3.0.12、`AboutHeaderOptions` / Issue #18)、`s2j-source-list` → `03edfcd` (`main`)

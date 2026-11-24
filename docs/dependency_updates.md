@@ -29,8 +29,10 @@ Xcode プロジェクト利用時は、ルートの `Package.resolved` に加え
 | `npm run release:after-release-build` | Release ビルド後: `ack:doctor` → `ack:generate` |
 | `npm run release:before-tag-push` | `git tag` / GitHub Release の直前 |
 | `npm run build:release` | Release を `build/DerivedData` にビルドのみ |
+| `npm run build:release:clean` | 上記の前に `build/DerivedData` を削除 (フル Release。Finder の日付を新しくしたいとき) |
 | `npm run install:applications` | Release `.app` を `/Applications/CozyBrew.app` に ditto (実行中は中止、`--build` でビルド併用) |
 | `npm run install:applications:build` | 上記と同じ (Release ビルド → 複製) |
+| `npm run install:applications:build:clean` | クリーン後に Release ビルド → `/Applications` へ複製 (`--build --clean`) |
 
 ### 版番号の正本 (CozyBrewApp) `{@dependency_updates:s-cozybrewapp}`
 

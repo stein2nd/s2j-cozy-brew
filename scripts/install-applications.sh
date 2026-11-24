@@ -4,8 +4,9 @@
 #
 # Usage:
 #   ./scripts/install-applications.sh              # copy のみ (Release 成果物が build/DerivedData にある前提)
-#   ./scripts/install-applications.sh --build      # Release ビルド → copy
-#   ./scripts/install-applications.sh --build-only # Release ビルドのみ (copy しない)
+#   ./scripts/install-applications.sh --build        # Release ビルド → copy
+#   ./scripts/install-applications.sh --build-only   # Release ビルドのみ (copy しない)
+#   ./scripts/install-applications.sh --build --clean # 上記の前に build/DerivedData を削除 (フル Release)
 #   ./scripts/install-applications.sh --src /path/to/CozyBrewApp.app
 #   ./scripts/install-applications.sh --dest /Applications/CozyBrew.app --force
 #
@@ -25,6 +26,7 @@ DO_BUILD=false
 BUILD_ONLY=false
 DO_INSTALL=true
 FORCE=false
+DO_CLEAN=false
 SRC=""
 
 usage() {
@@ -42,6 +44,9 @@ while [[ $# -gt 0 ]]; do
       DO_BUILD=true
       BUILD_ONLY=true
       DO_INSTALL=false
+      ;;
+    --clean)
+      DO_CLEAN=true
       ;;
     --force) FORCE=true ;;
     --src)
@@ -66,6 +71,10 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ "$DO_BUILD" == true ]]; then
+  if [[ "$DO_CLEAN" == true ]]; then
+    echo "== clean (derivedDataPath: $DERIVED_DATA) =="
+    rm -rf "$DERIVED_DATA"
+  fi
   echo "== Release ビルド (derivedDataPath: $DERIVED_DATA) =="
   xcodebuild build \
     -project "$PROJECT" \

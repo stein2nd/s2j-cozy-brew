@@ -325,6 +325,7 @@ npm run lint:swift         # xcodegen → SwiftLint → SwiftFormat → Peripher
 npm run version:check      # Are the “package.json” file and the Xcode version/build number synchronized?
 npm run build:release      # Build “Release” only in build/DerivedData
 npm run install:applications:build   # Copy the Release build to /Applications/CozyBrew.app
+npm run install:applications:build:clean   # rm build/DerivedData then build + install (fresh bundle dates)
 ```
 
 <!-- 

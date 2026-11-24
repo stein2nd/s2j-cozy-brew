@@ -1,6 +1,6 @@
 {
   "name": "s2j-cozy-brew",
-  "version": "1.0.24",
+  "version": "1.0.25",
   "buildNumber": 4,
   "description": "Using SwiftUI, reimplement the AppKit-based \"Cakebrew\".",
   "type": "module",
@@ -43,8 +43,10 @@
     "format:swift": "swiftformat .",
     "profile:swift": "xcrun xctrace",
     "build:release": "./scripts/install-applications.sh --build-only",
+    "build:release:clean": "./scripts/install-applications.sh --build-only --clean",
     "install:applications": "./scripts/install-applications.sh",
     "install:applications:build": "./scripts/install-applications.sh --build",
+    "install:applications:build:clean": "./scripts/install-applications.sh --build --clean",
     "lint:build": "xcodebuild build -project CozyBrew.xcodeproj -scheme CozyBrewApp -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO",
     "analyze:swift": "xcodebuild analyze -project CozyBrew.xcodeproj -scheme CozyBrewApp -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO",
     "swift:ncu": "./scripts/swift-deps.sh check",
