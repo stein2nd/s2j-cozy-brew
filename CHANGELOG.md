@@ -2,6 +2,15 @@
 
 ## unreleased
 
+## 1.0.24 - 2026-11-24
+
+* SPM pin: `s2j-about-window` → `41a2a76` (3.0.12、`AboutHeaderOptions` / Issue #18)、`s2j-source-list` → `03edfcd` (`main`)
+* **README**: Features 〜依存モジュール更新を現行実装に同期
+* **UX**: About を S2J ヘッダー強化に合わせて更新 — `classicHorizontal`、ビルド番号 (`showBuildNumber`)、下段 **`GitHub Repository`** (`primaryLink`)。本文は短い説明のみ (`CozyBrewAbout`)
+* **UX**: About ウィンドウを `minWidth` 480 / `defaultSize` 480×520に調整
+* **ビルド**: 埋め込み framework の署名、`GENERATE_INFOPLIST_FILE` を `settingGroups.embeddedFramework` に集約 (Release の `bundle format unrecognized` / CodeSign 対策)
+* **docs**: `SPEC.md` (About §4.3.2)、`dependency_updates.md` (署名、xcodegen、CodeSign トラブルシュート)
+
 ## 1.0.23 - 2026-11-23
 
 * SPM pin: 変更なし (`s2j-source-list` `9e872f0`、`s2j-about-window` `01d4fae`、`main` 最新)

@@ -20,9 +20,29 @@ settings:
     STRING_CATALOG_GENERATE_SYMBOLS: YES
     ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
     DEAD_CODE_STRIPPING: YES
-    # 全ターゲット Debug / Release 共通 (Configuration 切替で Team が消えないよう、ターゲットごとの空文字を避ける)
+    # アプリ / テスト用 (埋め込み framework は settingGroups.embeddedFramework)
     CODE_SIGN_STYLE: Automatic
     DEVELOPMENT_TEAM: PJWXCWS5U5
+  configs:
+    Debug:
+      CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
+    Release:
+      CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED: YES
+
+settingGroups:
+  embeddedFramework:
+    # Xcode 推奨: 埋め込み framework はビルド時署名しない (Embed の CodeSignOnCopy でアプリに合わせる)
+    CODE_SIGNING_ALLOWED: NO
+    CODE_SIGN_IDENTITY: "-"
+    DEFINES_MODULE: true
+    GENERATE_INFOPLIST_FILE: YES
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
+    ENABLE_MODULE_VERIFIER: YES
+    # Xcode「Enable Module Verifier Supported Languages」推奨 (Issues ダイアログ)
+    MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS: "gnu11 gnu++14"
+    CURRENT_PROJECT_VERSION: 1
+    MARKETING_VERSION: 1.0.2
 
 packages:
   s2j-source-list:
@@ -78,7 +98,7 @@ targets:
       CODE_SIGN_ENTITLEMENTS: CozyBrewApp/CozyBrewApp.entitlements
       ENABLE_HARDENED_RUNTIME: true
       ENABLE_APP_SANDBOX: false
-      MARKETING_VERSION: "1.0.23"
+      MARKETING_VERSION: "1.0.24"
       CURRENT_PROJECT_VERSION: "4"
       VERSIONING_SYSTEM: "apple-generic"
     dependencies:
@@ -93,14 +113,9 @@ targets:
     sources:
       - path: Sources/CozyBrewCore
     settings:
+      groups: [embeddedFramework]
       PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewCore
       PRODUCT_NAME: CozyBrewCore
-      SWIFT_VERSION: "6.0"
-      MACOSX_DEPLOYMENT_TARGET: "15.0"
-      DEFINES_MODULE: true
-      GENERATE_INFOPLIST_FILE: YES
-      CURRENT_PROJECT_VERSION: 1
-      MARKETING_VERSION: 1.0.2
 
   CozyBrewService:
     type: framework
@@ -111,14 +126,9 @@ targets:
     dependencies:
       - target: CozyBrewCore
     settings:
+      groups: [embeddedFramework]
       PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewService
       PRODUCT_NAME: CozyBrewService
-      SWIFT_VERSION: "6.0"
-      MACOSX_DEPLOYMENT_TARGET: "15.0"
-      DEFINES_MODULE: true
-      GENERATE_INFOPLIST_FILE: YES
-      CURRENT_PROJECT_VERSION: 1
-      MARKETING_VERSION: 1.0.2
 
   CozyBrewUIComponents:
     type: framework
@@ -135,14 +145,9 @@ targets:
       - package: s2j-about-window
         product: S2JAboutWindow
     settings:
+      groups: [embeddedFramework]
       PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewUIComponents
       PRODUCT_NAME: CozyBrewUIComponents
-      SWIFT_VERSION: "6.0"
-      MACOSX_DEPLOYMENT_TARGET: "15.0"
-      DEFINES_MODULE: true
-      GENERATE_INFOPLIST_FILE: YES
-      CURRENT_PROJECT_VERSION: 1
-      MARKETING_VERSION: 1.0.2
 
   CozyBrewUITests:
     type: bundle.ui-testing

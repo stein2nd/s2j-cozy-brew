@@ -197,8 +197,8 @@ S2J CozyBrew (Swift Package 名: `s2j-cozy-brew`) は、AppKit で実装され�
 
 * [S2J About Window](https://github.com/stein2nd/s2j-about-window) (v3.0.0以降) の `AboutView` を組込みます (SwiftUI `Window(id: about-cozy-brew)`。Homebrew 環境ウィンドウと同型)。
 * メニュー **About CozyBrew** から `openWindow(id: about-cozy-brew)` → S2J `AboutView` (SwiftUI `Window`、中央配置)。`.sheet` は使いません。
-* ヘッダー: Dock と同じアプリケーション・アイコン、`appName` / `Info.plist` のバージョン・著作権。
-* 本文: `CozyBrewAbout.markdown` (説明、GitHub リポジトリリンク)。
+* ヘッダー: Dock と同じアプリケーション・アイコン、`appName` / `Info.plist` のバージョン (任意ビルド番号) ・著作権。`AboutHeaderOptions` で `classicHorizontal` + `showBuildNumber`。
+* 本文: `CozyBrewAbout.markdown` (短い説明のみ)。GitHub は下段 **`primaryLink`** (`CozyBrewAbout.primaryLinkTitle` / `primaryLinkURL`)。
 * **License** / **Acknowledgements**: バンドル `CozyBrewApp/Resources/LICENSE.txt` と `ACKNOWLEDGEMENTS.md` を `licenseResourceName` / `acknowledgementsResourceName` でアプリケーション内表示 (オフライン可)。Acknowledgements は onot 生成の Markdown (v3.0.0以降は Textual により表表示に対応)。ウィンドウは標準の閉じる操作で dismiss します。
 
 ### 4.3.3. BrewCore (s2j-cozy-brew / CozyBrewCore) `{@spec:s4-3-3}`

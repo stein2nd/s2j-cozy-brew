@@ -67,13 +67,19 @@ struct CozyBrewApp: App {
             AboutView(
                 content: CozyBrewAbout.markdown,
                 appName: "CozyBrew",
+                headerOptions: AboutHeaderOptions(
+                    style: .classicHorizontal,
+                    showBuildNumber: true,
+                    primaryLinkTitle: CozyBrewAbout.primaryLinkTitle,
+                    primaryLinkURL: CozyBrewAbout.primaryLinkURL
+                ),
                 licenseResourceName: CozyBrewAbout.licenseResourceName,
                 acknowledgementsResourceName: CozyBrewAbout.acknowledgementsResourceName,
                 resourceBundle: .main
             )
-            .frame(minWidth: 400, minHeight: 480)
+            .frame(minWidth: 480, minHeight: 480)
         }
-        .defaultSize(width: 400, height: 500)
+        .defaultSize(width: 480, height: 520)
 
         Settings {
             CozyBrewSettingsView(manager: manager) {

@@ -58,6 +58,12 @@ Xcode プロジェクト利用時は、ルートの `Package.resolved` に加え
 
 * **正本:** `project.yml` の `settings.base` に `CODE_SIGN_STYLE: Automatic` と `DEVELOPMENT_TEAM` を置きます。`CozyBrewApp` ターゲットに **空の** `DEVELOPMENT_TEAM: ""` を書くと、Project の Configuration を Debug ↔ Release で切り替えたときに Xcode の **Signing** が None に見えることがあります (ターゲット側の空値が Project より優先されるため)。
 * **`npm run xcode:generate` のあと:** Xcode を閉じてから再生成するか、プロジェクトを開き直してください。Team が別 ID なら `project.yml` の `DEVELOPMENT_TEAM` を自分の Team に変えてから `xcodegen` します。
+* **Framework の Signing Certificate:** 埋め込み framework (Core / Service / UIComponents) は Xcode 推奨どおり **`Don't Code Sign`** (`CODE_SIGNING_ALLOWED: NO`、`CODE_SIGN_IDENTITY: "-"`)。**Signing UI が None / Don't Code Sign / Sign to Run Locally でも正常**です。実際の署名は `CozyBrew.app` への **Embed Frameworks (CodeSignOnCopy)** で行います。Team は Project 共通の `DEVELOPMENT_TEAM` を参照します。
+* **Release で `bundle format unrecognized` (CodeSign):** 埋め込み framework に **`Versions/A/Resources/Info.plist` がない** と失敗します。`settingGroups.embeddedFramework` に `GENERATE_INFOPLIST_FILE: YES` を含めること (XcodeGen で `groups` のみにしたとき plist 生成が落ちることがある)。修正後は **Clean Build Folder** または `rm -rf build/DerivedData` を推奨。
+* **「Update to recommended settings」:** ダイアログの主な内容は次のとおり。**Perform Changes する前に** `project.yml` と重複しないか確認し、正本は `npm run xcode:generate` を推奨します。
+  * **Disable Code Signing** (各 framework) — 上記と同じ。`settingGroups.embeddedFramework` で吸収済み。
+  * **モジュール Verifier の有効化** — `ENABLE_MODULE_VERIFIER: YES` と `MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS: gnu11 gnu++14` (framework グループ)。
+  * **Missing Localizability** — Project の `CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED` (en/ja 向け)。
 
 ### Periphery (ローカル vs CI) `{@dependency_updates:s-periphery}`
 
