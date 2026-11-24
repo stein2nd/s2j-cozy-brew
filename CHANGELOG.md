@@ -2,6 +2,11 @@
 
 ## unreleased
 
+## 1.0.26 - 2026-11-24
+
+* SPM pin: `s2j-about-window` → `8aa296d` (3.0.14)、`s2j-source-list` → `a9f8cfd` (2.0.26、`main`)
+* **Acknowledgements**: `ack:generate` で `ACKNOWLEDGEMENTS.md` を依存版に合わせて更新
+
 ## 1.0.25 - 2026-11-24
 
 * SPM pin: 変更なし (`s2j-source-list` `03edfcd`、`s2j-about-window` `41a2a76`、`main` 最新)
