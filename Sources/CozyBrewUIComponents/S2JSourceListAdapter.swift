@@ -4,6 +4,11 @@ import S2JSourceList
 import SwiftUI
 
 /// `SidebarItem` と S2J Source List の固定 UUID を双方向で結ぶレジストリ（`metadata` には載せない）。
+/// サイドバーに件数バッジを付ける `SidebarItem`（History は対象外）
+private let sidebarItemsWithCountBadge: [SidebarItem] = [
+    .installed, .outdated, .taps, .formulae, .casks,
+]
+
 enum SidebarItemSourceListRegistry {
     /// アプリ更新ごとに不変。再ビルドで選択が飛ばないよう固定 UUID を使う。
     private static let idsByItem: [SidebarItem: UUID] = [
@@ -129,6 +134,27 @@ public final class S2JSourceListAdapter: ObservableObject {
         )
     }
 
+    /// `BrewManager` の一覧件数を S2J Source List の `badge` に反映する（Warnings はカスタム行のまま）。
+    func syncSidebarBadges(counts: BrewManager.SidebarBadgeCounts) {
+        let countByItem: [SidebarItem: Int] = [
+            .installed: counts.installed,
+            .outdated: counts.outdated,
+            .taps: counts.taps,
+            .formulae: counts.formulae,
+            .casks: counts.casks,
+        ]
+        for item in sidebarItemsWithCountBadge {
+            guard let count = countByItem[item],
+                  let found = service.findItem(id: SidebarItemSourceListRegistry.id(for: item))
+            else { continue }
+            var updated = found.item
+            let nextBadge = "\(count)"
+            guard updated.badge != nextBadge else { continue }
+            updated.badge = nextBadge
+            service.updateItem(updated)
+        }
+    }
+
     func warningsRowContent(item: SourceItem, warningCount: Int, isSelected: Bool) -> AnyView {
         AnyView(
             HStack {
@@ -182,8 +208,12 @@ struct CozyBrewSourceListSidebar: View {
             }
         )
         .navigationTitle(CozyBrewL10n.navigationTitle)
-        .task {
+        .onAppear {
             adapter.applyInitialSelectionIfNeeded()
+            adapter.syncSidebarBadges(counts: manager.sidebarBadgeCounts)
+        }
+        .onChange(of: manager.sidebarBadgeCounts) { _, counts in
+            adapter.syncSidebarBadges(counts: counts)
         }
     }
 }

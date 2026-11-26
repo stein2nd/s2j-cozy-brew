@@ -1,4 +1,6 @@
 name: CozyBrew
+attributes:
+  LastUpgradeCheck: 2630
 options:
   bundleIdPrefix: com.s2j
   deploymentTarget:
@@ -6,7 +8,6 @@ options:
   developmentLanguage: en
   xcodeVersion: "26.3"
   projectFormat: xcode16_3
-  lastUpgradeCheck: 2630
   usesTabs: false
   indentWidth: 4
   tabWidth: 4
@@ -57,17 +58,19 @@ targets:
     type: application
     platform: macOS
     deploymentTarget: "15.0"
-    knownLocalizations:
-      - en
-      - ja
     sources:
       - path: CozyBrewApp
         excludes:
           - Resources/AppIcon-source.jpg
-    resources:
+          - Assets.xcassets
+          - Resources/LICENSE.txt
+          - Resources/ACKNOWLEDGEMENTS.md
       - path: CozyBrewApp/Assets.xcassets
+        buildPhase: resources
       - path: CozyBrewApp/Resources/LICENSE.txt
+        buildPhase: resources
       - path: CozyBrewApp/Resources/ACKNOWLEDGEMENTS.md
+        buildPhase: resources
     info:
       path: CozyBrewApp/Info.plist
       properties:
@@ -98,7 +101,7 @@ targets:
       CODE_SIGN_ENTITLEMENTS: CozyBrewApp/CozyBrewApp.entitlements
       ENABLE_HARDENED_RUNTIME: true
       ENABLE_APP_SANDBOX: false
-      MARKETING_VERSION: "1.0.26"
+      MARKETING_VERSION: "1.0.27"
       CURRENT_PROJECT_VERSION: "4"
       VERSIONING_SYSTEM: "apple-generic"
     dependencies:
@@ -114,8 +117,9 @@ targets:
       - path: Sources/CozyBrewCore
     settings:
       groups: [embeddedFramework]
-      PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewCore
-      PRODUCT_NAME: CozyBrewCore
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewCore
+        PRODUCT_NAME: CozyBrewCore
 
   CozyBrewService:
     type: framework
@@ -127,8 +131,9 @@ targets:
       - target: CozyBrewCore
     settings:
       groups: [embeddedFramework]
-      PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewService
-      PRODUCT_NAME: CozyBrewService
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewService
+        PRODUCT_NAME: CozyBrewService
 
   CozyBrewUIComponents:
     type: framework
@@ -136,8 +141,10 @@ targets:
     deploymentTarget: "15.0"
     sources:
       - path: Sources/CozyBrewUIComponents
-    resources:
+        excludes:
+          - Resources/**
       - path: Sources/CozyBrewUIComponents/Resources
+        buildPhase: resources
     dependencies:
       - target: CozyBrewService
       - package: s2j-source-list
@@ -146,8 +153,9 @@ targets:
         product: S2JAboutWindow
     settings:
       groups: [embeddedFramework]
-      PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewUIComponents
-      PRODUCT_NAME: CozyBrewUIComponents
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.s2j.CozyBrewUIComponents
+        PRODUCT_NAME: CozyBrewUIComponents
 
   CozyBrewUITests:
     type: bundle.ui-testing

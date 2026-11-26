@@ -103,6 +103,35 @@ public final class BrewManager: ObservableObject {
         !catalogCasksOverlay.isEmpty
     }
 
+    /// サイドバー・バッジ用の Formulae カタログ件数（未取得時は 0）
+    public var catalogFormulaeBadgeCount: Int {
+        catalogFormulaeBase.count
+    }
+
+    /// サイドバー・バッジ用の Casks カタログ件数（未取得時は 0）
+    public var catalogCasksBadgeCount: Int {
+        catalogCasksBase.count
+    }
+
+    /// サイドバー項目の件数バッジ（Installed / Outdated / Taps / Formulae / Casks）
+    public struct SidebarBadgeCounts: Equatable, Sendable {
+        public let installed: Int
+        public let outdated: Int
+        public let taps: Int
+        public let formulae: Int
+        public let casks: Int
+    }
+
+    public var sidebarBadgeCounts: SidebarBadgeCounts {
+        SidebarBadgeCounts(
+            installed: installedPackages.count,
+            outdated: outdatedPackages.count,
+            taps: taps.count,
+            formulae: catalogFormulaeBadgeCount,
+            casks: catalogCasksBadgeCount
+        )
+    }
+
     // MARK: - Initialization
 
     /// 初期化

@@ -2,6 +2,15 @@
 
 ## unreleased
 
+## 1.0.27 - 2026-11-27
+
+* SPM pin: `s2j-about-window` → `c923dfc`、`s2j-source-list` → `83dcf0` (`main`)
+* **UX**: サイドバー件数バッジ — Installed / Outdated / Taps / Formulae / Casks (`BrewManager.sidebarBadgeCounts` → `badge`)。Warnings はカスタム表示のまま
+* **ビルド**: `project.yml` を XcodeGen ProjectSpec 向けに整理 (`attributes.LastUpgradeCheck`、`sources` + `buildPhase: resources`、埋め込み framework の `settings.base`)。`xcodegen generate` の Unknown key 警告を解消
+* **Acknowledgements**: `@s2j/acknowledgements` ^0.1.18 (ホスト行 License を `package.json` → SPDX に反映)。`patch-ack-host-license.mjs` 削除、`ACKNOWLEDGEMENTS.md` 再生成
+* **docs**: `dependency_updates.md` に XcodeGen / リソース登録の注意を追記
+* **開発**: `package.json` 1.0.27 (build: 4)、`@s2j/docs-linter` 1.0.38
+
 ## 1.0.26 - 2026-11-24
 
 * SPM pin: `s2j-about-window` → `8aa296d` (3.0.14)、`s2j-source-list` → `a9f8cfd` (2.0.26、`main`)

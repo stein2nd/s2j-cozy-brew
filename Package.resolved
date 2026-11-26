@@ -7,7 +7,7 @@
       "location" : "https://github.com/stein2nd/s2j-about-window.git",
       "state" : {
         "branch" : "main",
-        "revision" : "8aa296dee5de715c2774ee4a426fd9df48eb7ab7"
+        "revision" : "c923dfc1b6523a3c004b12aeecf4e4a0eb738fff"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/stein2nd/s2j-source-list.git",
       "state" : {
         "branch" : "main",
-        "revision" : "a9f8cfd06aebe752b22c826c630f58f43e86db92"
+        "revision" : "83dcf0dea5dac86e237fd4ee9b7792bc796b00fd"
       }
     },
     {

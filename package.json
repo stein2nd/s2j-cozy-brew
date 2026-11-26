@@ -1,6 +1,6 @@
 {
   "name": "s2j-cozy-brew",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "buildNumber": 4,
   "description": "Using SwiftUI, reimplement the AppKit-based \"Cakebrew\".",
   "type": "module",
@@ -26,7 +26,6 @@
   "scripts": {
     "lint:docs": "s2j-docs-linter ./README.md ./CHANGELOG.md ./docs/*.md ./docs/**/*.md",
     "docs:heading-tags": "python3 scripts/apply-heading-tags.py",
-
     "lint:swift": "npm run xcode:generate && npm run lint:swiftlint && npm run lint:swiftformat && npm run lint:periphery",
     "lint:swiftlint": "swiftlint lint --strict Sources Tests CozyBrewApp Package.swift",
     "lint:swiftformat": "swiftformat --lint .",
@@ -62,8 +61,8 @@
     "ack:generate": "s2j-acknowledgements generate --config ack.config.json"
   },
   "devDependencies": {
-    "@s2j/acknowledgements": "^0.1.17",
-    "@s2j/docs-linter": "^1.0.34"
+    "@s2j/acknowledgements": "^0.1.18",
+    "@s2j/docs-linter": "^1.0.38"
   },
   "allowScripts": {
     "@s2j/docs-linter": true
