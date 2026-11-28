@@ -32,7 +32,7 @@ Xcode プロジェクト利用時は、ルートの `Package.resolved` に加え
 | `npm run build:release:clean` | 上記の前に `build/DerivedData` を削除 (フル Release。Finder の日付を新しくしたいとき) |
 | `npm run install:applications` | Release `.app` を `/Applications/CozyBrew.app` に ditto (実行中は中止、`--build` でビルド併用) |
 | `npm run install:applications:build` | 上記と同じ (Release ビルド → 複製) |
-| `npm run install:applications:build:clean` | クリーン後に Release ビルド → `/Applications` へ複製 (`--build --clean`) |
+| `npm run install:applications:build:clean` | クリーン後に Release ビルド → `/Applications` に複製 (`--build --clean`) |
 
 ### 版番号の正本 (CozyBrewApp) `{@dependency_updates:s-cozybrewapp}`
 
